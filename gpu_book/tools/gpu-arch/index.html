@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPU架构演进</title>
+<style>
+:root{
+  --bg:#f7f7f8; --panel:#ffffff; --border:#e3e5e8; --text:#16181d; --muted:#6b7280; --faint:#f1f2f4;
+  --accent:#2563eb; --accent-soft:#eff4ff;
+  --fp32:#16a34a; --int32:#2563eb; --fp64:#db2777; --tc:#9333ea; --ldst:#64748b; --sfu:#0891b2;
+  --reg:#fde68a; --smem:#bfdbfe; --l1:#dbeafe; --tmem:#e9d5ff; --l2:#c7d2fe; --mem:#fecaca; --link:#bbf7d0;
+  --box:#ffffff; --box2:#f8fafc; --stroke:#cbd5e1; --off:#e5e7eb;
+  --new:#f59e0b; --up:#16a34a; --down:#dc2626;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15171c; --panel:#1c1f26; --border:#2d3139; --text:#e6e8ec; --muted:#9aa1ad; --faint:#23262e;
+    --accent:#6ea8fe; --accent-soft:#1e2637;
+    --fp32:#4ade80; --int32:#60a5fa; --fp64:#f472b6; --tc:#c084fc; --ldst:#94a3b8; --sfu:#22d3ee;
+    --reg:#5b4a17; --smem:#1e3a5f; --l1:#1b2c44; --tmem:#3b2457; --l2:#2e3366; --mem:#5a2525; --link:#1d4630;
+    --box:#1c1f26; --box2:#22262e; --stroke:#3a404b; --off:#2a2e36;
+    --new:#fbbf24; --up:#4ade80; --down:#f87171;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15171c; --panel:#1c1f26; --border:#2d3139; --text:#e6e8ec; --muted:#9aa1ad; --faint:#23262e;
+  --accent:#6ea8fe; --accent-soft:#1e2637;
+  --fp32:#4ade80; --int32:#60a5fa; --fp64:#f472b6; --tc:#c084fc; --ldst:#94a3b8; --sfu:#22d3ee;
+  --reg:#5b4a17; --smem:#1e3a5f; --l1:#1b2c44; --tmem:#3b2457; --l2:#2e3366; --mem:#5a2525; --link:#1d4630;
+  --box:#1c1f26; --box2:#22262e; --stroke:#3a404b; --off:#2a2e36;
+  --new:#fbbf24; --up:#4ade80; --down:#f87171;
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--text);
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+.wrap{max-width:1240px; margin:0 auto; padding:24px 16px 64px}
+h1{font-size:22px; margin:0 0 4px}
+.sub{color:var(--muted); margin:0 0 16px}
+.card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:16px}
+button{background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:7px;
+  padding:6px 12px; font:13px/1.4 inherit; cursor:pointer}
+button:hover{border-color:var(--accent); color:var(--accent)}
+button:disabled{opacity:.4; cursor:default}
+.tabs{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden}
+.tabs button{border:0; border-radius:0; border-right:1px solid var(--border)}
+.tabs button:last-child{border-right:0}
+.tabs button.on{background:var(--accent-soft); color:var(--accent); font-weight:600}
+.bar{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.grow{flex:1}
+label.chk{display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer}
+.kbd{font-family:ui-monospace,Menlo,monospace; font-size:12px; border:1px solid var(--border); border-radius:4px; padding:0 5px; color:var(--muted)}
+
+/* 时间轴 */
+.timeline{display:flex; gap:0; overflow-x:auto; margin:14px 0 4px; padding-bottom:4px}
+.tl{flex:1 0 96px; border:0; border-top:3px solid var(--border); border-radius:0; background:none; padding:8px 4px 2px; text-align:left}
+.tl:hover{border-top-color:var(--accent); color:var(--text)}
+.tl b{display:block; font-size:14px}
+.tl span{font-size:12px; color:var(--muted)}
+.tl.on{border-top-color:var(--accent)}
+.tl.on b{color:var(--accent)}
+
+.main{display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:16px; align-items:start}
+@media (max-width:980px){ .main{grid-template-columns:minmax(0,1fr)} }
+.stage{position:relative}
+.stage svg{display:block; width:100%; height:auto}
+.legend{display:flex; flex-wrap:wrap; gap:4px 14px; font-size:12px; color:var(--muted); margin-top:8px}
+.legend i{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:-1px}
+.note{font-size:12px; color:var(--muted); margin-top:6px}
+
+.side h2{font-size:20px; margin:0}
+.side .meta{color:var(--muted); font-size:13px; margin:2px 0 12px}
+.side h3{font-size:13px; color:var(--muted); font-weight:600; margin:14px 0 6px}
+.side ul{margin:0; padding-left:18px}
+.side li{margin:3px 0}
+.kv{width:100%; border-collapse:collapse; font-size:13px}
+.kv td{padding:4px 0; border-bottom:1px solid var(--faint); vertical-align:top}
+.kv td:first-child{color:var(--muted); width:42%}
+.kv td:last-child{text-align:right; font-variant-numeric:tabular-nums}
+.d{font-size:11px; margin-left:4px}
+.d.up{color:var(--up)} .d.down{color:var(--down)}
+.unsure{border-bottom:1px dotted var(--muted); cursor:help}
+
+/* 总表 */
+.table-scroll{overflow-x:auto}
+table.all{border-collapse:collapse; font-size:12.5px; min-width:100%}
+table.all th, table.all td{padding:5px 8px; border-bottom:1px solid var(--faint); white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums}
+table.all th:first-child, table.all td:first-child{text-align:left; color:var(--muted); position:sticky; left:0; background:var(--panel)}
+table.all th{cursor:pointer}
+table.all .cur{background:var(--accent-soft)}
+table.all th.cur{color:var(--accent)}
+
+/* SVG */
+svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; fill:var(--text)}
+svg .lbl{font-size:11px}
+svg .sm-lbl{font-size:10px; fill:var(--muted)}
+svg .big{font-size:13px; font-weight:600}
+svg .new{stroke:var(--new) !important; stroke-width:2.2 !important}
+svg text.chg{fill:var(--new); font-weight:600}
+.hint{position:absolute; pointer-events:none; background:var(--panel); border:1px solid var(--border); border-radius:6px;
+  padding:6px 9px; font-size:12px; max-width:260px; box-shadow:0 4px 14px rgba(0,0,0,.12); display:none; z-index:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>NVIDIA数据中心GPU架构演进</h1>
+  <p class="sub">从Tesla到Blackwell，每一代取一款数据中心产品。按 <span class="kbd">←</span> <span class="kbd">→</span> 切换架构，<span class="kbd">Tab</span> 切换视图；变化的部分会以橙色标出。</p>
+
+  <div class="card">
+    <div class="bar">
+      <button id="prev" title="上一代（←）">← 上一代</button>
+      <button id="next" title="下一代（→）">下一代 →</button>
+      <div class="tabs" id="views">
+        <button data-v="sm" class="on">SM结构</button>
+        <button data-v="chip">整芯片</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="hl" checked>高亮与上一代的差异</label>
+      <span class="grow"></span>
+      <button id="png">导出当前图PNG</button>
+      <button id="theme" title="切换浅色 / 深色">◐</button>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <div class="main">
+    <div class="card stage" id="stage">
+      <svg id="svg" viewBox="0 0 860 600" role="img" aria-label="GPU架构示意图"></svg>
+      <div class="legend" id="legend"></div>
+      <div class="note" id="vnote"></div>
+      <div class="hint" id="hint"></div>
+    </div>
+    <div class="card side" id="side"></div>
+  </div>
+
+  <div class="card">
+    <div class="bar" style="margin-bottom:8px"><b>各代参数总表</b><span class="note" style="margin:0">点击表头跳到该代；虚线下划线的数字没有在官方资料中找到明确出处，仅供参考。</span></div>
+    <div class="table-scroll"><table class="all" id="all"></table></div>
+  </div>
+</div>
+
+<script>
+// ===================== 数据 =====================
+// 每一代取一颗芯片和一款数据中心产品。chip级的数字是完整芯片的配置，产品级的数字（启用的SM数、算力、显存）是该产品的规格。
+// 每个分区（part）的执行单元数取自各代架构白皮书；Fermi和Kepler没有严格的分区，按调度器个数平均画出。
+// unsure 列出没有在官方资料中找到明确数字的字段。
+const GENS = [
+{
+  id:'tesla', arch:'Tesla', year:2008, chip:'GT200', product:'Tesla C1060', process:'65nm', transistors:1.4,
+  smName:'SM', gpcName:'TPC', dies:1, gpc:10, tpcPerGpc:3, smPerTpc:1, smEnabled:30,
+  parts:1, part:{fp32:8, int32:0, fp64:1, tc:0, ldst:0, sfu:2}, smExtra:{},
+  tcGen:0, tcFma:0, regKB:64, maxThreads:1024,
+  mem1:[{name:'共享内存', kb:16, cls:'smem'}],
+  l2MB:null, mem:{type:'GDDR3', n:8, on:8, kind:'gddr', gb:4, bw:102},
+  link:{name:'PCIe 2.0 x16', bw:8}, clock:1.296,
+  perf:{fp32:0.622, fp64:0.078, fp16:null, low:null}, tdp:188,
+  notes:['“Tesla”既是这一代架构的名字，也是NVIDIA数据中心产品线的品牌。Fermi到Volta的数据中心产品（C2050、K40、P100、V100）也都叫Tesla，但它们不是Tesla架构。', 'NVIDIA当年宣传C1060的峰值是933GFLOPS，那是把SFU附带的一次乘法也算了进去，每个SP每周期按3次运算计。为了和后面各代可比，这里只按乘加计算，是622GFLOPS。', '这一代还没有L1和L2缓存，只有供纹理读取使用的只读缓存。每3个SM组成一个TPC，访存和纹理单元由TPC里的SM共用，所以SM里没有画LD/ST单元。', '每个SM只有一个调度器，8个SP（即后来所说的CUDA Core）每4个周期执行完一个warp。'],
+  new:['G80（2006）开创的统一着色器架构与CUDA编程模型，在这一代走向通用计算', '第一次加入FP64：每个SM 1个双精度单元，速率是FP32的1/8', '寄存器翻倍到每SM 16K个（64KB）', '每SM 16KB共享内存，由程序员显式管理', 'SM数增加到30个，共240个SP'],
+  sources:['NVIDIA GeForce GTX 200 GPU Architectural Overview (2008)', 'Lindholm et al., NVIDIA Tesla: A Unified Graphics and Computing Architecture (IEEE Micro, 2008)', 'Tesla C1060 数据手册'],
+  unsure:[]
+},
+{
+  id:'fermi', arch:'Fermi', year:2010, chip:'GF100', product:'Tesla C2050', process:'40nm', transistors:3.0,
+  smName:'SM', dies:1, gpc:4, tpcPerGpc:4, smPerTpc:1, smEnabled:14,
+  parts:2, part:{fp32:16, int32:0, fp64:0, tc:0, ldst:8, sfu:2}, smExtra:{},
+  tcGen:0, tcFma:0, regKB:128, maxThreads:1536,
+  mem1:[{name:'L1 / 共享内存', kb:64, cls:'smem'}],
+  l2MB:0.75, mem:{type:'GDDR5', n:6, on:6, kind:'gddr', gb:3, bw:144},
+  link:{name:'PCIe 2.0 x16', bw:8}, clock:1.15,
+  perf:{fp32:1.03, fp64:0.515, fp16:null, low:null}, tdp:238,
+  notes:['FP64由FP32单元两两配合完成，速率是FP32的一半，所以图中没有单独的FP64单元。', '每个SM有两个warp调度器，各自把指令发给一组16个CUDA Core。'],
+  new:['第一代真正面向通用计算设计的架构，统一的地址空间', '引入L1缓存与L2缓存，L1和共享内存共用64KB，可按16/48KB划分', '支持IEEE 754-2008的FMA，FP64速率达到FP32的一半', '显存支持ECC'],
+  sources:['NVIDIA Fermi Compute Architecture Whitepaper (2009)', 'Tesla C2050/C2070 数据手册'],
+  unsure:[]
+},
+{
+  id:'kepler', arch:'Kepler', year:2013, chip:'GK110', product:'Tesla K40', process:'28nm', transistors:7.1,
+  smName:'SMX', dies:1, gpc:5, tpcPerGpc:3, smPerTpc:1, smEnabled:15,
+  parts:4, part:{fp32:48, int32:0, fp64:16, tc:0, ldst:8, sfu:8}, smExtra:{},
+  tcGen:0, tcFma:0, regKB:256, maxThreads:2048,
+  mem1:[{name:'L1 / 共享内存', kb:64, cls:'smem'}, {name:'只读数据缓存', kb:48, cls:'l1'}],
+  l2MB:1.5, mem:{type:'GDDR5', n:6, on:6, kind:'gddr', gb:12, bw:288},
+  link:{name:'PCIe 3.0 x16', bw:16}, clock:0.745,
+  perf:{fp32:4.29, fp64:1.43, fp16:null, low:null}, tdp:235,
+  notes:['SMX有4个warp调度器，192个CUDA Core由它们共享，这里按调度器平均分成4组画出。', '算力按基础主频745MHz计算；开启GPU Boost到875MHz时，FP32可达5.0TFLOPS。'],
+  new:['SM改名SMX，CUDA Core从32个增加到192个，主频降低以换取能效', '每个SM有64个专用FP64单元', '新增48KB只读数据缓存', '引入warp shuffle指令、动态并行和Hyper-Q', '寄存器文件翻倍到256KB'],
+  sources:['NVIDIA Kepler GK110 Architecture Whitepaper (2012)', 'Tesla K40 数据手册'],
+  unsure:[]
+},
+{
+  id:'maxwell', arch:'Maxwell', year:2015, chip:'GM200', product:'Tesla M40', process:'28nm', transistors:8.0,
+  smName:'SMM', dies:1, gpc:6, tpcPerGpc:4, smPerTpc:1, smEnabled:24,
+  parts:4, part:{fp32:32, int32:0, fp64:0, tc:0, ldst:8, sfu:8}, smExtra:{fp64:4},
+  tcGen:0, tcFma:0, regKB:256, maxThreads:2048,
+  mem1:[{name:'共享内存', kb:96, cls:'smem'}, {name:'L1 / 纹理缓存', kb:48, cls:'l1'}],
+  l2MB:3, mem:{type:'GDDR5', n:6, on:6, kind:'gddr', gb:12, bw:288},
+  link:{name:'PCIe 3.0 x16', bw:16}, clock:1.114,
+  perf:{fp32:7.0, fp64:0.21, fp16:null, low:null}, tdp:250,
+  notes:['FP64只有每SM 4个单元，速率是FP32的1/32，Maxwell几乎放弃了双精度。'],
+  new:['SM划分成4个独立的处理块，每块有自己的调度器和32个CUDA Core，这个结构一直沿用至今', '共享内存独立出来，增加到96KB；L1与纹理缓存合并', 'FP64大幅削减，主打单精度和能效', 'L2增加到3MB'],
+  sources:['NVIDIA GeForce GTX 980 Whitepaper (Maxwell, 2014)', 'Tesla M40 数据手册'],
+  unsure:[]
+},
+{
+  id:'pascal', arch:'Pascal', year:2016, chip:'GP100', product:'Tesla P100 SXM2', process:'16nm', transistors:15.3,
+  smName:'SM', dies:1, gpc:6, tpcPerGpc:5, smPerTpc:2, smEnabled:56,
+  parts:2, part:{fp32:32, int32:0, fp64:16, tc:0, ldst:8, sfu:8}, smExtra:{},
+  tcGen:0, tcFma:0, regKB:256, maxThreads:2048,
+  mem1:[{name:'共享内存', kb:64, cls:'smem'}, {name:'L1 / 纹理缓存', kb:48, cls:'l1', unsure:true}],
+  l2MB:4, mem:{type:'HBM2', n:4, on:4, kind:'hbm', gb:16, bw:732},
+  link:{name:'NVLink 1.0 ×4', bw:160}, clock:1.48,
+  perf:{fp32:10.6, fp64:5.3, fp16:21.2, fp16NoTc:true, low:null}, tdp:300,
+  notes:['GP100的SM变小了：只有2个处理块、64个CUDA Core，但寄存器总量不变，每个线程能分到的寄存器更多。', 'FP16由CUDA Core以两倍速率计算，还没有Tensor Core。'],
+  new:['第一次使用HBM2显存，带宽从288GB/s跃升到732GB/s', '第一次使用NVLink，多卡之间不再只靠PCIe', 'FP16以两倍FP32的速率计算，开始照顾深度学习', 'SM缩小为2个处理块，SM数量增加到60个（P100启用56个）', '统一内存支持按需页迁移'],
+  sources:['NVIDIA Tesla P100 Whitepaper (2016)'],
+  unsure:['mem1']
+},
+{
+  id:'volta', arch:'Volta', year:2017, chip:'GV100', product:'Tesla V100 SXM2', process:'12nm', transistors:21.1,
+  smName:'SM', dies:1, gpc:6, tpcPerGpc:7, smPerTpc:2, smEnabled:80,
+  parts:4, part:{fp32:16, int32:16, fp64:8, tc:2, ldst:8, sfu:4}, smExtra:{},
+  tcGen:1, tcFma:64, regKB:256, maxThreads:2048,
+  mem1:[{name:'L1 / 共享内存', kb:128, cls:'smem'}],
+  l2MB:6, mem:{type:'HBM2', n:4, on:4, kind:'hbm', gb:16, bw:900},
+  link:{name:'NVLink 2.0 ×6', bw:300}, clock:1.53,
+  perf:{fp32:15.7, fp64:7.8, fp16:125, low:null}, tdp:300,
+  notes:['每个Tensor Core每周期完成一次4×4×4的矩阵乘加，即64次FP16乘加。'],
+  new:['第一代Tensor Core：每SM 8个，FP16矩阵乘法达到125TFLOPS，是FP32的8倍', 'INT32单元与FP32单元分开，整数运算和浮点运算可以同时执行', '独立线程调度：warp里的每个线程有自己的程序计数器', 'L1与共享内存重新合并为128KB', 'NVLink 2.0'],
+  sources:['NVIDIA Tesla V100 GPU Architecture Whitepaper (2017)'],
+  unsure:[]
+},
+{
+  id:'turing', arch:'Turing', year:2018, chip:'TU104', product:'T4', process:'12nm', transistors:13.6,
+  smName:'SM', dies:1, gpc:6, tpcPerGpc:4, smPerTpc:2, smEnabled:40,
+  parts:4, part:{fp32:16, int32:16, fp64:0, tc:2, ldst:4, sfu:4}, smExtra:{fp64:2},
+  tcGen:2, tcFma:64, regKB:256, maxThreads:1024,
+  mem1:[{name:'L1 / 共享内存', kb:96, cls:'smem'}],
+  l2MB:4, mem:{type:'GDDR6', n:8, on:8, kind:'gddr', gb:16, bw:320},
+  link:{name:'PCIe 3.0 x16', bw:16}, clock:1.59,
+  perf:{fp32:8.1, fp64:0.25, fp16:65, low:130, lowName:'INT8'}, tdp:70,
+  notes:['T4是本书的实验卡。它是面向推理的70W小卡，选用的是中端芯片TU104，所以各项指标比V100低。', '每SM只有2个FP64单元，速率是FP32的1/32。', '每个SM还有一个光线追踪用的RT Core，与计算无关，图中未画出。'],
+  new:['第二代Tensor Core，新增INT8和INT4，面向推理', '改用GDDR6显存', '数据中心产品线第一次出现低功耗推理卡（70W）', '每SM最多驻留1024个线程，比Volta减半'],
+  sources:['NVIDIA Turing GPU Architecture Whitepaper (2018)', 'NVIDIA T4 数据手册'],
+  unsure:[]
+},
+{
+  id:'ampere', arch:'Ampere', year:2020, chip:'GA100', product:'A100 SXM4 80GB', process:'7nm', transistors:54.2,
+  smName:'SM', dies:1, gpc:8, tpcPerGpc:8, smPerTpc:2, smEnabled:108,
+  parts:4, part:{fp32:16, int32:16, fp64:8, tc:1, ldst:8, sfu:4}, smExtra:{},
+  tcGen:3, tcFma:256, regKB:256, maxThreads:2048,
+  mem1:[{name:'L1 / 共享内存', kb:192, cls:'smem'}],
+  l2MB:40, mem:{type:'HBM2e', n:6, on:5, kind:'hbm', gb:80, bw:2039},
+  link:{name:'NVLink 3.0 ×12', bw:600}, clock:1.41,
+  perf:{fp32:19.5, fp64:9.7, fp16:312, low:624, lowName:'INT8'}, tdp:400,
+  notes:['每个处理块的Tensor Core从2个减为1个，但单个Tensor Core的吞吐提高到4倍，每周期256次FP16乘加。', 'A100的L2是40MB，完整的GA100是48MB；6个HBM位置只启用了5个。'],
+  new:['第三代Tensor Core：新增TF32、BF16和FP64，支持2:4结构化稀疏', '异步拷贝（cp.async）：全局内存可以绕过寄存器直接写入共享内存', 'L1/共享内存增加到192KB，L2猛增到40MB', 'MIG：一块GPU可以切分成最多7个独立实例', 'NVLink 3.0，带宽600GB/s'],
+  sources:['NVIDIA A100 Tensor Core GPU Architecture Whitepaper (2020)'],
+  unsure:[]
+},
+{
+  id:'hopper', arch:'Hopper', year:2022, chip:'GH100', product:'H100 SXM5', process:'4N', transistors:80,
+  smName:'SM', dies:1, gpc:8, tpcPerGpc:9, smPerTpc:2, smEnabled:132,
+  parts:4, part:{fp32:32, int32:16, fp64:16, tc:1, ldst:8, sfu:4}, smExtra:{},
+  tcGen:4, tcFma:512, regKB:256, maxThreads:2048,
+  mem1:[{name:'L1 / 共享内存', kb:256, cls:'smem'}],
+  l2MB:50, mem:{type:'HBM3', n:6, on:5, kind:'hbm', gb:80, bw:3350},
+  link:{name:'NVLink 4.0 ×18', bw:900}, clock:1.98,
+  perf:{fp32:67, fp64:34, fp16:989, low:1979, lowName:'FP8'}, tdp:700,
+  notes:['每个处理块的FP32单元翻倍到32个，Tensor Core吞吐再翻倍，每周期512次FP16乘加。', 'H100 SXM5的L2是50MB，完整的GH100是60MB；6个HBM位置只启用了5个。'],
+  new:['第四代Tensor Core：新增FP8，配合Transformer Engine自动选择精度', 'TMA（Tensor Memory Accelerator）：用一条指令搬运整块张量', '线程块簇与分布式共享内存：同一个GPC里的SM可以互相读写共享内存', 'warpgroup级的矩阵乘法指令WGMMA', 'HBM3显存，带宽3.35TB/s；NVLink 4.0，带宽900GB/s'],
+  sources:['NVIDIA H100 Tensor Core GPU Architecture Whitepaper (2022)', 'H100 数据手册'],
+  unsure:[]
+},
+{
+  id:'blackwell', arch:'Blackwell', year:2024, chip:'GB100 ×2', product:'B200', process:'4NP', transistors:208,
+  smName:'SM', dies:2, gpc:8, tpcPerGpc:10, smPerTpc:2, smEnabled:148,
+  parts:4, part:{fp32:32, int32:16, fp64:16, tc:1, ldst:8, sfu:4}, smExtra:{},
+  tcGen:5, tcFma:1024, regKB:256, maxThreads:2048,
+  mem1:[{name:'L1 / 共享内存', kb:256, cls:'smem', unsure:true}, {name:'Tensor Memory', kb:256, cls:'tmem'}],
+  l2MB:126, mem:{type:'HBM3e', n:8, on:8, kind:'hbm', gb:192, bw:8000},
+  link:{name:'NVLink 5.0 ×18', bw:1800}, clock:null,
+  perf:{fp32:75, fp64:37, fp16:2250, low:9000, lowName:'FP4'}, tdp:1000,
+  notes:['B200由两颗GB100裸片封装而成，两颗之间以10TB/s的NV-HBI相连，对软件表现为一块GPU。', 'NVIDIA没有发布Blackwell数据中心芯片的完整白皮书，SM内部的单元数、完整芯片的SM数、L2大小都来自第三方资料，以虚线标出。', '新增的Tensor Memory（TMEM）专门存放Tensor Core的累加结果，每SM 256KB。'],
+  new:['两颗裸片封装成一块GPU，晶体管数达到2080亿', '第五代Tensor Core：新增FP4和FP6，支持微缩放格式（MXFP）', 'Tensor Memory：每SM 256KB，存放矩阵乘法的累加结果，减轻寄存器压力', 'tcgen05指令：两个SM可以合作完成一次矩阵乘法', 'HBM3e显存，带宽8TB/s；NVLink 5.0，带宽1.8TB/s'],
+  sources:['NVIDIA Blackwell Architecture Technical Brief (2024)', 'HGX B200 规格', '第三方微基准测试与拆解资料'],
+  unsure:['part','tcFma','l2MB','fp32','fp64','gpc','tpcPerGpc','mem1','clock']
+}
+];
+
+// ===================== 派生量与格式化 =====================
+const sumPart = g => Object.fromEntries(['fp32','int32','fp64','tc','ldst','sfu'].map(k => [k, g.part[k] * g.parts + (g.smExtra[k] || 0)]));
+const smFull = g => g.gpc * g.tpcPerGpc * g.smPerTpc;
+const fmt = (v, d = 1) => v == null ? '—' : (Math.abs(v) >= 100 ? String(Math.round(v)) : (+v.toFixed(d)).toString());
+const fp = v => v == null ? '—' : fmt(v, v < 0.1 ? 3 : v < 10 ? 2 : 1);   // 算力：小数字多保留几位
+const tf = v => v == null ? '—' : (v >= 1000 ? (+(v / 1000).toFixed(2)) + ' P' : fmt(v) + ' T');
+const kb = v => v >= 1024 ? (+(v / 1024).toFixed(1)) + 'MB' : v + 'KB';
+const mb = v => v == null ? '无' : v < 1 ? (v * 1024) + 'KB' : v + 'MB';
+const bw = v => v >= 1000 ? (+(v / 1000).toFixed(2)) + ' TB/s' : v + ' GB/s';
+
+// 参数表的行：[名称, 取值函数(返回数值或null), 显示函数, 不确定字段名]
+const ROWS = [
+  ['年份', g => g.year, g => g.year],
+  ['产品', null, g => g.product],
+  ['芯片', null, g => g.chip],
+  ['工艺', null, g => g.process],
+  ['晶体管（亿）', g => g.transistors, g => fmt(g.transistors * 10, 0)],
+  ['SM数（启用 / 完整）', g => g.smEnabled, g => `${g.smEnabled} / ${smFull(g)}`, 'gpc'],
+  ['FP32单元 / SM', g => sumPart(g).fp32, g => sumPart(g).fp32, 'part'],
+  ['FP64单元 / SM', g => sumPart(g).fp64, g => sumPart(g).fp64 || '（由FP32完成）', 'part'],
+  ['Tensor Core / SM', g => sumPart(g).tc, g => g.tcGen ? `${sumPart(g).tc}（第${g.tcGen}代）` : '—'],
+  ['每个TC每周期FP16乘加', g => g.tcFma || null, g => g.tcFma || '—', 'tcFma'],
+  ['寄存器 / SM', g => g.regKB, g => kb(g.regKB)],
+  ['L1+共享内存 / SM', g => g.mem1[0].kb, g => g.mem1.map(m => kb(m.kb)).join(' + '), 'mem1'],
+  ['最大常驻线程 / SM', g => g.maxThreads, g => g.maxThreads],
+  ['L2缓存', g => g.l2MB, g => mb(g.l2MB), 'l2MB'],
+  ['最高主频（GHz）', g => g.clock, g => g.clock ?? '未公开', 'clock'],
+  ['FP32（TFLOPS）', g => g.perf.fp32, g => fp(g.perf.fp32), 'fp32'],
+  ['FP64（TFLOPS）', g => g.perf.fp64, g => fp(g.perf.fp64), 'fp64'],
+  ['FP16 Tensor（TFLOPS，稠密）', g => g.perf.fp16NoTc ? null : g.perf.fp16, g => g.perf.fp16 == null ? '—' : (fmt(g.perf.fp16) + (g.perf.fp16NoTc ? '（非TC）' : ''))],
+  ['最低精度Tensor（稠密）', g => g.perf.low, g => g.perf.low == null ? '—' : `${tf(g.perf.low)}（${g.perf.lowName}）`],
+  ['显存', g => g.mem.gb, g => `${g.mem.gb}GB ${g.mem.type}`],
+  ['显存带宽', g => g.mem.bw, g => bw(g.mem.bw)],
+  ['FP32拐点（FLOP/字节）', g => g.perf.fp32 * 1000 / g.mem.bw, g => fmt(g.perf.fp32 * 1000 / g.mem.bw), 'fp32'],
+  ['Tensor拐点（FLOP/字节）', g => g.perf.fp16 && !g.perf.fp16NoTc ? g.perf.fp16 * 1000 / g.mem.bw : null, g => g.perf.fp16 && !g.perf.fp16NoTc ? fmt(g.perf.fp16 * 1000 / g.mem.bw, 0) : '—'],
+  ['互连', g => g.link.bw, g => `${g.link.name}，${bw(g.link.bw)}`],
+  ['功耗', g => g.tdp, g => g.tdp + 'W'],
+];
+
+// ===================== 一个小的带补间动画的SVG渲染器 =====================
+// 每个图元有唯一的key；切换时，同key的图元平滑移动到新位置，新出现的淡入，消失的淡出。
+const NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('svg');
+const nodes = new Map();       // key -> {el, a}
+const tweens = new Map();      // el -> {from, to}
+let tweenStart = 0, rafId = 0;
+const DUR = 480;
+const NUM = new Set(['x','y','width','height','x1','y1','x2','y2','rx','opacity']);
+
+function draw(list, viewH, prevKeys, animate) {
+  svg.setAttribute('viewBox', `0 0 860 ${viewH}`);
+  const seen = new Set();
+  for (const [el, tw] of tweens) if (tw.remove) el.remove();   // 上一次还没淡出完的图元直接删掉
+  tweens.clear();
+  for (const s of list) {
+    seen.add(s.k);
+    let n = nodes.get(s.k);
+    const isNew = !n;
+    if (isNew) {
+      const el = document.createElementNS(NS, s.t);
+      n = {el, a:{}};
+      nodes.set(s.k, n);
+      for (const [k, v] of Object.entries(s.a)) el.setAttribute(k, v);
+      n.a = {...s.a};
+      if (animate) { el.setAttribute('opacity', 0); tweens.set(el, {from:{opacity:0}, to:{opacity:s.a.opacity ?? 1}, n}); }
+    } else {
+      const from = {}, to = {};
+      for (const [k, v] of Object.entries(s.a)) {
+        if (NUM.has(k) && animate && typeof v === 'number' && typeof n.a[k] === 'number' && n.a[k] !== v) { from[k] = n.a[k]; to[k] = v; }
+        else n.el.setAttribute(k, v);
+      }
+      if (n.el.getAttribute('opacity') !== null && s.a.opacity === undefined) {
+        if (animate) { from.opacity = +n.el.getAttribute('opacity'); to.opacity = 1; } else n.el.removeAttribute('opacity');
+      }
+      for (const k of Object.keys(n.a)) if (!(k in s.a) && k !== 'opacity') n.el.removeAttribute(k);
+      if (Object.keys(to).length) tweens.set(n.el, {from, to, n});
+      n.a = {...s.a};
+    }
+    const el = n.el;
+    if (s.txt !== undefined) {
+      const old = el.textContent;
+      el.textContent = s.txt;
+      el.classList.toggle('chg', !!(s.hlText && prevKeys && !isNew && old !== s.txt));
+    }
+    el.classList.toggle('new', !!(s.hl && prevKeys && !prevKeys.has(s.k)));
+    if (s.tip) el.dataset.tip = s.tip; else delete el.dataset.tip;
+    svg.appendChild(el);   // 按列表顺序重排，保证遮挡关系
+  }
+  for (const [k, n] of nodes) {
+    if (seen.has(k)) continue;
+    nodes.delete(k);
+    if (animate) tweens.set(n.el, {from:{opacity:+(n.el.getAttribute('opacity') ?? 1)}, to:{opacity:0}, remove:true});
+    else n.el.remove();
+  }
+  cancelAnimationFrame(rafId);
+  if (animate && tweens.size) { tweenStart = performance.now(); rafId = requestAnimationFrame(step); }
+  return seen;
+}
+function step(now) {
+  const t = Math.min(1, (now - tweenStart) / DUR);
+  const e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  for (const [el, tw] of tweens) for (const k in tw.to) el.setAttribute(k, tw.from[k] + (tw.to[k] - tw.from[k]) * e);
+  if (t < 1) rafId = requestAnimationFrame(step);
+  else for (const [el, tw] of tweens) { if (tw.remove) el.remove(); else if (tw.to.opacity === 1) el.removeAttribute('opacity'); }
+}
+
+// 图元构造的小工具
+const R = (k, x, y, w, h, fill, o = {}) => ({k, t:'rect', a:{x, y, width:w, height:h, rx:o.rx ?? 2, fill, stroke:o.stroke ?? 'none', 'stroke-width':o.sw ?? 1, ...(o.dash ? {'stroke-dasharray':o.dash} : {})}, hl:o.hl, tip:o.tip});
+const T = (k, x, y, txt, cls = 'lbl', o = {}) => ({k, t:'text', a:{x, y, class:cls, 'text-anchor':o.anchor ?? 'start', ...(o.fill ? {fill:o.fill} : {})}, txt, hlText:o.hlText ?? true, tip:o.tip});
+const V = n => `var(--${n})`;
+
+// ===================== SM视图 =====================
+const UNIT = [
+  ['fp32', 'FP32单元（CUDA Core）'], ['int32', 'INT32单元'], ['fp64', 'FP64单元'], ['ldst', 'LD/ST 访存单元'], ['sfu', 'SFU 特殊函数单元'],
+];
+const SHORT = {fp32:'FP32', int32:'INT32', fp64:'FP64', ldst:'LD/ST', sfu:'SFU'};
+const TIPS = {
+  fp32:'FP32单元，NVIDIA称之为CUDA Core。每周期完成一次单精度乘加。',
+  int32:'INT32单元。从Volta开始独立出来，整数运算（如地址计算）可以和浮点运算同时进行。',
+  fp64:'FP64单元，做双精度运算。科学计算需要它，AI几乎不用。',
+  ldst:'LD/ST单元，负责发出访存指令。',
+  sfu:'SFU，计算sin、cos、exp、倒数平方根等超越函数。',
+  tc:'Tensor Core，每周期完成一次小矩阵乘加。方块越宽，单个Tensor Core的吞吐越高。',
+  reg:'寄存器文件。每个线程的寄存器都在这里，切换warp时不用保存和恢复。',
+  sched:'warp调度器与分发单元：每周期从就绪的warp中挑一个，把它的下一条指令发出去。',
+  smem:'L1缓存与共享内存共用的片上SRAM。共享内存由程序员显式管理。',
+  l1:'由硬件管理的缓存。',
+  tmem:'Tensor Memory：Blackwell新增，专门存放Tensor Core的累加结果。',
+  icache:'指令缓存。',
+};
+
+function smScene(g) {
+  const out = [];
+  const W = 860, pad = 16, cell = 11, gap = 2, perRow = 16;
+  const cols = 2, pw = (W - pad * 2 - 16 - 12) / cols;   // 分区宽度
+  const rowsOf = n => Math.ceil(n / perRow);
+  // 分区内部的高度，取决于单元数
+  const unitRows = UNIT.reduce((s, [k]) => s + (g.part[k] ? rowsOf(g.part[k]) : 0), 0);
+  const tcH = g.part.tc ? 34 : 0;
+  const ph = 12 + 20 + 6 + 18 + 10 + unitRows * (cell + gap) + (UNIT.filter(([k]) => g.part[k]).length) * 6 + (tcH ? tcH + 8 : 0) + 8;
+  const prow = Math.ceil(g.parts / cols);
+  const smX = pad, smY = 34, smW = W - pad * 2;
+  const icY = smY + 28;
+  const pY0 = icY + 26;
+  const sharedY = pY0 + prow * (ph + 12);
+  const extraN = Object.values(g.smExtra).reduce((a, b) => a + b, 0);
+  const sharedH = (extraN ? 30 : 0) + g.mem1.length * 30 + 12;
+  const smH = sharedY - smY + sharedH;
+
+  out.push(T('title', pad, 22, `${g.arch}的一个${g.smName}（${g.chip}）${g.unsure.includes('part') ? '　执行单元数待核实' : ''}`, 'big', {hlText:false}));
+  out.push(R('smbox', smX, smY, smW, smH, V('box2'), {rx:8, stroke:V('stroke')}));
+  out.push(T('smname', smX + 12, smY + 18, g.smName, 'sm-lbl', {hlText:false}));
+  out.push(R('icache', smX + 12, icY, smW - 24, 18, V('faint'), {stroke:V('stroke'), tip:TIPS.icache}));
+  out.push(T('icache-t', smX + smW / 2, icY + 13, '指令缓存', 'sm-lbl', {anchor:'middle', hlText:false}));
+
+  const inner = pw - 20;
+  for (let p = 0; p < g.parts; p++) {
+    const px = smX + 12 + (p % cols) * (pw + 12);
+    const py = pY0 + Math.floor(p / cols) * (ph + 12);
+    out.push(R(`p${p}`, px, py, pw, ph, V('box'), {rx:6, stroke:V('stroke'), hl:true}));
+    let y = py + 10;
+    out.push(R(`p${p}-sched`, px + 10, y, inner, 20, V('faint'), {stroke:V('stroke'), tip:TIPS.sched}));
+    out.push(T(`p${p}-sched-t`, px + 10 + inner / 2, y + 14, `Warp调度器 + 分发单元${g.parts === 4 ? '' : ''}`, 'sm-lbl', {anchor:'middle', hlText:false}));
+    y += 26;
+    const regPart = g.regKB / g.parts;
+    const rw = inner * Math.min(1, regPart / 128);
+    out.push(R(`p${p}-reg`, px + 10, y, rw, 18, V('reg'), {tip:TIPS.reg}));
+    out.push(T(`p${p}-reg-t`, px + 14, y + 13, `寄存器 ${kb(regPart)}`, 'sm-lbl'));
+    y += 28;
+    for (const [k] of UNIT) {
+      const n = g.part[k];
+      if (!n) continue;
+      for (let i = 0; i < n; i++) {
+        const ux = px + 10 + (i % perRow) * (cell + gap), uy = y + Math.floor(i / perRow) * (cell + gap);
+        out.push(R(`p${p}-${k}-${i}`, ux, uy, cell, cell, V(k), {hl:true, tip:TIPS[k]}));
+      }
+      out.push(T(`p${p}-${k}-n`, px + 10 + perRow * (cell + gap) + 4, y + 9, `${SHORT[k]} ×${n}`, 'sm-lbl'));
+      y += rowsOf(n) * (cell + gap) + 6;
+    }
+    if (g.part.tc) {
+      const tw = 30 + 12 * Math.log2(g.tcFma / 64);
+      y += 2;
+      for (let i = 0; i < g.part.tc; i++) {
+        const tx = px + 10 + i * (tw + 8);
+        out.push(R(`p${p}-tc-${i}`, tx, y, tw, tcH, V('tc'), {rx:4, hl:true, tip:TIPS.tc}));
+        out.push(T(`p${p}-tc-${i}-t`, tx + tw / 2, y + 21, 'TC', 'lbl', {anchor:'middle', fill:'#fff', hlText:false}));
+      }
+      out.push(T(`p${p}-tc-n`, px + 10 + g.part.tc * (tw + 8) + 2, y + 15, `第${g.tcGen}代 Tensor Core`, 'sm-lbl'));
+      out.push(T(`p${p}-tc-f`, px + 10 + g.part.tc * (tw + 8) + 2, y + 29, `每个每周期 ${g.tcFma} 次FP16乘加${g.unsure.includes('tcFma') ? '（待核实）' : ''}`, 'sm-lbl'));
+    }
+  }
+  // SM级共享的部分
+  let y = sharedY;
+  if (extraN) {
+    let x = smX + 12;
+    for (const [k, n] of Object.entries(g.smExtra)) {
+      for (let i = 0; i < n; i++) out.push(R(`sx-${k}-${i}`, x + i * (cell + gap), y + 4, cell, cell, V(k), {hl:true, tip:TIPS[k]}));
+      out.push(T(`sx-${k}-t`, x + n * (cell + gap) + 4, y + 13, `整个${g.smName}共享 ${n} 个${UNIT.find(u => u[0] === k)[1]}`, 'sm-lbl'));
+      x += 260;
+    }
+    y += 30;
+  }
+  const full = smW - 24;
+  g.mem1.forEach((m, i) => {
+    const w = Math.max(110, full * Math.min(1, m.kb / 256));
+    out.push(R(`m1-${m.cls}`, smX + 12, y, w, 22, V(m.cls), {stroke:V('stroke'), hl:true, tip:TIPS[m.cls]}));
+    out.push(T(`m1-${m.cls}-t`, smX + 20, y + 15, `${m.name} ${kb(m.kb)}${m.unsure ? '（待核实）' : ''}`, 'lbl'));
+    y += 30;
+  });
+  out.push(T('scale', smX + smW - 12, y + 2, '存储条的长度按容量画，满宽为256KB', 'sm-lbl', {anchor:'end', hlText:false}));
+  return {list:out, h:smY + smH + 24};
+}
+
+// ===================== 整芯片视图 =====================
+function chipScene(g) {
+  const out = [];
+  const W = 860, pad = 16;
+  const full = smFull(g), off = full - g.smEnabled;
+  // 屏蔽的SM：从各GPC的末尾轮流去掉，只为示意数量
+  const perGpc = g.tpcPerGpc * g.smPerTpc;
+  const disabled = new Set();
+  for (let i = 0, gi = g.gpc - 1, slot = perGpc - 1; i < off; i++) {
+    disabled.add(`${gi}-${slot}`);
+    gi--; if (gi < 0) { gi = g.gpc - 1; slot--; }
+  }
+  const gpcPerDie = g.gpc / g.dies;
+  const topN = Math.ceil(gpcPerDie / 2), botN = gpcPerDie - topN;
+  const memW = 46;
+  const dieGap = g.dies > 1 ? 30 : 0;
+  const dieW = (W - pad * 2 - dieGap * (g.dies - 1)) / g.dies;
+  const coreX0 = memW + 10, coreW = dieW - (memW + 10) * 2;
+  const gw = (coreW - (topN - 1) * 8) / topN;
+  // GPC内部SM的排布
+  const smCols = Math.max(2, Math.ceil(Math.sqrt(perGpc * gw / 120)));
+  const smRows = Math.ceil(perGpc / smCols);
+  const sc = Math.min(18, (gw - 16 - (smCols - 1) * 3) / smCols);
+  const gh = 26 + smRows * (sc + 3) + 8;
+  const y0 = 40, l2H = 30;
+  const dieH = gh * 2 + l2H + 32;
+  out.push(T('title', pad, 22, `${g.chip}整芯片（${g.product}启用 ${g.smEnabled} / ${full} 个${g.smName}）`, 'big', {hlText:false}));
+
+  let smi = 0;
+  for (let d = 0; d < g.dies; d++) {
+    const dx = pad + d * (dieW + dieGap);
+    out.push(R(`die${d}`, dx, y0, dieW, dieH, V('box2'), {rx:8, stroke:V('stroke')}));
+    for (let gi = 0; gi < gpcPerDie; gi++) {
+      const G = d * gpcPerDie + gi;
+      const top = gi < topN;
+      const col = top ? gi : gi - topN;
+      const n = top ? topN : botN;
+      const gw2 = (coreW - (n - 1) * 8) / n;
+      const gx = dx + coreX0 + col * (gw2 + 8);
+      const gy = top ? y0 + 10 : y0 + 10 + gh + 6 + l2H + 6;
+      out.push(R(`gpc${G}`, gx, gy, gw2, gh, V('box'), {rx:5, stroke:V('stroke'), hl:true}));
+      out.push(T(`gpc${G}-t`, gx + 6, gy + 15, `${g.gpcName || 'GPC'} ${G}`, 'sm-lbl', {hlText:false}));
+      for (let s = 0; s < perGpc; s++) {
+        const sx = gx + 8 + (s % smCols) * (sc + 3);
+        const sy = gy + 22 + Math.floor(s / smCols) * (sc + 3);
+        const isOff = disabled.has(`${G}-${s}`);
+        out.push(R(`sm${G}-${s}`, sx, sy, sc, sc, isOff ? 'none' : V('fp32'),
+          {rx:2, stroke:isOff ? V('muted') : 'none', dash:isOff ? '2 2' : null, hl:!isOff,
+           tip:isOff ? '这个位置的SM在该产品中被屏蔽（为了提高良率）' : `一个${g.smName}，内部结构见“SM结构”视图`}));
+        smi++;
+      }
+    }
+    // L2
+    const l2y = y0 + 10 + gh + 6;
+    out.push(R(`l2-${d}`, dx + coreX0, l2y, coreW, l2H, g.l2MB == null ? 'none' : V('l2'), {rx:4, stroke:g.l2MB == null ? V('muted') : V('stroke'), dash:g.l2MB == null ? '3 2' : null, tip:g.l2MB == null ? '这一代还没有L2缓存，只有纹理缓存' : 'L2缓存，所有SM共享'}));
+    out.push(T(`l2-${d}-t`, dx + coreX0 + coreW / 2, l2y + 19,
+      g.dies > 1 ? `L2缓存（两颗裸片合计约${g.l2MB}MB，待核实）` : (g.l2MB == null ? '没有L2缓存（只有纹理缓存）' : `L2缓存 ${mb(g.l2MB)}`), 'lbl', {anchor:'middle'}));
+    // 显存：左右两侧
+    const nPer = g.mem.n / g.dies;
+    for (let m = 0; m < nPer; m++) {
+      const M = d * nPer + m;
+      const left = m < Math.ceil(nPer / 2);
+      const k = left ? m : m - Math.ceil(nPer / 2);
+      const cnt = left ? Math.ceil(nPer / 2) : nPer - Math.ceil(nPer / 2);
+      const mh = (dieH - 20 - (cnt - 1) * 6) / cnt;
+      const mx = left ? dx + 6 : dx + dieW - 6 - memW;
+      const my = y0 + 10 + k * (mh + 6);
+      const on = M < g.mem.on;
+      const hbm = g.mem.kind === 'hbm';
+      out.push(R(`mem${M}`, mx, my, memW, mh, on ? V('mem') : 'none',
+        {rx:hbm ? 6 : 3, stroke:on ? V('stroke') : V('muted'), dash:on ? null : '3 2', hl:true,
+         tip:hbm ? 'HBM：与GPU封装在一起的堆叠式显存' : 'GDDR：焊在电路板上的显存颗粒，每个控制器32或64位宽'}));
+      out.push(T(`mem${M}-t`, mx + memW / 2, my + mh / 2 + 4, on ? g.mem.type : '未启用', 'sm-lbl', {anchor:'middle'}));
+    }
+  }
+  if (g.dies > 1) {
+    const lx = pad + dieW, ly = y0 + dieH / 2 - 20;
+    out.push(R('hbi', lx + 2, ly, dieGap - 4, 40, V('link'), {rx:3, stroke:V('stroke'), tip:'NV-HBI：两颗裸片之间10TB/s的互连'}));
+    out.push(T('hbi-t', lx + dieGap / 2, ly + 56, 'NV-HBI', 'sm-lbl', {anchor:'middle'}));
+  }
+  // 互连
+  const ly = y0 + dieH + 14;
+  out.push(R('link', pad, ly, W - pad * 2, 26, V('link'), {rx:4, stroke:V('stroke'), tip:'GPU与主机、与其他GPU之间的连接'}));
+  out.push(T('link-t', W / 2, ly + 18, `对外互连：${g.link.name}，${bw(g.link.bw)}　　显存：${g.mem.gb}GB ${g.mem.type}，${bw(g.mem.bw)}`, 'lbl', {anchor:'middle'}));
+  return {list:out, h:ly + 44};
+}
+
+// ===================== 页面状态与交互 =====================
+let cur = 4, view = 'sm', prevKeys = null, lastScene = null;
+const $ = id => document.getElementById(id);
+
+function legend() {
+  const items = view === 'sm'
+    ? [['fp32','FP32（CUDA Core）'],['int32','INT32'],['fp64','FP64'],['ldst','LD/ST'],['sfu','SFU'],['tc','Tensor Core'],['reg','寄存器'],['smem','L1/共享内存'],['tmem','Tensor Memory']]
+    : [['fp32','启用的SM'],['l2','L2缓存'],['mem','显存'],['link','互连']];
+  $('legend').innerHTML = items.map(([c, n]) => `<span><i style="background:var(--${c})"></i>${n}</span>`).join('')
+    + `<span><i style="background:none;border:2px solid var(--new)"></i>相对上一代新增</span>`
+    + (view === 'chip' ? `<span><i style="background:none;border:1px dashed var(--muted)"></i>未启用</span>` : '');
+}
+
+function render(animate) {
+  const g = GENS[cur];
+  const scene = view === 'sm' ? smScene(g) : chipScene(g);
+  const hlOn = $('hl').checked;
+  // 高亮的基准是上一代：用上一代的场景键集合判断哪些是新的
+  let base = null;
+  if (hlOn && cur > 0) {
+    const pg = GENS[cur - 1];
+    base = new Set((view === 'sm' ? smScene(pg) : chipScene(pg)).list.map(s => s.k));
+  }
+  // 文本变化也以上一代为准：先静默画一遍上一代的文本
+  if (hlOn && cur > 0) {
+    const pscene = view === 'sm' ? smScene(GENS[cur - 1]) : chipScene(GENS[cur - 1]);
+    const ptxt = new Map(pscene.list.filter(s => s.txt !== undefined).map(s => [s.k, s.txt]));
+    scene.list.forEach(s => { if (s.txt !== undefined) s.prevTxt = ptxt.get(s.k); });
+  }
+  draw(scene.list, scene.h, base, animate);
+  // 根据上一代修正文本高亮
+  for (const s of scene.list) {
+    if (s.txt === undefined) continue;
+    const el = nodes.get(s.k).el;
+    el.classList.toggle('chg', !!(hlOn && s.hlText && s.prevTxt !== undefined && s.prevTxt !== s.txt));
+  }
+  if (!hlOn || cur === 0) for (const n of nodes.values()) n.el.classList.remove('new', 'chg');
+  lastScene = scene;
+  legend();
+  $('vnote').textContent = view === 'sm'
+    ? 'SM内部按处理块（分区）画出，每个小方块是一个执行单元。数据来自各代白皮书，Blackwell的部分数字待核实。'
+    : '示意图，只表示数量和连接关系，不代表实际的芯片布局。具体哪几个SM被屏蔽因芯片而异。';
+  side(g);
+  table();
+  document.querySelectorAll('.tl').forEach((b, i) => b.classList.toggle('on', i === cur));
+  $('prev').disabled = cur === 0; $('next').disabled = cur === GENS.length - 1;
+  try { localStorage.setItem('gpu-arch', JSON.stringify({cur, view})); } catch (e) {}
+}
+
+function delta(row, g, pg) {
+  if (!pg || !row[1]) return '';
+  const a = row[1](pg), b = row[1](g);
+  if (a == null || b == null || a === b || row[0] === '年份') return '';
+  const r = b / a;
+  const txt = r >= 1.995 ? `×${+r.toFixed(r >= 10 ? 0 : 1)}` : (r >= 1 ? `+${Math.round((r - 1) * 100)}%` : `${Math.round((r - 1) * 100)}%`);
+  return `<span class="d ${r >= 1 ? 'up' : 'down'}">${txt}</span>`;
+}
+const cellVal = (row, g) => {
+  const v = row[2](g);
+  const un = row[3] && g.unsure.includes(row[3]);
+  return un ? `<span class="unsure" title="没有在官方资料中找到明确数字，待核实">${v}</span>` : v;
+};
+
+function side(g) {
+  const pg = GENS[cur - 1];
+  const pick = ['SM数（启用 / 完整）','FP32单元 / SM','Tensor Core / SM','每个TC每周期FP16乘加','L1+共享内存 / SM','L2缓存','FP32（TFLOPS）','FP16 Tensor（TFLOPS，稠密）','最低精度Tensor（稠密）','显存带宽','Tensor拐点（FLOP/字节）','互连','功耗'];
+  const rows = ROWS.filter(r => pick.includes(r[0]));
+  $('side').innerHTML = `
+    <h2>${g.arch}</h2>
+    <div class="meta">${g.year}年 · ${g.product} · ${g.chip} · ${g.process} · ${fmt(g.transistors * 10, 0)}亿晶体管</div>
+    <h3>${cur ? '相对' + pg.arch + '的主要变化' : '主要特点'}</h3>
+    <ul>${g.new.map(s => `<li>${s}</li>`).join('')}</ul>
+    <h3>关键参数${cur ? '（右侧为相对上一代的变化）' : ''}</h3>
+    <table class="kv">${rows.map(r => `<tr><td>${r[0]}</td><td>${cellVal(r, g)}${delta(r, g, pg)}</td></tr>`).join('')}</table>
+    <h3>说明</h3>
+    <ul>${g.notes.map(s => `<li>${s}</li>`).join('')}</ul>
+    <h3>资料来源</h3>
+    <ul>${g.sources.map(s => `<li>${s}</li>`).join('')}</ul>`;
+}
+
+function table() {
+  const head = `<tr><th>参数</th>${GENS.map((g, i) => `<th data-i="${i}" class="${i === cur ? 'cur' : ''}">${g.arch}</th>`).join('')}</tr>`;
+  const body = ROWS.map(r => `<tr><td>${r[0]}</td>${GENS.map((g, i) => `<td class="${i === cur ? 'cur' : ''}">${cellVal(r, g)}</td>`).join('')}</tr>`).join('');
+  $('all').innerHTML = head + body;
+}
+
+function go(i) {
+  i = Math.max(0, Math.min(GENS.length - 1, i));
+  if (i === cur) return;
+  cur = i; render(true);
+}
+function setView(v) {
+  if (v === view) return;
+  view = v;
+  document.querySelectorAll('#views button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  cancelAnimationFrame(rafId);
+  tweens.clear();
+  svg.replaceChildren();
+  nodes.clear();
+  render(false);
+}
+
+$('timeline').innerHTML = GENS.map((g, i) => `<button class="tl" data-i="${i}"><b>${g.arch}</b><span>${g.year} · ${g.product.replace('Tesla ', '')}</span></button>`).join('');
+$('timeline').addEventListener('click', e => { const b = e.target.closest('.tl'); if (b) go(+b.dataset.i); });
+$('all').addEventListener('click', e => { const th = e.target.closest('th[data-i]'); if (th) go(+th.dataset.i); });
+$('prev').onclick = () => go(cur - 1);
+$('next').onclick = () => go(cur + 1);
+document.querySelectorAll('#views button').forEach(b => b.onclick = () => setView(b.dataset.v));
+$('hl').onchange = () => render(false);
+document.addEventListener('keydown', e => {
+  if (e.target.closest && e.target.closest('input,select,textarea')) return;
+  if (e.key === 'ArrowLeft') { go(cur - 1); e.preventDefault(); }
+  else if (e.key === 'ArrowRight') { go(cur + 1); e.preventDefault(); }
+  else if (e.key === 'Home') go(0);
+  else if (e.key === 'End') go(GENS.length - 1);
+  else if (e.key === 'Tab') { setView(view === 'sm' ? 'chip' : 'sm'); e.preventDefault(); }
+  else if (e.key === '1') setView('sm');
+  else if (e.key === '2') setView('chip');
+});
+
+// 悬停提示
+const hint = $('hint');
+svg.addEventListener('mousemove', e => {
+  const t = e.target.closest('[data-tip]');
+  if (!t) { hint.style.display = 'none'; return; }
+  const box = $('stage').getBoundingClientRect();
+  hint.textContent = t.dataset.tip;
+  hint.style.display = 'block';
+  const x = Math.min(e.clientX - box.left + 12, box.width - hint.offsetWidth - 8);
+  hint.style.left = x + 'px';
+  hint.style.top = (e.clientY - box.top + 14) + 'px';
+});
+svg.addEventListener('mouseleave', () => hint.style.display = 'none');
+
+// 主题切换
+$('theme').onclick = () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+};
+
+// 导出PNG：把CSS变量换成计算后的颜色，画到canvas上
+$('png').onclick = () => {
+  const clone = svg.cloneNode(true);
+  const cs = getComputedStyle(document.documentElement);
+  const resolve = v => v && v.replace(/var\((--[\w-]+)\)/g, (_, n) => cs.getPropertyValue(n).trim());
+  const src = svg.querySelectorAll('*'), dst = clone.querySelectorAll('*');
+  src.forEach((el, i) => {
+    const s = getComputedStyle(el), d = dst[i];
+    for (const p of ['fill', 'stroke']) { const a = el.getAttribute(p); d.setAttribute(p, a && a.includes('var(') ? resolve(a) : s[p]); }
+    if (el.tagName === 'text') { d.setAttribute('font-size', s.fontSize); d.setAttribute('font-weight', s.fontWeight); d.setAttribute('font-family', s.fontFamily); }
+  });
+  const vb = svg.viewBox.baseVal;
+  clone.setAttribute('width', vb.width); clone.setAttribute('height', vb.height);
+  const bg = document.createElementNS(NS, 'rect');
+  bg.setAttribute('width', '100%'); bg.setAttribute('height', '100%'); bg.setAttribute('fill', cs.getPropertyValue('--panel').trim());
+  clone.insertBefore(bg, clone.firstChild);
+  const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], {type:'image/svg+xml'}));
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = vb.width * 2; c.height = vb.height * 2;
+    const ctx = c.getContext('2d'); ctx.scale(2, 2); ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(url);
+    const a = document.createElement('a');
+    a.download = `gpu-arch-${GENS[cur].id}-${view}.png`;
+    a.href = c.toDataURL('image/png'); a.click();
+  };
+  img.src = url;
+};
+
+try { const s = JSON.parse(localStorage.getItem('gpu-arch')); if (s) { cur = s.cur ?? cur; view = s.view ?? view; } } catch (e) {}
+document.querySelectorAll('#views button').forEach(b => b.classList.toggle('on', b.dataset.v === view));
+render(false);
+</script>
+</body>
+</html>

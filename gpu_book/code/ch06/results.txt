@@ -1,0 +1,82 @@
+# GPU：Tesla T4, 580.82.07, 1590 MHz, 5001 MHz, 70.00 W
+# CUDA：Cuda compilation tools, release 13.0, V13.0.88
+
+## 6.2 block如何分配到SM
+blocks=40  threads=1024   用到40个SM，每个SM分到1～1个block   一个block约1188.0微秒，全部用时1188.1微秒
+    第1轮： 40个block，在第    0.0微秒开始
+blocks=64  threads=1024   用到40个SM，每个SM分到1～2个block   一个block约1005.9微秒，全部用时2027.5微秒
+    第1轮： 40个block，在第    0.0微秒开始
+    第2轮： 24个block，在第  988.8微秒开始
+blocks=160  threads=256   用到40个SM，每个SM分到4～4个block   一个block约570.8微秒，全部用时901.3微秒
+    第1轮：160个block，在第    0.0微秒开始
+blocks=320  threads=256   用到40个SM，每个SM分到8～8个block   一个block约698.4微秒，全部用时1718.0微秒
+    第1轮：200个block，在第    0.0微秒开始
+    第2轮： 80个block，在第  448.3微秒开始
+    第3轮： 40个block，在第  870.0微秒开始
+
+## 6.3 访存延迟
+shared       4KiB     22.0 周期     13.8 纳秒
+global       4KiB     40.0 周期     25.2 纳秒
+global       8KiB     40.0 周期     25.2 纳秒
+global      16KiB     40.0 周期     25.2 纳秒
+global      32KiB     40.0 周期     25.2 纳秒
+global      64KiB    109.9 周期     69.1 纳秒
+global     128KiB    231.8 周期    145.8 纳秒
+global     256KiB    231.8 周期    145.8 纳秒
+global     512KiB    231.7 周期    145.7 纳秒
+global       1MiB    231.6 周期    145.7 纳秒
+global       2MiB    231.7 周期    145.7 纳秒
+global       4MiB    233.4 周期    146.8 纳秒
+global       8MiB    469.0 周期    295.0 纳秒
+global      16MiB    470.8 周期    296.1 纳秒
+global      32MiB    494.7 周期    311.1 纳秒
+global      64MiB    494.6 周期    311.1 纳秒
+
+## 6.3 每个SM的warp数与访存带宽
+read  每个SM  1个warp      17.365 毫秒      15.5 GB/s
+read  每个SM  2个warp       8.732 毫秒      30.7 GB/s
+read  每个SM  4个warp       4.429 毫秒      60.6 GB/s
+read  每个SM  8个warp       2.388 毫秒     112.4 GB/s
+read  每个SM 16个warp       1.447 毫秒     185.6 GB/s
+read  每个SM 32个warp       1.185 毫秒     226.6 GB/s
+
+## 6.3 每个SM的warp数与算力（每个线程一条FMA链）
+fma   每个SM  1个warp       0.184 毫秒     914.1 GFLOPS
+fma   每个SM  2个warp       0.184 毫秒    1827.2 GFLOPS
+fma   每个SM  4个warp       0.184 毫秒    3654.4 GFLOPS
+fma   每个SM  8个warp       0.187 毫秒    7173.0 GFLOPS
+fma   每个SM 16个warp       0.337 毫秒    7959.8 GFLOPS
+fma   每个SM 32个warp       0.669 毫秒    8024.8 GFLOPS
+
+## 6.4 分支分歧
+none      0.339 毫秒     7918.4 GFLOPS（按每个线程做的FMA计）
+warp      0.340 毫秒     7890.1 GFLOPS（按每个线程做的FMA计）
+lane      0.676 毫秒     3972.2 GFLOPS（按每个线程做的FMA计）
+
+## 6.5 SM的上限
+每个SM最多驻留的线程     1024（32个warp）
+每个SM最多驻留的block    16
+每个SM的32位寄存器       65536（256KiB）
+每个SM的共享内存         64KiB
+每个block最多的共享内存  64KiB
+每个线程最多的寄存器     255
+L2 cache                 4096KiB
+warp大小                 32
+
+## 6.5 朴素kernel的occupancy
+naive  block= 8x8   每个线程49个寄存器   每个SM驻留16个block、32个warp   occupancy 100%
+naive  block=16x16  每个线程49个寄存器   每个SM驻留 4个block、32个warp   occupancy 100%
+naive  block=32x32  每个线程49个寄存器   每个SM驻留 1个block、32个warp   occupancy 100%
+
+## 6.5 用共享内存压低occupancy
+smem  每个block  0KiB共享内存   每个SM驻留4个block、32个warp   occupancy 100%     217.4 GB/s
+smem  每个block  8KiB共享内存   每个SM驻留4个block、32个warp   occupancy 100%     217.2 GB/s
+smem  每个block 16KiB共享内存   每个SM驻留4个block、32个warp   occupancy 100%     218.0 GB/s
+smem  每个block 24KiB共享内存   每个SM驻留2个block、16个warp   occupancy  50%     175.0 GB/s
+smem  每个block 32KiB共享内存   每个SM驻留2个block、16个warp   occupancy  50%     174.6 GB/s
+smem  每个block 48KiB共享内存   每个SM驻留1个block、 8个warp   occupancy  25%     102.1 GB/s
+smem  每个block 64KiB共享内存   每个SM驻留1个block、 8个warp   occupancy  25%     102.1 GB/s
+
+## 测完时的GPU状态
+clocks.current.sm [MHz], clocks.current.memory [MHz], temperature.gpu, power.draw [W], clocks_event_reasons.active
+1395 MHz, 5000 MHz, 41, 30.48 W, 0x0000000000000000

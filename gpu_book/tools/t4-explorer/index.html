@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T4结构探索</title>
+<style>
+:root{
+  --bg:#f7f7f8; --panel:#ffffff; --border:#e3e5e8; --text:#16181d; --muted:#6b7280;
+  --accent:#2563eb; --accent-soft:#eff4ff; --chip:#f8fafc; --chip-line:#475569;
+  --sm:#16a34a; --sm-bg:#dcf5e3; --l2:#2563eb; --l2-bg:#bfdbfe; --dram:#b91c1c; --dram-bg:#fecaca;
+  --mc:#64748b; --mc-bg:#f1f5f9; --sched:#ea580c; --sched-bg:#fed7aa; --reg:#ca8a04; --reg-bg:#fde68a;
+  --int:#2563eb; --int-bg:#dbeafe; --fp:#16a34a; --fp-bg:#dcfce7; --tc:#9333ea; --tc-bg:#ede9fe;
+  --ldst:#475569; --ldst-bg:#e2e8f0; --sfu:#0891b2; --sfu-bg:#cffafe; --misc:#94a3b8; --misc-bg:#f8fafc;
+  --wait:#cbd5e1; --hot:#f59e0b;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15171c; --panel:#1c1f26; --border:#2d3139; --text:#e6e8ec; --muted:#9aa1ad;
+    --accent:#6ea8fe; --accent-soft:#1e2637; --chip:#20242c; --chip-line:#64748b;
+    --sm:#4ade80; --sm-bg:#173524; --l2:#60a5fa; --l2-bg:#1e3a5f; --dram:#f87171; --dram-bg:#4a1d1d;
+    --mc:#94a3b8; --mc-bg:#272c35; --sched:#fb923c; --sched-bg:#4a2a12; --reg:#facc15; --reg-bg:#423510;
+    --int:#60a5fa; --int-bg:#1b2b45; --fp:#4ade80; --fp-bg:#163522; --tc:#c084fc; --tc-bg:#33204a;
+    --ldst:#94a3b8; --ldst-bg:#2a3039; --sfu:#22d3ee; --sfu-bg:#123840; --misc:#64748b; --misc-bg:#20242c;
+    --wait:#3a414d; --hot:#fbbf24;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--text);
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+.wrap{max-width:1240px; margin:0 auto; padding:24px 16px 64px}
+h1{font-size:22px; margin:0 0 4px}
+.sub{color:var(--muted); margin:0 0 16px}
+.card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px}
+.main{display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:16px; align-items:start}
+@media (max-width:900px){ .main{grid-template-columns:1fr} }
+#crumb{display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin-bottom:12px; font-size:14px}
+#crumb button{background:none; border:0; padding:2px 6px; border-radius:6px; color:var(--accent); cursor:pointer; font:inherit}
+#crumb button:hover{background:var(--accent-soft)}
+#crumb span.sep{color:var(--muted)}
+#crumb span.cur{font-weight:600; padding:2px 6px}
+#crumb .hint{margin-left:auto; color:var(--muted); font-size:12px}
+svg{display:block; width:100%; height:auto; user-select:none}
+svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; fill:var(--text)}
+svg text.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+svg text.muted{fill:var(--muted)}
+svg .hot{cursor:pointer}
+svg .hot:hover > rect.body, svg .hot.sel > rect.body{stroke:var(--hot); stroke-width:2.5}
+svg .badge{fill:var(--muted); font-size:11px}
+.k-chip{fill:var(--chip); stroke:var(--chip-line)}
+.k-sm{fill:var(--sm-bg); stroke:var(--sm)} .k-l2{fill:var(--l2-bg); stroke:var(--l2)}
+.k-dram{fill:var(--dram-bg); stroke:var(--dram)} .k-mc{fill:var(--mc-bg); stroke:var(--mc)}
+.k-pcie{fill:var(--sm-bg); stroke:var(--sm)} .k-host{fill:var(--panel); stroke:var(--chip-line)}
+.k-sched{fill:var(--sched-bg); stroke:var(--sched)} .k-reg{fill:var(--reg-bg); stroke:var(--reg)}
+.k-int{fill:var(--int-bg); stroke:var(--int)} .k-fp{fill:var(--fp-bg); stroke:var(--fp)}
+.k-tc{fill:var(--tc-bg); stroke:var(--tc)} .k-ldst{fill:var(--ldst-bg); stroke:var(--ldst)}
+.k-sfu{fill:var(--sfu-bg); stroke:var(--sfu)} .k-icache{fill:var(--mc-bg); stroke:var(--mc)}
+.k-l1{fill:var(--l2-bg); stroke:var(--l2)} .k-misc{fill:var(--misc-bg); stroke:var(--misc); stroke-dasharray:4 3}
+.k-pb{fill:var(--panel); stroke:var(--chip-line)} .k-ghost{fill:transparent; stroke:transparent}
+.k-wait{fill:var(--wait); stroke:none} .k-none{fill:none; stroke:var(--border)}
+.f-tc{fill:var(--tc)} .f-fp{fill:var(--fp)} .f-int{fill:var(--int)} .f-sched{fill:var(--sched)} .f-reg{fill:var(--reg)}
+.f-l2{fill:var(--l2)} .f-sm{fill:var(--sm)} .f-ldst{fill:var(--ldst)} .f-wait{fill:var(--wait)}
+.line{stroke:var(--chip-line); fill:none}
+#ctrl{display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; margin-top:12px; font-size:13px}
+#ctrl:empty{display:none}
+#ctrl label{display:flex; align-items:center; gap:6px; color:var(--muted)}
+#ctrl input[type=range]{width:140px; accent-color:var(--accent)}
+#ctrl b{color:var(--text); font-variant-numeric:tabular-nums}
+button.btn{background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:7px;
+  padding:6px 12px; font:13px/1.4 inherit; cursor:pointer}
+button.btn:hover{border-color:var(--accent); color:var(--accent)}
+button.btn.on{background:var(--accent-soft); color:var(--accent); border-color:var(--accent)}
+#ctrl .out{color:var(--text)}
+aside h2{font-size:17px; margin:0 0 2px}
+aside .en{color:var(--muted); font-size:12px; margin-bottom:10px}
+aside p{margin:0 0 10px; font-size:13.5px}
+aside table{width:100%; border-collapse:collapse; font-size:13px; margin:4px 0 10px}
+aside td{padding:5px 0; border-top:1px solid var(--border); vertical-align:top}
+aside td:first-child{color:var(--muted); width:42%; padding-right:8px}
+aside td small{color:var(--muted)}
+aside .go{display:inline-block; margin:2px 0 10px; color:var(--accent); font-size:13px}
+aside .ch{font-size:12px; color:var(--muted); border-top:1px dashed var(--border); padding-top:8px; margin-top:4px}
+aside code{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.legend{display:flex; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--muted); margin-top:8px}
+.legend i{display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-2px; margin-right:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>T4结构探索</h1>
+  <p class="sub">从整块GPU开始，一层一层点进去：SM、处理块、Tensor Core、调度器、寄存器……鼠标停在部件上，右边会显示它的说明和关键数字。</p>
+  <div class="main">
+    <div class="card">
+      <nav id="crumb"></nav>
+      <svg id="svg"></svg>
+      <div id="ctrl"></div>
+    </div>
+    <aside class="card" id="info"></aside>
+  </div>
+</div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+
+// ---------- 部件说明 ----------
+// go：点击后进入的下一层；没有go的部件只显示说明
+const INFO = {
+  gpu: {title: 'T4', en: 'NVIDIA Tesla T4，Turing架构，TU104芯片',
+    body: `<p>T4是一块70W的推理卡，也是本书做实验用的GPU。它用的TU104芯片完整版有48个SM（6个GPC，每个GPC 4个TPC，每个TPC 2个SM），T4启用了其中40个。</p>
+      `,
+    nums: [['SM', '40个（TU104完整版48个）'], ['CUDA Core', '2560个（40×64）'], ['Tensor Core', '320个（40×8）'],
+      ['主频', '基础585MHz，最高1.59GHz'], ['FP32峰值', '8.1 TFLOPS<br><small>实测7544.3 GFLOPS（第5章）</small>'],
+      ['FP16峰值（Tensor Core）', '65 TFLOPS'], ['显存带宽', '320 GB/s<br><small>实测277.5 GB/s（第5章）</small>'],
+      ['最多同时驻留的线程', '40960（40×1024）'], ['工艺 / 晶体管', '12nm / 136亿'], ['功耗', '70W']],
+    ch: '第4章：GPU的整体结构'},
+  sm: {title: 'SM', en: 'Streaming Multiprocessor，流式多处理器', go: 'sm',
+    body: `<p>GPU的基本组成单位，40个SM完全相同。一个block总是被整个放到某一个SM上执行，block里的线程可以通过这个SM的共享内存交换数据。</p>
+      <p>每个SM分成4个处理块，另有4个处理块共用的L1指令缓存和96KiB的L1缓存/共享内存。</p>`,
+    nums: [['处理块', '4个'], ['FP32单元', '64个'], ['INT32单元', '64个'], ['Tensor Core', '8个'],
+      ['寄存器', '65536个32位寄存器（256KiB）'], ['L1 / 共享内存', '共96KiB'],
+      ['最多驻留', '1024个线程（32个warp）、16个block'], ['每周期FP32运算', '128次（64个单元×每次乘加2次）']],
+    ch: '第4章：GPU的整体结构；第6章：block如何分配到SM、Occupancy'},
+  l2: {title: 'L2缓存', en: 'Level 2 Cache',
+    body: `<p>所有SM共享的缓存，位于SM和显存控制器之间。SM读写显存的数据都要经过它。</p>
+      <p>和CPU相比，它很小：平均到每个SM只有100KiB左右。第6章用指针追逐实测了它的延迟，数组从4MiB增加到8MiB时，延迟从约232个周期跳到约469个周期，正好对应L2的容量。</p>`,
+    nums: [['容量', '4MiB'], ['延迟', '约232个周期<br><small>实测（第6章）</small>'], ['共享范围', '所有40个SM']],
+    ch: '第4章；第6章：访存延迟有多长；第7章：L2从显存取数据的粒度'},
+  mc: {title: '显存控制器', en: 'Memory Controller',
+    body: `<p>T4有8个32位的显存控制器，合起来是256位的显存接口。每个控制器连接一片GDDR6显存颗粒。</p>
+      <p>带宽可以这样算：256位 × 每根数据线每秒10Gbit ÷ 8 = 320 GB/s。</p>`,
+    nums: [['数量', '8个，每个32位'], ['总位宽', '256位'], ['理论带宽', '320 GB/s']],
+    ch: '第4章'},
+  dram: {title: 'GDDR6显存', en: 'Device Memory（Global Memory）',
+    body: `<p>GPU的显存，16GB。<code>cudaMalloc</code>分配的就是这里的空间，在CUDA里叫做全局内存，所有线程都能访问。</p>
+      <p>它是存储层次里最大、也最慢的一级。T4的计算单元每秒能做7.5万亿次浮点运算，显存却只能送来不到3000亿字节，算术强度低于27左右的程序，都会被它卡住。</p>`,
+    nums: [['容量', '16GB'], ['带宽', '理论320 GB/s<br><small>实测277.5 GB/s，约为理论值的87%（第5章）</small>'],
+      ['延迟', '约470到495个周期<br><small>实测（第6章）</small>']],
+    ch: '第4章；第5章：实测带宽；第6章：访存延迟；第7章：访存合并'},
+  pcie: {title: 'PCIe 3.0 x16', en: 'PCI Express',
+    body: `<p>GPU和主机之间的连接。<code>cudaMemcpy</code>在主机内存和显存之间复制数据，走的就是这条路。</p>
+      <p>和显存带宽相比，它慢了一个数量级还多，所以数据最好一次拷到GPU上，在那里反复使用。第5章用普通的（可分页的）主机内存实测，只有理论值的三分之一左右。</p>`,
+    nums: [['理论带宽', '每个方向15.75 GB/s'], ['实测', '主机→设备4.6 GB/s，设备→主机4.7 GB/s<br><small>可分页内存，256MiB（第5章）</small>']],
+    ch: '第5章：主机与设备'},
+  host: {title: '主机', en: 'Host',
+    body: `<p>CPU和主机内存。CUDA程序从主机开始运行：分配显存，把数据拷过去，启动kernel，再把结果拷回来。</p>`,
+    nums: [], ch: '第5章：主机与设备'},
+  icache1: {title: 'L1指令缓存', en: 'L1 Instruction Cache',
+    body: `<p>存放kernel的机器指令，4个处理块共用。每个处理块还有自己更小的L0指令缓存。本书的优化很少涉及指令缓存。</p>`,
+    nums: [], ch: ''},
+  pb: {title: '处理块', en: 'Processing Block（SM Sub-partition）', go: 'pb',
+    body: `<p>SM的四分之一。每个处理块有自己的warp调度器、寄存器文件和计算单元，一个warp从被分到某个处理块开始，就一直在这个处理块上执行。</p>
+      <p>可以把一个处理块类比成一个CPU核心，16个FP32单元相当于它的SIMD宽度。</p>`,
+    nums: [['warp调度器', '1个，每周期发射1条warp指令'], ['FP32 / INT32单元', '各16个'], ['Tensor Core', '2个'],
+      ['LD/ST单元', '4个'], ['SFU', '4个'], ['寄存器文件', '64KiB（16384个32位寄存器）'], ['最多驻留', '8个warp']],
+    ch: '第4章；第6章：Warp与SIMT'},
+  l1: {title: 'L1缓存 / 共享内存', en: 'L1 Data Cache / Shared Memory', go: 'l1',
+    body: `<p>每个SM有96KiB的片上存储，一部分用作硬件自动管理的L1缓存，一部分用作程序员自己管理的共享内存。</p>
+      <p>下一层画出了两种划分方式、缓存行和sector的大小，以及共享内存的32个bank。</p>`,
+    nums: [['总容量', '96KiB'], ['共享内存', '32KiB或64KiB，其余是L1'], ['共享内存延迟', '22个周期<br><small>实测（第6章）</small>'],
+      ['L1延迟', '40个周期<br><small>实测（第6章）</small>']],
+    ch: '第4章；第6章：内存层次全景；第7章；第8章：共享内存分块'},
+  fp64: {title: 'FP64单元', en: 'Double-precision Unit',
+    body: `<p>双精度浮点单元，每个SM只有2个，速率是FP32的1/32。T4面向推理，几乎不做双精度计算。</p>`,
+    nums: [['数量', '每个SM 2个，共80个'], ['FP64峰值', '约0.25 TFLOPS']], ch: ''},
+  tex: {title: '纹理单元', en: 'Texture Unit',
+    body: `<p>图形渲染时用来对纹理采样和过滤。CUDA程序也能通过纹理接口读数据，但本书不会用到。</p>`,
+    nums: [['数量', '每个SM 4个']], ch: ''},
+  rt: {title: 'RT Core', en: 'Ray Tracing Core',
+    body: `<p>Turing架构新增的光线追踪单元，专门计算光线和场景的求交。和矩阵乘法无关，本书不会用到。</p>`,
+    nums: [['数量', '每个SM 1个']], ch: ''},
+  icache0: {title: 'L0指令缓存', en: 'L0 Instruction Cache',
+    body: `<p>每个处理块自己的指令缓存，比L1指令缓存更靠近调度器。</p>`, nums: [], ch: ''},
+  sched: {title: 'Warp调度器 + 分发单元', en: 'Warp Scheduler + Dispatch Unit', go: 'sched',
+    body: `<p>处理块的“指挥”。每个时钟周期，它从驻留在这个处理块上的warp里，挑一个下一条指令已经就绪的warp，把这条指令发出去，32个线程一起执行。</p>
+      <p>warp的寄存器一直留在寄存器文件里，换一个warp执行不需要保存和恢复任何东西。所以某个warp在等数据时，调度器可以立刻换别的warp执行，把访存延迟藏起来。</p>`,
+    nums: [['每周期发射', '1条warp指令'], ['驻留的warp', '最多8个（每个SM 32个）']],
+    ch: '第6章：Warp与SIMT、用并发隐藏延迟'},
+  reg: {title: '寄存器文件', en: 'Register File', go: 'reg',
+    body: `<p>每个线程的局部变量都放在这里，是最快的一级存储。每个处理块64KiB，整个SM 256KiB，40个SM加起来10MiB，比L2还大。</p>
+      <p>寄存器按warp分配，每个线程用的寄存器越多，能驻留的warp就越少。</p>`,
+    nums: [['每个处理块', '16384个32位寄存器（64KiB）'], ['每个SM', '65536个（256KiB）'], ['每个线程最多', '255个']],
+    ch: '第4章；第6章：Occupancy；第9章：寄存器分块'},
+  int32: {title: 'INT32单元', en: 'Integer Unit',
+    body: `<p>做整数运算：数组下标、地址、循环计数器。矩阵乘法里，<code>A[row * n + k]</code>的地址计算就由它完成。</p>
+      <p>Volta之前，整数和浮点运算共用一套单元；从Volta开始分成两套，Turing也是如此。调度器每个周期只发一条指令，但一条warp指令要在16个单元上占两个周期，交替发射浮点指令和整数指令，两套单元就能同时忙起来。</p>`,
+    nums: [['每个处理块', '16个'], ['每个SM', '64个']], ch: '第4章'},
+  fp32: {title: 'FP32单元（CUDA Core）', en: 'FP32 Unit', go: 'fp32',
+    body: `<p>NVIDIA所说的CUDA Core，就是一个FP32单元。它每个周期完成一次乘加 <code>d = a × b + c</code>，算作2次浮点运算。</p>
+      <p>它只是一条运算通道，没有自己的指令调度。一个warp有32个线程，处理块只有16个FP32单元，所以一条warp指令要分两个周期执行。</p>`,
+    nums: [['每个处理块', '16个'], ['全卡', '2560个'], ['峰值', '2560 × 2 × 1.59GHz ≈ 8141 GFLOPS']],
+    ch: '第4章；第5章：实测峰值'},
+  tc: {title: 'Tensor Core', en: 'Tensor Core（第二代）', go: 'tc',
+    body: `<p>专门做矩阵乘法的计算单元。白皮书的描述是，它每个周期完成一次4×4×4的矩阵乘加 D = A×B + C，也就是64次FP16乘加。一个FP32单元每周期只做1次。</p>
+      <p>Turing的Tensor Core还支持INT8和INT4，面向推理。CUDA程序看到的是warp级的矩阵乘指令，例如一个warp一起算16×16×16的矩阵乘，由处理块的Tensor Core分多个周期完成；NVIDIA没有公开电路细节，4×4×4是白皮书里的描述。</p>`,
+    nums: [['每个处理块', '2个'], ['全卡', '320个'], ['每周期', '64次FP16乘加；INT8为128次，INT4为256次'],
+      ['FP16峰值', '320 × 64 × 2 × 1.59GHz ≈ 65 TFLOPS，是FP32的8倍'], ['INT8峰值', '130 TOPS']],
+    ch: '第4章；第12、13章会正式使用'},
+  ldst: {title: 'LD/ST单元', en: 'Load/Store Unit',
+    body: `<p>执行访存指令。一个warp执行一条读指令时，32个线程各给出一个地址，打包成一个请求交给L1，L1再按32字节的sector处理。</p>
+      <p>32个地址落在的sector越少，这次访问的代价越低，这就是第7章的访存合并。</p>`,
+    nums: [['每个处理块', '4个'], ['每个SM', '16个']], ch: '第7章：全局内存是怎样被访问的'},
+  sfu: {title: 'SFU', en: 'Special Function Unit',
+    body: `<p>特殊函数单元，计算sin、cos、exp、log、倒数、平方根倒数这类函数的近似值，对应CUDA里的<code>__sinf</code>、<code>__expf</code>等内置函数。</p>
+      <p>每个处理块只有4个，一条warp指令的32个线程要分8批才能做完。矩阵乘法用不到它，softmax这类算子会用到。</p>`,
+    nums: [['每个处理块', '4个'], ['每个SM', '16个']], ch: ''},
+};
+
+// 每一层的标题与默认说明
+const LEVELS = {
+  gpu: {name: 'T4', info: 'gpu'},
+  sm: {name: 'SM', info: 'sm'},
+  pb: {name: '处理块', info: 'pb'},
+  sched: {name: 'Warp调度器', info: 'sched'},
+  reg: {name: '寄存器文件', info: 'reg'},
+  fp32: {name: 'FP32单元', info: 'fp32'},
+  tc: {name: 'Tensor Core', info: 'tc'},
+  l1: {name: 'L1 / 共享内存', info: 'l1'},
+};
+
+// ---------- SVG小工具 ----------
+let svg = $('svg'), timers = [];
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) if (attrs[k] !== undefined && attrs[k] !== null) e.setAttribute(k, attrs[k]);
+  (parent || svg).appendChild(e);
+  return e;
+}
+function text(x, y, s, o = {}, parent) {
+  const t = el('text', {x, y, 'text-anchor': o.anchor || 'middle', 'dominant-baseline': 'central',
+    'font-size': o.size || 13, 'font-weight': o.bold ? 600 : null, class: o.cls}, parent);
+  t.textContent = s;
+  return t;
+}
+// 带标签的方框；id存在时可以悬停/点击
+function box(x, y, w, h, kind, label, o = {}) {
+  const g = el('g', {}, o.parent);
+  if (o.id) { g.classList.add('hot'); g.dataset.id = o.id; if (o.arg !== undefined) g.dataset.arg = o.arg; }
+  el('rect', {x, y, width: w, height: h, rx: o.rx ?? 5, class: 'body k-' + kind, 'stroke-width': o.sw || 1.2}, g);
+  if (label) {
+    const lines = String(label).split('\n'), lh = (o.size || 13) * 1.25;
+    lines.forEach((s, i) => text(x + w / 2, y + h / 2 + (i - (lines.length - 1) / 2) * lh, s,
+      {size: o.size, bold: o.bold, cls: o.mono ? 'mono' : null}, g));
+  }
+  if (o.id && INFO[o.id] && INFO[o.id].go && o.badge !== false) {
+    const t = text(x + w - 6, y + 9, '›', {anchor: 'end', size: 13}, g); t.classList.add('badge');
+  }
+  return g;
+}
+function arrow(x1, y1, x2, y2, both) {
+  el('line', {x1, y1, x2, y2, class: 'line', 'stroke-width': 1.5, 'marker-end': 'url(#ar)', 'marker-start': both ? 'url(#ar)' : null});
+}
+function defs() {
+  const d = el('defs', {});
+  const m = el('marker', {id: 'ar', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse'}, d);
+  el('path', {d: 'M0,0 L10,5 L0,10 z', fill: 'var(--chip-line)'}, m);
+}
+
+// ---------- 各层绘制 ----------
+const DRAW = {};
+
+DRAW.gpu = () => {
+  view(800, 560);
+  text(400, 20, 'T4（TU104，启用40个SM）', {size: 17, bold: true});
+  box(108, 40, 584, 380, 'chip', '', {rx: 14, sw: 1.5});
+  for (let side = 0; side < 2; side++) for (let r = 0; r < 4; r++) {
+    const y = 56 + r * 72;
+    const mx = side ? 620 : 120, dx = side ? 712 : 8;
+    box(mx, y, 60, 58, 'mc', '显存\n控制器', {id: 'mc', size: 12});
+    box(dx, y + 4, 80, 50, 'dram', 'GDDR6', {id: 'dram', size: 12});
+    if (side) arrow(682, y + 29, 710, y + 29, true); else arrow(90, y + 29, 118, y + 29, true);
+  }
+  let n = 0;
+  const smRow = y => { for (let c = 0; c < 10; c++) box(196 + c * 41, y, 37, 36, 'sm', 'SM', {id: 'sm', arg: n++, size: 12, badge: false}); };
+  smRow(58); smRow(100);
+  box(196, 148, 406, 48, 'l2', 'L2缓存 4MiB，所有SM共享', {id: 'l2'});
+  smRow(210); smRow(252);
+  box(260, 358, 280, 34, 'pcie', 'PCIe 3.0 x16 接口', {id: 'pcie'});
+  arrow(400, 394, 400, 466, true);
+  text(410, 430, '15.75GB/s', {anchor: 'start', size: 12, cls: 'muted'});
+  box(280, 468, 240, 40, 'host', '主机（CPU与主机内存）', {id: 'host'});
+  text(400, 536, '显存：8个32位控制器，共256位，16GB GDDR6，320GB/s', {size: 12, cls: 'muted'});
+};
+
+DRAW.sm = () => {
+  view(800, 540);
+  box(8, 8, 784, 520, 'chip', '', {rx: 14, sw: 1.5});
+  box(24, 22, 752, 28, 'icache', 'L1 指令缓存', {id: 'icache1', size: 12});
+  for (let p = 0; p < 4; p++) {
+    const x = 24 + p * 190, w = 180, g = box(x, 60, w, 318, 'pb', '', {id: 'pb', arg: p, rx: 8});
+    text(x + 10, 74, `处理块 ${p}`, {anchor: 'start', size: 12, cls: 'muted'}, g);
+    const mini = (y, h, kind, label) => box(x + 10, y, w - 20, h, kind, label, {parent: g, size: 11});
+    mini(86, 20, 'icache', 'L0 指令缓存');
+    mini(112, 30, 'sched', 'Warp调度器 + 分发');
+    mini(148, 24, 'reg', '寄存器文件 64KiB');
+    const cells = (y, kind, label) => {
+      text(x + 10, y, label, {anchor: 'start', size: 10, cls: 'muted'}, g);
+      for (let i = 0; i < 16; i++) el('rect', {x: x + 10 + (i % 8) * 20, y: y + 7 + Math.floor(i / 8) * 15, width: 17, height: 12, rx: 2, class: 'k-' + kind}, g);
+    };
+    cells(184, 'int', 'INT32 ×16'); cells(228, 'fp', 'FP32 ×16');
+    text(x + 10, 272, 'Tensor Core ×2', {anchor: 'start', size: 10, cls: 'muted'}, g);
+    box(x + 10, 279, 77, 30, 'tc', 'TC', {parent: g, size: 11}); box(x + 93, 279, 77, 30, 'tc', 'TC', {parent: g, size: 11});
+    text(x + 10, 322, 'LD/ST ×4　　SFU ×4', {anchor: 'start', size: 10, cls: 'muted'}, g);
+    for (let i = 0; i < 4; i++) el('rect', {x: x + 10 + i * 19, y: 330, width: 16, height: 16, rx: 2, class: 'k-ldst'}, g);
+    for (let i = 0; i < 4; i++) el('rect', {x: x + 93 + i * 19, y: 330, width: 16, height: 16, rx: 2, class: 'k-sfu'}, g);
+    text(x + w / 2, 364, '点击进入 ›', {size: 11, cls: 'muted'}, g);
+  }
+  box(24, 390, 752, 52, 'l1', 'L1缓存 / 共享内存，共96KiB', {id: 'l1', size: 15});
+  text(24, 462, '图里另外画出了第4章配图省略的部件：', {anchor: 'start', size: 12, cls: 'muted'});
+  box(24, 474, 200, 40, 'misc', 'FP64单元 ×2', {id: 'fp64', size: 12});
+  box(236, 474, 200, 40, 'misc', '纹理单元 ×4', {id: 'tex', size: 12});
+  box(448, 474, 200, 40, 'misc', 'RT Core ×1', {id: 'rt', size: 12});
+};
+
+DRAW.pb = () => {
+  view(800, 520);
+  box(18, 14, 764, 30, 'icache', 'L0 指令缓存', {id: 'icache0', size: 12});
+  box(18, 54, 764, 46, 'sched', 'Warp调度器 + 分发单元　　每周期从最多8个warp中挑1个，发射1条指令', {id: 'sched'});
+  box(18, 110, 764, 40, 'reg', '寄存器文件 64KiB　　16384个32位寄存器', {id: 'reg'});
+  const row = (y, id, kind, label, n, w, gap, h, cellLabel) => {
+    const g = box(14, y - 18, 772, h + 26, 'ghost', '', {id, rx: 6});
+    text(20, y - 8, label, {anchor: 'start', size: 12, cls: 'muted'}, g);
+    for (let i = 0; i < n; i++) box(18 + i * (w + gap), y, w, h, kind, cellLabel ? cellLabel(i) : '', {parent: g, size: 11, rx: 4});
+    if (INFO[id].go) { const t = text(780, y - 8, '点击进入 ›', {anchor: 'end', size: 11}, g); t.classList.add('badge'); }
+  };
+  row(184, 'int32', 'int', 'INT32 ×16', 16, 44, 4, 30);
+  row(246, 'fp32', 'fp', 'FP32 ×16（CUDA Core）', 16, 44, 4, 30);
+  row(308, 'tc', 'tc', 'Tensor Core ×2', 2, 380, 4, 56, () => 'Tensor Core');
+  row(396, 'ldst', 'ldst', 'LD/ST ×4', 4, 188, 4, 34, () => 'LD/ST');
+  row(462, 'sfu', 'sfu', 'SFU ×4', 4, 188, 4, 34, () => 'SFU');
+};
+
+// Tensor Core：一个周期完成4×4×4矩阵乘加，对比16个FP32单元
+let tcMode = 'tc';
+DRAW.tc = () => {
+  view(800, 400);
+  const cs = 30, y0 = 92;
+  const mats = [['A（FP16）', 30, 'tc'], ['B（FP16）', 220, 'tc'], ['C（FP16或FP32）', 410, 'l1'], ['D（FP16或FP32）', 600, 'fp']];
+  const cells = {};
+  mats.forEach(([name, x], m) => {
+    text(x + 2 * cs, y0 - 16, name, {size: 13, bold: true});
+    cells[m] = [];
+    for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++)
+      cells[m].push(el('rect', {x: x + c * cs, y: y0 + r * cs, width: cs - 3, height: cs - 3, rx: 3, class: 'k-none'}));
+  });
+  text(195, y0 + 2 * cs, '×', {size: 22, cls: 'muted'}); text(385, y0 + 2 * cs, '+', {size: 22, cls: 'muted'});
+  text(575, y0 + 2 * cs, '=', {size: 22, cls: 'muted'});
+  const status = text(400, 250, '', {size: 15, bold: true});
+  const detail = text(400, 278, '', {size: 13, cls: 'muted'});
+  text(400, 330, '一个4×4×4的矩阵乘加，D的16个元素各要做4次乘加，共64次。', {size: 13, cls: 'muted'});
+  text(400, 354, 'Tensor Core一个周期全部做完；处理块的16个FP32单元每周期做16次，要4个周期。', {size: 13, cls: 'muted'});
+
+  const total = tcMode === 'tc' ? 1 : 4;
+  let cyc = 0;
+  const paint = () => {
+    for (let m = 0; m < 4; m++) cells[m].forEach(c => c.setAttribute('class', m === 2 ? 'k-l1' : m < 2 ? 'k-none' : 'k-none'));
+    if (cyc === 0) {
+      cells[0].forEach(c => c.setAttribute('class', 'k-tc')); cells[1].forEach(c => c.setAttribute('class', 'k-tc'));
+      status.textContent = tcMode === 'tc' ? 'Tensor Core：准备执行' : '16个FP32单元：准备执行';
+      detail.textContent = '点击“执行”开始';
+      return;
+    }
+    if (tcMode === 'tc') {
+      cells[0].forEach(c => c.setAttribute('class', 'f-tc')); cells[1].forEach(c => c.setAttribute('class', 'f-tc'));
+      cells[3].forEach(c => c.setAttribute('class', 'f-fp'));
+      status.textContent = '第1个周期：64次乘加全部完成';
+      detail.textContent = '每周期64次乘加 = 128次浮点运算';
+    } else {
+      // 每个周期算完D的一行：用到A的一行和B的全部
+      cells[0].forEach((c, i) => c.setAttribute('class', Math.floor(i / 4) === cyc - 1 ? 'f-tc' : 'k-tc'));
+      cells[1].forEach(c => c.setAttribute('class', 'f-tc'));
+      cells[3].forEach((c, i) => c.setAttribute('class', Math.floor(i / 4) < cyc ? 'f-fp' : 'k-none'));
+      status.textContent = `第${cyc}个周期：已完成 ${cyc * 16} / 64 次乘加`;
+      detail.textContent = '16个FP32单元各做1次乘加，算完D的一行（4个元素×4次）';
+    }
+  };
+  paint();
+  ctrl(`<button class="btn ${tcMode === 'tc' ? 'on' : ''}" data-m="tc">Tensor Core</button>
+    <button class="btn ${tcMode === 'fp' ? 'on' : ''}" data-m="fp">16个FP32单元</button>
+    <button class="btn" id="run">执行</button><button class="btn" id="rst">重置</button>`);
+  $('ctrl').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { tcMode = b.dataset.m; render(); });
+  $('run').onclick = () => {
+    clearTimers(); cyc = 0; paint();
+    for (let k = 1; k <= total; k++) timers.push(setTimeout(() => { cyc = k; paint(); }, k * 700));
+  };
+  $('rst').onclick = () => { clearTimers(); cyc = 0; paint(); };
+};
+
+// FP32：一个warp的32个线程分两个周期在16个单元上执行
+DRAW.fp32 = () => {
+  view(800, 400);
+  text(400, 18, '一条FMA指令：d = a × b + c，warp里的32个线程各算一个', {size: 13, cls: 'muted'});
+  text(18, 48, 'warp（32个线程）', {anchor: 'start', size: 12, bold: true});
+  const th = [];
+  for (let t = 0; t < 32; t++) {
+    const x = 18 + (t % 16) * 48, y = 60 + Math.floor(t / 16) * 40;
+    th.push(box(x, y, 42, 32, 'none', `t${t}`, {size: 11, mono: true}));
+  }
+  text(18, 178, '16个FP32单元', {anchor: 'start', size: 12, bold: true});
+  const lanes = [];
+  for (let l = 0; l < 16; l++) lanes.push(box(18 + l * 48, 190, 42, 50, 'fp', '', {size: 10}));
+  const lab = lanes.map((g, l) => text(18 + l * 48 + 21, 215, '', {size: 10, cls: 'mono'}, g));
+  const status = text(400, 280, '', {size: 15, bold: true});
+  text(400, 316, '处理块只有16个FP32单元，一个warp有32个线程，所以一条warp指令要分两个周期执行。', {size: 13, cls: 'muted'});
+  text(400, 340, '整个SM有4个处理块，每周期做64次乘加；全卡40个SM：64 × 40 × 2 × 1.59GHz ≈ 8141 GFLOPS。', {size: 13, cls: 'muted'});
+  let cyc = 0;
+  const paint = () => {
+    th.forEach((g, t) => g.querySelector('rect').setAttribute('class', 'body ' +
+      (cyc === 0 ? 'k-none' : Math.floor(t / 16) === cyc - 1 ? 'k-fp' : Math.floor(t / 16) < cyc - 1 ? 'k-wait' : 'k-none')));
+    lab.forEach((t, l) => t.textContent = cyc ? `t${l + (cyc - 1) * 16}` : '');
+    status.textContent = cyc === 0 ? '点击“执行”开始' : cyc === 1 ? '第1个周期：线程0到15' : '第2个周期：线程16到31，这条指令完成';
+  };
+  paint();
+  ctrl(`<button class="btn" id="run">执行</button><button class="btn" id="rst">重置</button>`);
+  $('run').onclick = () => { clearTimers(); cyc = 0; paint(); [1, 2].forEach(k => timers.push(setTimeout(() => { cyc = k; paint(); }, k * 800))); };
+  $('rst').onclick = () => { clearTimers(); cyc = 0; paint(); };
+};
+
+// 调度器：用多个warp隐藏访存延迟
+const sch = {w: 4, lat: 16, k: 3};
+DRAW.sched = () => {
+  const T = 48, cw = 13, rh = 22, x0 = 70, y0 = 40;
+  view(800, y0 + sch.w * rh + 140);
+  // 模拟：每个warp循环执行 k 条计算指令和 1 条读指令；读指令发出后要等 lat 个周期，下一条指令才就绪
+  const pc = new Array(sch.w).fill(0), ready = new Array(sch.w).fill(0);
+  const grid = Array.from({length: sch.w}, () => new Array(T).fill(''));
+  let last = sch.w - 1, issued = 0;
+  for (let t = 0; t < T; t++) {
+    let pick = -1;
+    for (let d = 1; d <= sch.w; d++) { const w = (last + d) % sch.w; if (ready[w] <= t) { pick = w; break; } }
+    for (let w = 0; w < sch.w; w++) grid[w][t] = ready[w] <= t ? 'r' : 'w';
+    if (pick >= 0) {
+      issued++; last = pick;
+      if (pc[pick] < sch.k) { grid[pick][t] = 'c'; pc[pick]++; ready[pick] = t + 1; }
+      else { grid[pick][t] = 'm'; pc[pick] = 0; ready[pick] = t + sch.lat; }
+    }
+  }
+  text(x0, 16, '周期 →', {anchor: 'start', size: 12, cls: 'muted'});
+  for (let t = 0; t < T; t += 8) text(x0 + t * cw + cw / 2, 30, String(t), {size: 10, cls: 'muted'});
+  for (let w = 0; w < sch.w; w++) {
+    text(x0 - 8, y0 + w * rh + rh / 2, `warp ${w}`, {anchor: 'end', size: 12, cls: 'mono'});
+    for (let t = 0; t < T; t++) {
+      const s = grid[w][t], cls = {c: 'f-fp', m: 'f-l2', w: 'f-wait', r: 'k-none'}[s];
+      el('rect', {x: x0 + t * cw, y: y0 + w * rh + 2, width: cw - 2, height: rh - 4, rx: 2, class: cls});
+    }
+  }
+  // 调度器这一行：哪些周期发射了指令
+  const ys = y0 + sch.w * rh + 10;
+  text(x0 - 8, ys + rh / 2, '发射', {anchor: 'end', size: 12, bold: true});
+  for (let t = 0; t < T; t++) {
+    const any = grid.some(r => r[t] === 'c' || r[t] === 'm');
+    el('rect', {x: x0 + t * cw, y: ys + 2, width: cw - 2, height: rh - 4, rx: 2, class: any ? 'f-sched' : 'k-none'});
+  }
+  const util = issued / T;
+  const bound = Math.min(1, sch.w * (sch.k + 1) / (sch.k + sch.lat));
+  text(400, ys + 52, `这48个周期里，调度器有 ${issued} 个周期发出了指令，利用率 ${(util * 100).toFixed(0)}%`, {size: 14, bold: true});
+  text(400, ys + 78, `粗略估算：每个warp每 ${sch.k + sch.lat} 个周期只能发 ${sch.k + 1} 条指令，${sch.w} 个warp最多占满 ${(bound * 100).toFixed(0)}% 的周期`, {size: 12, cls: 'muted'});
+  text(400, ys + 100, '为了画得下，这里的延迟比真实值小得多：第6章实测L2约232个周期，显存约470个周期，所以真实的GPU需要更多warp', {size: 12, cls: 'muted'});
+  ctrl(`<label>warp数 <input type="range" id="sw" min="1" max="8" value="${sch.w}"> <b>${sch.w}</b></label>
+    <label>读指令延迟 <input type="range" id="sl" min="4" max="40" value="${sch.lat}"> <b>${sch.lat}</b>周期</label>
+    <label>两次读之间的计算指令 <input type="range" id="sk" min="1" max="8" value="${sch.k}"> <b>${sch.k}</b>条</label>
+    <div class="legend"><span><i class="lg" style="background:var(--fp)"></i>发射计算指令</span>
+      <span><i style="background:var(--l2)"></i>发射读指令</span><span><i style="background:var(--wait)"></i>等数据</span>
+      <span><i style="border:1px solid var(--border)"></i>就绪但没轮到</span></div>`);
+  [['sw', 'w'], ['sl', 'lat'], ['sk', 'k']].forEach(([id, key]) => $(id).oninput = e => { sch[key] = +e.target.value; render(); });
+};
+
+// 寄存器：每个线程用的寄存器数决定能驻留多少warp
+let regPer = 64;
+DRAW.reg = () => {
+  view(800, 360);
+  const rr = Math.ceil(regPer / 8) * 8, perWarp = 32 * rr;
+  const perPb = Math.min(8, Math.floor(16384 / perWarp)), warps = perPb * 4;
+  const H = 220, y0 = 30;
+  for (let p = 0; p < 4; p++) {
+    const x = 40 + p * 190;
+    text(x + 70, 16, `处理块 ${p}`, {size: 12, cls: 'muted'});
+    el('rect', {x, y: y0, width: 140, height: H, rx: 4, class: 'k-none'});
+    for (let w = 0; w < perPb; w++) {
+      const h = perWarp / 16384 * H;
+      el('rect', {x: x + 1, y: y0 + w * h + 1, width: 138, height: Math.max(1, h - 2), rx: 2, class: 'k-reg'});
+      if (h > 14) text(x + 70, y0 + w * h + h / 2, `warp ${p + 4 * w}`, {size: 10, cls: 'mono'});
+    }
+    const used = perPb * perWarp;
+    text(x + 70, y0 + H + 16, `${perPb}个warp，用掉${used}/16384`, {size: 11, cls: 'muted'});
+  }
+  const occ = warps / 32;
+  const lim = Math.floor(16384 / perWarp) >= 8 ? '不受寄存器限制（受每个SM最多32个warp限制）' : '受寄存器限制';
+  text(400, 300, `每个SM驻留 ${warps} 个warp，occupancy ${(occ * 100).toFixed(0)}%，${lim}`, {size: 14, bold: true});
+  text(400, 326, `每个线程${regPer}个寄存器${rr !== regPer ? `（按8个一组分配，实际占${rr}个）` : ''}，一个warp占 32 × ${rr} = ${perWarp} 个`, {size: 12, cls: 'muted'});
+  text(400, 346, '这是简化的模型：实际分配粒度和block的整体约束由硬件和驱动决定，以CUDA的occupancy计算结果为准', {size: 11, cls: 'muted'});
+  ctrl(`<label>每个线程的寄存器数 <input type="range" id="rg" min="16" max="255" value="${regPer}"> <b>${regPer}</b></label>
+    <button class="btn" data-r="49">49（朴素kernel）</button><button class="btn" data-r="64">64</button>
+    <button class="btn" data-r="128">128</button><button class="btn" data-r="255">255</button>`);
+  $('rg').oninput = e => { regPer = +e.target.value; render(); };
+  $('ctrl').querySelectorAll('[data-r]').forEach(b => b.onclick = () => { regPer = +b.dataset.r; render(); });
+};
+
+// L1 / 共享内存：两种划分，以及缓存行和sector
+let carve = 64;
+DRAW.l1 = () => {
+  view(800, 380);
+  text(20, 20, '96KiB片上存储的划分', {anchor: 'start', size: 13, bold: true});
+  const W = 760, sw = W * carve / 96;
+  box(20, 34, sw, 50, 'reg', `共享内存 ${carve}KiB\n程序员管理，延迟22周期`, {size: 12});
+  box(20 + sw, 34, W - sw, 50, 'l1', `L1缓存 ${96 - carve}KiB\n硬件管理，延迟40周期`, {size: 12});
+  text(20, 104, 'Turing允许两种划分：64KiB共享内存 + 32KiB L1，或32KiB共享内存 + 64KiB L1。CUDA会根据kernel的需要选择，也可以手动指定。',
+    {anchor: 'start', size: 12, cls: 'muted'});
+
+  text(20, 148, '一个128字节的缓存行，分成4个32字节的sector', {anchor: 'start', size: 13, bold: true});
+  for (let s = 0; s < 4; s++) {
+    box(20 + s * 190, 162, 186, 40, 'l2', `sector ${s}：32字节`, {size: 12});
+    for (let f = 0; f < 8; f++) el('rect', {x: 24 + s * 190 + f * 22.5, y: 208, width: 20, height: 14, rx: 2, class: 'k-fp'});
+  }
+  text(20, 238, '每个sector装得下8个float。L1以sector为单位处理请求：一个warp的32个地址落在几个sector里，就要传几个sector（第7章）。',
+    {anchor: 'start', size: 12, cls: 'muted'});
+
+  text(20, 280, '共享内存分成32个bank', {anchor: 'start', size: 13, bold: true});
+  for (let b = 0; b < 32; b++) {
+    el('rect', {x: 20 + b * 23.75, y: 294, width: 21, height: 26, rx: 2, class: 'k-reg'});
+    if (b % 4 === 0) text(20 + b * 23.75 + 10.5, 307, String(b), {size: 10, cls: 'mono'});
+  }
+  text(20, 344, '连续的4字节字依次落在32个bank上，32个线程访问32个不同的bank时可以同时完成。多个线程挤在同一个bank上就要排队，', {anchor: 'start', size: 12, cls: 'muted'});
+  text(20, 362, '叫做bank冲突，第10章会讨论。', {anchor: 'start', size: 12, cls: 'muted'});
+  ctrl(`<button class="btn ${carve === 64 ? 'on' : ''}" data-c="64">64KiB共享内存 + 32KiB L1</button>
+    <button class="btn ${carve === 32 ? 'on' : ''}" data-c="32">32KiB共享内存 + 64KiB L1</button>`);
+  $('ctrl').querySelectorAll('[data-c]').forEach(b => b.onclick = () => { carve = +b.dataset.c; render(); });
+};
+
+// ---------- 导航与说明面板 ----------
+let stack = [{lv: 'gpu'}];
+let selected = null;
+
+function view(w, h) { svg.setAttribute('viewBox', `0 0 ${w} ${h}`); defs(); }
+function ctrl(html) { $('ctrl').innerHTML = html; }
+function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+function crumbName(s) {
+  if (s.lv === 'sm') return `SM ${s.arg}`;
+  if (s.lv === 'pb') return `处理块 ${s.arg}`;
+  return LEVELS[s.lv].name;
+}
+
+function showInfo(id) {
+  const d = INFO[id];
+  if (!d) return;
+  const here = stack[stack.length - 1].lv;
+  const canGo = d.go && LEVELS[here].info !== id;
+  $('info').innerHTML = `<h2>${d.title}</h2><div class="en">${d.en}</div>${d.body}
+    ${canGo ? '<div class="go">点击这个部件，进入下一层 ›</div>' : ''}
+    ${d.nums.length ? '<table>' + d.nums.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('') + '</table>' : ''}
+    ${d.ch ? `<div class="ch">相关章节：${d.ch}</div>` : ''}`;
+}
+
+function render() {
+  clearTimers();
+  svg.replaceChildren();
+  $('ctrl').innerHTML = '';
+  const cur = stack[stack.length - 1];
+  DRAW[cur.lv]();
+  // 面包屑
+  const nav = $('crumb');
+  nav.innerHTML = stack.map((s, i) => i === stack.length - 1
+    ? `<span class="cur">${crumbName(s)}</span>`
+    : `<button data-i="${i}">${crumbName(s)}</button><span class="sep">›</span>`).join('') +
+    `<span class="hint">${stack.length > 1 ? 'Esc 返回上一层' : '点击带 › 的部件进入'}</span>`;
+  nav.querySelectorAll('button').forEach(b => b.onclick = () => { stack = stack.slice(0, +b.dataset.i + 1); selected = null; render(); });
+  if (selected) svg.querySelectorAll(`.hot[data-id="${selected}"]`).forEach(g => g.classList.add('sel'));
+  showInfo(selected || LEVELS[cur.lv].info);
+}
+
+svg.addEventListener('mouseover', e => {
+  const g = e.target.closest && e.target.closest('.hot');
+  if (g) showInfo(g.dataset.id);
+});
+svg.addEventListener('mouseleave', () => showInfo(selected || LEVELS[stack[stack.length - 1].lv].info));
+svg.addEventListener('click', e => {
+  const g = e.target.closest && e.target.closest('.hot');
+  if (!g) return;
+  const d = INFO[g.dataset.id];
+  if (d.go && LEVELS[stack[stack.length - 1].lv].info !== g.dataset.id) {
+    const arg = g.dataset.arg !== undefined ? +g.dataset.arg : undefined;
+    stack.push({lv: d.go, arg});
+    selected = null;
+  } else {
+    selected = selected === g.dataset.id ? null : g.dataset.id;
+  }
+  render();
+});
+document.addEventListener('keydown', e => {
+  const t = e.target;
+  if (t && t.tagName === 'INPUT') return;
+  if ((e.key === 'Escape' || e.key === 'Backspace') && stack.length > 1) { stack.pop(); selected = null; render(); e.preventDefault(); }
+});
+
+render();
+})();
+</script>
+</body>
+</html>

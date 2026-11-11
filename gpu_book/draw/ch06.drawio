@@ -1,0 +1,425 @@
+<mxfile host="65bd71144e">
+    <diagram name="block-to-sm" id="block-to-sm">
+        <mxGraphModel dx="1633" dy="1214" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="block-to-sm-2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=16;fontColor=#111827;fontFamily=PingFang SC;fontStyle=1;" value="block怎样分到SM上，又怎样分成warp（示意：4个SM，每个SM最多同时驻留2个block）" vertex="1">
+                    <mxGeometry height="28" width="880" x="40" y="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#475569;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=4;" value="" vertex="1">
+                    <mxGeometry height="190" width="290" x="30" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-4" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#6b7280;fontFamily=PingFang SC;" value="grid：12个block" vertex="1">
+                    <mxGeometry height="20" width="260" x="40" y="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 0" vertex="1">
+                    <mxGeometry height="40" width="60" x="40" y="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 1" vertex="1">
+                    <mxGeometry height="40" width="60" x="110" y="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 2" vertex="1">
+                    <mxGeometry height="40" width="60" x="180" y="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 3" vertex="1">
+                    <mxGeometry height="40" width="60" x="250" y="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 4" vertex="1">
+                    <mxGeometry height="40" width="60" x="40" y="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 5" vertex="1">
+                    <mxGeometry height="40" width="60" x="110" y="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 6" vertex="1">
+                    <mxGeometry height="40" width="60" x="180" y="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 7" vertex="1">
+                    <mxGeometry height="40" width="60" x="250" y="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6b7280;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;dashed=1;fontColor=#6b7280;" value="block 8" vertex="1">
+                    <mxGeometry height="40" width="60" x="40" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6b7280;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;dashed=1;fontColor=#6b7280;" value="block 9" vertex="1">
+                    <mxGeometry height="40" width="60" x="110" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6b7280;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;dashed=1;fontColor=#6b7280;" value="block 10" vertex="1">
+                    <mxGeometry height="40" width="60" x="180" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6b7280;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;dashed=1;fontColor=#6b7280;" value="block 11" vertex="1">
+                    <mxGeometry height="40" width="60" x="250" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-17" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="虚线：暂时没有SM能容纳，等前面的block结束" vertex="1">
+                    <mxGeometry height="20" width="320" x="30" y="238" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-18" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=2;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="330" y="135" as="sourcePoint"/>
+                        <mxPoint x="390" y="135" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="block-to-sm-19" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="分配" vertex="1">
+                    <mxGeometry height="20" width="80" x="324" y="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#2563eb;strokeWidth=2;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=6;" value="" vertex="1">
+                    <mxGeometry height="150" width="120" x="410" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-21" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#2563eb;fontFamily=PingFang SC;fontStyle=1;" value="SM 0" vertex="1">
+                    <mxGeometry height="20" width="120" x="410" y="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 0" vertex="1">
+                    <mxGeometry height="42" width="100" x="420" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 4" vertex="1">
+                    <mxGeometry height="42" width="100" x="420" y="124" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#16a34a;strokeWidth=2;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=6;" value="" vertex="1">
+                    <mxGeometry height="150" width="120" x="544" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-25" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#16a34a;fontFamily=PingFang SC;fontStyle=1;" value="SM 1" vertex="1">
+                    <mxGeometry height="20" width="120" x="544" y="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 1" vertex="1">
+                    <mxGeometry height="42" width="100" x="554" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 5" vertex="1">
+                    <mxGeometry height="42" width="100" x="554" y="124" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-28" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#d97706;strokeWidth=2;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=6;" value="" vertex="1">
+                    <mxGeometry height="150" width="120" x="678" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-29" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#d97706;fontFamily=PingFang SC;fontStyle=1;" value="SM 2" vertex="1">
+                    <mxGeometry height="20" width="120" x="678" y="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-30" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 2" vertex="1">
+                    <mxGeometry height="42" width="100" x="688" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 6" vertex="1">
+                    <mxGeometry height="42" width="100" x="688" y="124" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-32" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#9333ea;strokeWidth=2;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=6;" value="" vertex="1">
+                    <mxGeometry height="150" width="120" x="812" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-33" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#9333ea;fontFamily=PingFang SC;fontStyle=1;" value="SM 3" vertex="1">
+                    <mxGeometry height="20" width="120" x="812" y="44" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-34" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 3" vertex="1">
+                    <mxGeometry height="42" width="100" x="822" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="block 7" vertex="1">
+                    <mxGeometry height="42" width="100" x="822" y="124" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-36" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="block 0 有256个线程，按序号每32个分成一个warp，一共8个warp：" vertex="1">
+                    <mxGeometry height="24" width="880" x="40" y="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-37" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="warp 0：线程 0～31" vertex="1">
+                    <mxGeometry height="36" width="206" x="40" y="304" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-38" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="warp 1：线程 32～63" vertex="1">
+                    <mxGeometry height="36" width="206" x="260" y="304" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-39" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="warp 2：线程 64～95" vertex="1">
+                    <mxGeometry height="36" width="206" x="480" y="304" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="warp 3：线程 96～127" vertex="1">
+                    <mxGeometry height="36" width="206" x="700" y="304" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="warp 4：线程 128～159" vertex="1">
+                    <mxGeometry height="36" width="206" x="40" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-42" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="warp 5：线程 160～191" vertex="1">
+                    <mxGeometry height="36" width="206" x="260" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-43" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="warp 6：线程 192～223" vertex="1">
+                    <mxGeometry height="36" width="206" x="480" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="warp 7：线程 224～255" vertex="1">
+                    <mxGeometry height="36" width="206" x="700" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="block-to-sm-45" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#6b7280;fontFamily=PingFang SC;" value="一个block的所有warp都在同一个SM上执行，直到这个block结束，中途不会换到别的SM" vertex="1">
+                    <mxGeometry height="22" width="880" x="40" y="400" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="warp-timeline" id="warp-timeline">
+        <mxGraphModel dx="915" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="warp-timeline-2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=16;fontColor=#111827;fontFamily=PingFang SC;fontStyle=1;" value="用切换隐藏延迟：4个warp轮流执行（示意，时间比例并非实际）" vertex="1">
+                    <mxGeometry height="28" width="880" x="40" y="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-3" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#2563eb;fontFamily=PingFang SC;fontStyle=1;" value="warp 0" vertex="1">
+                    <mxGeometry height="34" width="80" x="40" y="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="130" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="174" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="306" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="350" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="482" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="526" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="658" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="702" y="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-12" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#16a34a;fontFamily=PingFang SC;fontStyle=1;" value="warp 1" vertex="1">
+                    <mxGeometry height="34" width="80" x="40" y="116" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="174" y="118" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="218" y="118" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="350" y="118" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="394" y="118" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="526" y="118" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="570" y="118" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="702" y="118" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="" vertex="1">
+                    <mxGeometry height="30" width="88" x="746" y="118" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-21" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#d97706;fontFamily=PingFang SC;fontStyle=1;" value="warp 2" vertex="1">
+                    <mxGeometry height="34" width="80" x="40" y="162" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="218" y="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="262" y="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="394" y="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-25" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="438" y="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="570" y="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="614" y="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-28" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="746" y="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="" vertex="1">
+                    <mxGeometry height="30" width="44" x="790" y="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-30" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#9333ea;fontFamily=PingFang SC;fontStyle=1;" value="warp 3" vertex="1">
+                    <mxGeometry height="34" width="80" x="40" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="262" y="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-32" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="306" y="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-33" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="438" y="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-34" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="482" y="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="614" y="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-36" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;fontColor=#6b7280;" value="等待数据" vertex="1">
+                    <mxGeometry height="30" width="132" x="658" y="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-37" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="执行" vertex="1">
+                    <mxGeometry height="30" width="44" x="790" y="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-38" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;fontStyle=1;" value="计算单元&lt;br&gt;在执行" vertex="1">
+                    <mxGeometry height="40" width="90" x="40" y="268" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-39" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w0" vertex="1">
+                    <mxGeometry height="30" width="44" x="130" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w1" vertex="1">
+                    <mxGeometry height="30" width="44" x="174" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w2" vertex="1">
+                    <mxGeometry height="30" width="44" x="218" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-42" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w3" vertex="1">
+                    <mxGeometry height="30" width="44" x="262" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-43" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w0" vertex="1">
+                    <mxGeometry height="30" width="44" x="306" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w1" vertex="1">
+                    <mxGeometry height="30" width="44" x="350" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-45" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w2" vertex="1">
+                    <mxGeometry height="30" width="44" x="394" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-46" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w3" vertex="1">
+                    <mxGeometry height="30" width="44" x="438" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-47" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w0" vertex="1">
+                    <mxGeometry height="30" width="44" x="482" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-48" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w1" vertex="1">
+                    <mxGeometry height="30" width="44" x="526" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-49" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w2" vertex="1">
+                    <mxGeometry height="30" width="44" x="570" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-50" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w3" vertex="1">
+                    <mxGeometry height="30" width="44" x="614" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-51" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w0" vertex="1">
+                    <mxGeometry height="30" width="44" x="658" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-52" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w1" vertex="1">
+                    <mxGeometry height="30" width="44" x="702" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-53" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdecc8;strokeColor=#d97706;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w2" vertex="1">
+                    <mxGeometry height="30" width="44" x="746" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-54" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9333ea;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="w3" vertex="1">
+                    <mxGeometry height="30" width="44" x="790" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-55" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="130" y="320" as="sourcePoint"/>
+                        <mxPoint x="854" y="320" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="warp-timeline-56" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="时间" vertex="1">
+                    <mxGeometry height="20" width="100" x="774" y="324" as="geometry"/>
+                </mxCell>
+                <mxCell id="warp-timeline-57" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#6b7280;fontFamily=PingFang SC;" value="每个warp执行一条访存指令后，要等很久数据才回来。调度器每个周期挑一个准备好的warp执行，&lt;br&gt;warp 0在等的时候就执行warp 1、2、3。只要warp足够多，计算单元就一刻不停" vertex="1">
+                    <mxGeometry height="44" width="880" x="40" y="346" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="memory-pyramid" id="memory-pyramid">
+        <mxGraphModel dx="1004" dy="746" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="memory-pyramid-2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=16;fontColor=#111827;fontFamily=PingFang SC;fontStyle=1;" value="T4的内存层次（延迟为第6章实测）" vertex="1">
+                    <mxGeometry height="28" width="900" x="40" y="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-3" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#6b7280;fontFamily=PingFang SC;fontStyle=1;" value="容量" vertex="1">
+                    <mxGeometry height="22" width="160" x="520" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-4" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#6b7280;fontFamily=PingFang SC;fontStyle=1;" value="延迟" vertex="1">
+                    <mxGeometry height="22" width="160" x="690" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-5" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#6b7280;fontFamily=PingFang SC;fontStyle=1;" value="谁能访问" vertex="1">
+                    <mxGeometry height="22" width="160" x="810" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fde68a;strokeColor=#ca8a04;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="寄存器" vertex="1">
+                    <mxGeometry height="56" width="180" x="180" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-7" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="每个SM 256KiB" vertex="1">
+                    <mxGeometry height="56" width="170" x="520" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-8" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="几乎为0" vertex="1">
+                    <mxGeometry height="56" width="120" x="690" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-9" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="每个线程自己" vertex="1">
+                    <mxGeometry height="56" width="180" x="810" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-10" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#e2e8f0;strokeWidth=1;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="366" y="108" as="sourcePoint"/>
+                        <mxPoint x="510" y="108" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="memory-pyramid-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="共享内存 / L1" vertex="1">
+                    <mxGeometry height="56" width="280" x="130" y="144" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-12" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="每个SM 96KiB，两者共用" vertex="1">
+                    <mxGeometry height="56" width="170" x="520" y="144" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-13" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="22 / 40 周期" vertex="1">
+                    <mxGeometry height="56" width="120" x="690" y="144" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-14" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="共享内存：同一个block&lt;br&gt;L1：同一个SM" vertex="1">
+                    <mxGeometry height="56" width="180" x="810" y="144" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-15" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#e2e8f0;strokeWidth=1;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="416" y="172" as="sourcePoint"/>
+                        <mxPoint x="510" y="172" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="memory-pyramid-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#c7d2fe;strokeColor=#4f46e5;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="L2缓存" vertex="1">
+                    <mxGeometry height="56" width="380" x="80" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-17" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="全GPU 4MiB" vertex="1">
+                    <mxGeometry height="56" width="170" x="520" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-18" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="约232 周期" vertex="1">
+                    <mxGeometry height="56" width="120" x="690" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-19" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="所有SM" vertex="1">
+                    <mxGeometry height="56" width="180" x="810" y="208" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-20" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#e2e8f0;strokeWidth=1;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="466" y="236" as="sourcePoint"/>
+                        <mxPoint x="510" y="236" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="memory-pyramid-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#dc2626;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="显存（global memory）" vertex="1">
+                    <mxGeometry height="56" width="480" x="30" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-22" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="16GB" vertex="1">
+                    <mxGeometry height="56" width="170" x="520" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-23" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="约470～495 周期" vertex="1">
+                    <mxGeometry height="56" width="120" x="690" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-24" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="所有线程，以及主机" vertex="1">
+                    <mxGeometry height="56" width="180" x="810" y="272" as="geometry"/>
+                </mxCell>
+                <mxCell id="memory-pyramid-25" edge="1" parent="1" style="endArrow=none;html=1;strokeColor=#e2e8f0;strokeWidth=1;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="516" y="300" as="sourcePoint"/>
+                        <mxPoint x="510" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="memory-pyramid-26" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="20" y="326" as="sourcePoint"/>
+                        <mxPoint x="20" y="90" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="memory-pyramid-27" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="更快&lt;br&gt;更小&lt;br&gt;范围更窄" vertex="1">
+                    <mxGeometry height="60" width="60" x="26" y="84" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

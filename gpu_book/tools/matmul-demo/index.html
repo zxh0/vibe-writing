@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>矩阵乘法演示</title>
+<style>
+:root{
+  --bg:#f7f7f8; --panel:#ffffff; --border:#e3e5e8; --text:#16181d; --muted:#6b7280;
+  --accent:#2563eb; --accent-soft:#eff4ff; --cell:#ffffff;
+  --a:#dc2626; --a-soft:#fdecec; --b:#16a34a; --b-soft:#e8f6ee;
+  --c:#d97706; --c-soft:#fdf3e2; --done:#f2f3f5;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15171c; --panel:#1c1f26; --border:#2d3139; --text:#e6e8ec; --muted:#9aa1ad;
+    --accent:#6ea8fe; --accent-soft:#1e2637; --cell:#1c1f26;
+    --a:#f87171; --a-soft:#3a1f22; --b:#4ade80; --b-soft:#1b3326;
+    --c:#fbbf24; --c-soft:#3a2f17; --done:#252931;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:24px 16px 64px}
+h1{font-size:22px; margin:0 0 4px}
+.sub{color:var(--muted); margin:0 0 20px}
+.card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:16px}
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end}
+label.f{display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--muted)}
+input[type=number],select{
+  background:var(--panel); color:var(--text); border:1px solid var(--border);
+  border-radius:7px; padding:7px 9px; font:13px/1.4 inherit; width:76px;
+}
+select{width:auto}
+input[type=range]{width:140px; accent-color:var(--accent)}
+input:focus,select:focus{outline:2px solid var(--accent-soft); border-color:var(--accent)}
+label.chk{display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text); padding-bottom:7px; cursor:pointer}
+label.chk.off{opacity:.4; cursor:default}
+button{
+  background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:7px;
+  padding:7px 12px; font:13px/1.4 inherit; cursor:pointer;
+}
+button:hover{border-color:var(--accent); color:var(--accent)}
+button.primary{background:var(--accent); border-color:var(--accent); color:#fff; min-width:72px}
+button.primary:hover{opacity:.9; color:#fff}
+button:disabled{opacity:.4; cursor:default}
+.tabs{display:inline-flex; border:1px solid var(--border); border-radius:8px; overflow:hidden}
+.tabs button{border:0; border-radius:0; border-right:1px solid var(--border); padding:7px 14px}
+.tabs button:last-child{border-right:0}
+.tabs button.on{background:var(--accent-soft); color:var(--accent); font-weight:600}
+.shape{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px; color:var(--muted); padding-bottom:7px}
+.hidden{display:none !important}
+.stage-scroll{overflow-x:auto; padding:4px 0}
+.stage{display:flex; align-items:flex-start; gap:14px; width:max-content; margin:0 auto}
+.mat-wrap{display:flex; flex-direction:column; gap:4px}
+.mat-title{line-height:20px; font-size:12px; color:var(--muted); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.mat-title b{color:var(--text)}
+/* 运算符与第一行单元格对齐：标题20px + 间距4px，行高等于单元格高度 */
+.op{font-size:24px; color:var(--muted); margin-top:24px; line-height:44px}
+.mat{display:grid; gap:3px}
+.cell{
+  min-width:44px; height:44px; padding:0 4px; display:flex; align-items:center; justify-content:center;
+  background:var(--cell); border:1px solid var(--border); border-radius:6px;
+  font:13px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-variant-numeric:tabular-nums;
+  transition:background .15s, border-color .15s, color .15s, transform .15s;
+  position:relative;
+}
+/* 分块视角下，块与块之间留出更宽的缝 */
+.cell.br{margin-right:7px}
+.cell.bb{margin-bottom:7px}
+.cell .idx{position:absolute; top:2px; left:4px; font-size:8px; color:var(--muted); opacity:.8}
+#matA .cell.hl{background:var(--a-soft); border-color:var(--a)}
+#matB .cell.hl{background:var(--b-soft); border-color:var(--b)}
+#matA .cell.pair{background:var(--a); border-color:var(--a); color:#fff}
+#matB .cell.pair{background:var(--b); border-color:var(--b); color:#fff}
+/* 只有一对数相乘时才放大，整列、整块高亮时放大会互相重叠 */
+.stage.single .cell.pair,.stage.single .cell.cur{transform:scale(1.08)}
+#matA .cell.pair .idx,#matB .cell.pair .idx,#matC .cell.cur .idx{color:#fff}
+#matC.clickable .cell{cursor:pointer}
+#matC .cell.empty{color:transparent}
+#matC .cell.partial{background:var(--c-soft); border-color:var(--c); color:var(--c)}
+#matC .cell.done{background:var(--done)}
+#matC .cell.cur{background:var(--c); border-color:var(--c); color:#fff}
+.calc{
+  margin-top:14px; padding:12px 14px; background:var(--bg); border:1px solid var(--border); border-radius:8px;
+  font:14px/1.9 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; overflow-x:auto; white-space:nowrap; min-height:76px;
+}
+.calc .lbl{color:var(--muted); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif; font-size:13px}
+.calc .term{padding:1px 4px; border-radius:4px}
+.calc .term.now{background:var(--c-soft); outline:1px solid var(--c)}
+.calc .a{color:var(--a); font-weight:600}
+.calc .b{color:var(--b); font-weight:600}
+.calc .c{color:var(--c); font-weight:600}
+.calc .pending{color:var(--muted); opacity:.5}
+.calc .eq{display:flex; align-items:center; gap:10px; margin-top:6px}
+.mini{display:inline-grid; gap:2px; vertical-align:middle}
+.mini span{
+  min-width:30px; padding:1px 5px; text-align:center; border:1px solid var(--border); border-radius:4px;
+  font-size:12px; line-height:20px; background:var(--panel);
+}
+.mini.a span{border-color:var(--a); color:var(--a)}
+.mini.b span{border-color:var(--b); color:var(--b)}
+.mini.c span{border-color:var(--c); color:var(--c)}
+.ctrl{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:14px}
+.ctrl.export{margin-top:10px; padding-top:12px; border-top:1px dashed var(--border)}
+.status{font-size:12px; color:var(--muted)}
+.progress{margin-left:auto; font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums}
+.note{color:var(--muted); font-size:13px; margin:0}
+.note b{color:var(--text)}
+@media (max-width:560px){
+  .cell{min-width:36px; height:36px; font-size:12px}
+  .op{line-height:36px}
+  .progress{margin-left:0; width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>矩阵乘法演示</h1>
+  <p class="sub">C = A × B。同一个矩阵乘法，可以从点积、外积、分块三种视角来计算，结果完全相同。</p>
+
+  <div class="card">
+    <div class="row">
+      <label class="f">M（A的行数）<input type="number" id="inM" min="1" max="8" value="2"></label>
+      <label class="f">K（A的列数 = B的行数）<input type="number" id="inK" min="1" max="8" value="3"></label>
+      <label class="f">N（B的列数）<input type="number" id="inN" min="1" max="8" value="2"></label>
+      <label class="f">元素取值
+        <select id="inFill">
+          <option value="seq">顺序整数</option>
+          <option value="small">随机整数（-3到3）</option>
+          <option value="digit">随机整数（0到9）</option>
+        </select>
+      </label>
+      <button id="btnFill">重新生成</button>
+      <div class="shape" id="shape"></div>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <label class="f">视角
+        <div class="tabs" id="tabs">
+          <button data-mode="dot" class="on">点积视角</button>
+          <button data-mode="outer">外积视角</button>
+          <button data-mode="block">分块视角</button>
+        </div>
+      </label>
+      <label class="f hidden" id="bsWrap">块大小
+        <select id="inBs">
+          <option value="1">1×1</option>
+          <option value="2" selected>2×2</option>
+          <option value="3">3×3</option>
+          <option value="4">4×4</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="stage-scroll">
+      <div class="stage">
+        <div class="mat-wrap">
+          <div class="mat-title" id="titleA"></div>
+          <div class="mat" id="matA"></div>
+        </div>
+        <div class="op">×</div>
+        <div class="mat-wrap">
+          <div class="mat-title" id="titleB"></div>
+          <div class="mat" id="matB"></div>
+        </div>
+        <div class="op">=</div>
+        <div class="mat-wrap">
+          <div class="mat-title" id="titleC"></div>
+          <div class="mat" id="matC"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc" id="calc"></div>
+
+    <div class="ctrl">
+      <button class="primary" id="btnPlay">播放</button>
+      <button id="btnPrev">上一步</button>
+      <button id="btnNext">下一步</button>
+      <button id="btnReset">重置</button>
+      <button id="btnAll">直接算完</button>
+      <label class="f">速度<input type="range" id="inSpeed" min="1" max="10" value="5"></label>
+      <label class="chk" id="fineWrap"><input type="checkbox" id="inFine" checked>逐次乘加</label>
+      <span class="progress" id="progress"></span>
+    </div>
+    <div class="ctrl export">
+      <button id="btnGif">导出GIF</button>
+      <button id="btnPng">导出当前帧PNG</button>
+      <label class="chk"><input type="checkbox" id="inCaption" checked>附带说明文字</label>
+      <span class="status" id="exportStatus">导出整段动画（从第0步到最后一步），帧间隔取当前速度，图片为2倍分辨率。</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="note" id="note"></p>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const MAX = 8;
+  const NOTES = {
+    dot: `<b>点积视角：</b>C中的每个元素，是A的一行与B的一列的点积。按 i、j、k 的顺序循环，一次算完C的一个元素，再算下一个。
+      计算C中的某个元素时，A中用到的那一行标成浅红色，B中用到的那一列标成浅绿色。
+      勾选“逐次乘加”时，每一步只做一次乘法和一次加法，深色的两格就是这一步相乘的两个数；取消勾选后，每一步直接算完一个元素。
+      点击C中的任意一格，可以直接跳到这个元素。`,
+    outer: `<b>外积视角：</b>取出A的第k列和B的第k行，二者相乘得到一个和C一样大的矩阵，叫做外积。一共有K个外积，C就是它们的和。
+      和点积视角相比，三重循环完全一样，只是把 k 那一层挪到了最外面。
+      取消勾选“逐次乘加”时，每一步把一个完整的外积加到C上，C的所有元素同时更新；勾选后，每一步只更新C的一个元素。
+      注意C的元素要到最后一个外积加完才算完成，在此之前都只是部分和。`,
+    block: `<b>分块视角：</b>把A、B、C都切成小块（矩阵中较宽的缝就是块的边界）。小块之间的运算规则和元素之间一样：C的块(I,J)等于A的第I行小块与B的第J列小块“逐对相乘再相加”，只不过这里的“相乘”是两个小矩阵的矩阵乘法。
+      每一步做一次小矩阵乘法，并把结果累加到C的对应块上。块大小取1×1时，就退化成了点积视角。
+      矩阵尺寸不是块大小的整数倍时，边上的块会小一些。点击C中的任意一格，可以跳到它所在的块。`,
+  };
+
+  let mode = 'dot';
+  let M, K, N, A, B, C;
+  let steps = [];   // 每一步：要高亮的单元格，以及要累加的乘积项 [i, j, k]
+  let pos = 0;      // 已执行的步数
+  let timer = null;
+  let cellsA = [], cellsB = [], cellsC = [];
+
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const readDim = el => { const v = clamp(parseInt(el.value, 10) || 1, 1, MAX); el.value = v; return v; };
+  const range = n => Array.from({length: n}, (_, i) => i);
+  const fine = () => $('inFine').checked;
+  const bs = () => +$('inBs').value;
+
+  function genValues() {
+    const fill = $('inFill').value;
+    const rnd = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+    const gen = (rows, cols, start) => range(rows).map(r => range(cols).map(c => {
+      if (fill === 'seq') return start + r * cols + c;
+      if (fill === 'small') return rnd(-3, 3);
+      return rnd(0, 9);
+    }));
+    A = gen(M, K, 1);
+    B = gen(K, N, M * K + 1);
+    C = range(M).map(i => range(N).map(j => range(K).reduce((s, k) => s + A[i][k] * B[k][j], 0)));
+  }
+
+  // ---------- 三种视角的步骤 ----------
+  function buildSteps() {
+    steps = [];
+    if (mode === 'dot') {
+      for (const i of range(M)) for (const j of range(N)) {
+        const aHl = range(K).map(k => [i, k]), bHl = range(K).map(k => [k, j]);
+        if (fine()) for (const k of range(K))
+          steps.push({i, j, k, aHl, bHl, aPair: [[i, k]], bPair: [[k, j]], cCur: [[i, j]], adds: [[i, j, k]]});
+        else
+          steps.push({i, j, k: -1, aHl, bHl, aPair: [], bPair: [], cCur: [[i, j]], adds: range(K).map(k => [i, j, k])});
+      }
+    } else if (mode === 'outer') {
+      for (const k of range(K)) {
+        const aHl = range(M).map(i => [i, k]), bHl = range(N).map(j => [k, j]);
+        if (fine()) {
+          for (const i of range(M)) for (const j of range(N))
+            steps.push({i, j, k, aHl, bHl, aPair: [[i, k]], bPair: [[k, j]], cCur: [[i, j]], adds: [[i, j, k]]});
+        } else {
+          const all = [];
+          for (const i of range(M)) for (const j of range(N)) all.push([i, j, k]);
+          steps.push({i: -1, j: -1, k, aHl, bHl, aPair: aHl, bPair: bHl, cCur: all.map(([i, j]) => [i, j]), adds: all});
+        }
+      }
+    } else {
+      const s = bs();
+      const blocks = n => range(Math.ceil(n / s)).map(b => range(Math.min(s, n - b * s)).map(x => b * s + x));
+      const rowsM = blocks(M), colsN = blocks(N), ks = blocks(K);
+      rowsM.forEach((ri, I) => colsN.forEach((cj, J) => {
+        const aHl = [], bHl = [];
+        for (const i of ri) for (const k of range(K)) aHl.push([i, k]);
+        for (const k of range(K)) for (const j of cj) bHl.push([k, j]);
+        ks.forEach((kl, L) => {
+          const aPair = [], bPair = [], cCur = [], adds = [];
+          for (const i of ri) for (const k of kl) aPair.push([i, k]);
+          for (const k of kl) for (const j of cj) bPair.push([k, j]);
+          for (const i of ri) for (const j of cj) { cCur.push([i, j]); for (const k of kl) adds.push([i, j, k]); }
+          steps.push({I, J, L, ri, cj, kl, aHl, bHl, aPair, bPair, cCur, adds});
+        });
+      }));
+    }
+  }
+
+  // ---------- 绘制矩阵 ----------
+  function buildMat(el, rows, cols, vals, name, rowCut, colCut) {
+    el.innerHTML = '';
+    el.style.gridTemplateColumns = `repeat(${cols}, auto)`;
+    const cells = [];
+    for (let r = 0; r < rows; r++) {
+      cells.push([]);
+      for (let c = 0; c < cols; c++) {
+        const d = document.createElement('div');
+        d.className = 'cell';
+        if (colCut && (c + 1) % colCut === 0 && c + 1 < cols) d.dataset.br = 1;
+        if (rowCut && (r + 1) % rowCut === 0 && r + 1 < rows) d.dataset.bb = 1;
+        d.innerHTML = `<span class="idx">${r},${c}</span><span class="v">${vals ? vals[r][c] : ''}</span>`;
+        d.title = `${name}[${r}][${c}]`;
+        el.appendChild(d);
+        cells[r].push(d);
+      }
+    }
+    return cells;
+  }
+
+  function build() {
+    stop();
+    M = readDim($('inM')); K = readDim($('inK')); N = readDim($('inN'));
+    genValues();
+    layout();
+  }
+
+  // 形状或视角变化时重建界面（数值保持不变）
+  function layout() {
+    stop();
+    const s = mode === 'block' ? bs() : 0;
+    buildSteps();
+    pos = 0;
+    cellsA = buildMat($('matA'), M, K, A, 'A', s, s);
+    cellsB = buildMat($('matB'), K, N, B, 'B', s, s);
+    cellsC = buildMat($('matC'), M, N, null, 'C', s, s);
+    cellsC.forEach((row, i) => row.forEach((d, j) => d.addEventListener('click', () => jumpTo(i, j))));
+    $('matC').classList.toggle('clickable', mode !== 'outer');
+    $('titleA').innerHTML = `<b>A</b>  ${M}×${K}`;
+    $('titleB').innerHTML = `<b>B</b>  ${K}×${N}`;
+    $('titleC').innerHTML = `<b>C</b>  ${M}×${N}`;
+    $('shape').textContent = `(${M}×${K}) × (${K}×${N}) = (${M}×${N})，共 ${M*N*K} 次乘加`;
+    $('note').innerHTML = NOTES[mode];
+    $('bsWrap').classList.toggle('hidden', mode !== 'block');
+    $('inFine').disabled = mode === 'block';
+    $('fineWrap').classList.toggle('off', mode === 'block');
+    document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.mode === mode));
+    render();
+  }
+
+  // ---------- 根据已执行的步数渲染 ----------
+  // 重放前p步，得到C的部分和，以及每个元素已累加了多少项
+  function stateAt(p) {
+    const sum = range(M).map(() => Array(N).fill(0));
+    const cnt = range(M).map(() => Array(N).fill(0));
+    for (let q = 0; q < p; q++) for (const [i, j, k] of steps[q].adds) { sum[i][j] += A[i][k] * B[k][j]; cnt[i][j]++; }
+    return {sum, cnt, cur: p > 0 ? steps[p - 1] : null};
+  }
+
+  function render() {
+    const {sum, cnt, cur} = stateAt(pos);
+    const isCur = new Set(cur ? cur.cCur.map(([i, j]) => i * N + j) : []);
+
+    let done = 0;
+    for (let i = 0; i < M; i++) for (let j = 0; j < N; j++) {
+      const d = cellsC[i][j];
+      d.className = 'cell' + (d.dataset.br ? ' br' : '') + (d.dataset.bb ? ' bb' : '');
+      d.querySelector('.v').textContent = sum[i][j];
+      if (cnt[i][j] === K) done++;
+      if (isCur.has(i * N + j)) d.classList.add('cur');
+      else if (cnt[i][j] === K) d.classList.add('done');
+      else if (cnt[i][j] > 0) d.classList.add('partial');
+      else d.classList.add('empty');
+    }
+    const paint = (cells, rows, cols, hl, pair) => {
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        const d = cells[r][c];
+        d.className = 'cell' + (d.dataset.br ? ' br' : '') + (d.dataset.bb ? ' bb' : '');
+      }
+      for (const [r, c] of hl) cells[r][c].classList.add('hl');
+      for (const [r, c] of pair) cells[r][c].classList.add('pair');
+    };
+    paint(cellsA, M, K, cur ? cur.aHl : [], cur ? cur.aPair : []);
+    paint(cellsB, K, N, cur ? cur.bHl : [], cur ? cur.bPair : []);
+
+    document.querySelector('.stage').classList.toggle('single', !!cur && cur.cCur.length === 1);
+    renderCalc(cur, sum, cnt);
+    $('progress').textContent = `第 ${pos} / ${steps.length} 步 · 已完成 ${done} / ${M*N} 个元素`;
+    $('btnPrev').disabled = pos === 0;
+    $('btnNext').disabled = pos === steps.length;
+    $('btnAll').disabled = pos === steps.length;
+    $('btnPlay').textContent = timer ? '暂停' : (pos === steps.length ? '重新播放' : '播放');
+  }
+
+  // ---------- 下方的计算过程 ----------
+  const fmt = x => x < 0 ? `(${x})` : `${x}`;
+  const mini = (cls, rows, cols, f) =>
+    `<span class="mini ${cls}" style="grid-template-columns:repeat(${cols},auto)">` +
+    rows.map(r => cols && range(cols).map(c => `<span>${f(r, c)}</span>`).join('')).join('') + `</span>`;
+  const sub = (x, y) => `<sub>${x}${y}</sub>`;
+
+  function renderCalc(cur, sum, cnt) {
+    const el = $('calc');
+    if (!cur) {
+      const first = {
+        dot: '第一步计算 C[0][0]，用到 A 的第 0 行和 B 的第 0 列。',
+        outer: '第一步取 A 的第 0 列和 B 的第 0 行，计算第一个外积。',
+        block: '第一步计算 C 左上角的块，用到 A 和 B 左上角的块。',
+      }[mode];
+      el.innerHTML = `<span class="lbl">点击“播放”或“下一步”开始。${first}</span>`;
+      return;
+    }
+    if (mode === 'dot') return calcDot(el, cur);
+    if (mode === 'outer') return calcOuter(el, cur, sum, cnt);
+    return calcBlock(el, cur, sum);
+  }
+
+  function calcDot(el, cur) {
+    const {i, j} = cur;
+    const upto = cur.k < 0 ? K - 1 : cur.k;
+    const sym = [], terms = [];
+    let s = 0;
+    for (let k = 0; k < K; k++) {
+      const p = k <= upto ? '' : ' pending';
+      sym.push(`<span class="${p}"><span class="a">a${sub(i, k)}</span><span class="b">b${sub(k, j)}</span></span>`);
+      if (k <= upto) s += A[i][k] * B[k][j];
+      terms.push(`<span class="term${k === cur.k ? ' now' : ''}${p}"><span class="a">${fmt(A[i][k])}</span>×<span class="b">${fmt(B[k][j])}</span></span>`);
+    }
+    const finished = upto === K - 1;
+    let line3 = '';
+    if (cur.k >= 0) {
+      const prev = s - A[i][cur.k] * B[cur.k][j];
+      line3 = `<br><span class="lbl">本步：</span>${prev} + <span class="a">${fmt(A[i][cur.k])}</span>×<span class="b">${fmt(B[cur.k][j])}</span> = <span class="c">${s}</span>` +
+        `<span class="lbl">　${finished ? `C[${i}][${j}] 计算完成` : `还差 ${K - 1 - cur.k} 项`}</span>`;
+    }
+    el.innerHTML =
+      `<span class="lbl">A 的第 ${i} 行 · B 的第 ${j} 列：</span><span class="c">c${sub(i, j)}</span> = ${sym.join(' + ')}<br>` +
+      `<span class="lbl">代入数值：</span><span class="c">${finished ? C[i][j] : '?'}</span> = ${terms.join(' + ')}` + line3;
+  }
+
+  function calcOuter(el, cur, sum, cnt) {
+    const {k} = cur;
+    const head = `<span class="lbl">第 ${k + 1} / ${K} 个外积：A 的第 ${k} 列 × B 的第 ${k} 行，</span>` +
+      `<span class="c">C</span> += <span class="a">a<sub>:,${k}</sub></span><span class="b">b<sub>${k},:</sub></span>`;
+    if (cur.i < 0) {
+      const outer = mini('c', range(M), N, (i, j) => A[i][k] * B[k][j]);
+      el.innerHTML = head +
+        `<div class="eq">${mini('a', range(M), 1, i => A[i][k])}<span>×</span>${mini('b', [0], N, (_, j) => B[k][j])}` +
+        `<span>=</span>${outer}<span class="lbl">把这个外积加到 C 的全部 ${M * N} 个元素上${k === K - 1 ? '，C 计算完成' : ''}</span></div>`;
+      return;
+    }
+    const {i, j} = cur;
+    const now = sum[i][j], prev = now - A[i][k] * B[k][j];
+    el.innerHTML = head +
+      `<br><span class="lbl">本步：</span><span class="c">c${sub(i, j)}</span> = ${prev} + <span class="a">${fmt(A[i][k])}</span>×<span class="b">${fmt(B[k][j])}</span> = <span class="c">${now}</span>` +
+      `<span class="lbl">　c${sub(i, j)} 已累加 ${cnt[i][j]} / ${K} 项${cnt[i][j] === K ? '，计算完成' : ''}</span>`;
+  }
+
+  function calcBlock(el, cur, sum) {
+    const {I, J, L, ri, cj, kl} = cur;
+    const nL = Math.ceil(K / bs());
+    const prod = mini('c', ri, cj.length, (i, c) => kl.reduce((s, k) => s + A[i][k] * B[k][cj[c]], 0));
+    const after = mini('c', ri, cj.length, (i, c) => sum[i][cj[c]]);
+    const span = (arr) => arr.length === 1 ? `${arr[0]}` : `${arr[0]}–${arr[arr.length - 1]}`;
+    el.innerHTML =
+      `<span class="lbl">C 的块(${I},${J}) 的第 ${L + 1} / ${nL} 项：</span>` +
+      `<span class="c">C<sub>${I}${J}</sub></span> += <span class="a">A<sub>${I}${L}</sub></span><span class="b">B<sub>${L}${J}</sub></span>` +
+      `<span class="lbl">　（A 的第 ${span(ri)} 行、第 ${span(kl)} 列 × B 的第 ${span(kl)} 行、第 ${span(cj)} 列）</span>` +
+      `<div class="eq">${mini('a', ri, kl.length, (i, c) => A[i][kl[c]])}<span>×</span>` +
+      `${mini('b', kl, cj.length, (k, c) => B[k][cj[c]])}<span>=</span>${prod}` +
+      `<span class="lbl">累加后</span>${after}` +
+      `<span class="lbl">${L === nL - 1 ? `块(${I},${J}) 计算完成` : `还差 ${nL - 1 - L} 项`}</span></div>`;
+  }
+
+  // ---------- 导出GIF / PNG ----------
+  // 导出的图片固定使用浅色配色，便于放进书里
+  const PAL = {
+    bg: '#ffffff', border: '#d9dce1', text: '#16181d', muted: '#6b7280', cell: '#ffffff',
+    a: '#dc2626', aSoft: '#fdecec', b: '#16a34a', bSoft: '#e8f6ee',
+    c: '#d97706', cSoft: '#fdf3e2', done: '#eef0f3',
+  };
+  const SCALE = 2;
+  const MONO = 'ui-monospace,SFMono-Regular,Menlo,Consolas,monospace';
+  const SANS = '-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+
+  // 每一步的说明文字（纯文本）
+  function caption(cur, sum) {
+    if (!cur) return {dot: '点积视角：C 的每个元素，是 A 的一行与 B 的一列的点积',
+      outer: '外积视角：C 是 K 个外积之和', block: `分块视角：块大小 ${bs()}×${bs()}`}[mode];
+    if (mode === 'dot') {
+      const {i, j} = cur, upto = cur.k < 0 ? K - 1 : cur.k;
+      const terms = range(upto + 1).map(k => `${fmt(A[i][k])}×${fmt(B[k][j])}`);
+      const rest = upto < K - 1 ? ' + …' : '';
+      return `c[${i}][${j}] = ${terms.join(' + ')}${rest} = ${sum[i][j]}`;
+    }
+    if (mode === 'outer') {
+      const {k} = cur;
+      if (cur.i < 0) return `第 ${k + 1}/${K} 个外积：C += A 的第 ${k} 列 × B 的第 ${k} 行`;
+      const {i, j} = cur, now = sum[i][j], prev = now - A[i][k] * B[k][j];
+      return `第 ${k + 1}/${K} 个外积：c[${i}][${j}] = ${prev} + ${fmt(A[i][k])}×${fmt(B[k][j])} = ${now}`;
+    }
+    const nL = Math.ceil(K / bs());
+    return `C块(${cur.I},${cur.J}) += A块(${cur.I},${cur.L}) × B块(${cur.L},${cur.J})，第 ${cur.L + 1}/${nL} 项`;
+  }
+
+  // 计算画布布局：单元格宽度取所有可能出现的数字中最宽的那个
+  function exportLayout(withCaption) {
+    const g = document.createElement('canvas').getContext('2d');
+    g.font = `13px ${MONO}`;
+    const textW = vals => Math.max(...vals.map(v => g.measureText(String(v)).width));
+    const sums = new Set([0]);
+    for (let p = 0; p <= steps.length; p++) {
+      const {sum} = stateAt(p);
+      sum.forEach(r => r.forEach(v => sums.add(v)));
+      if (steps.length > 120) { p += Math.floor(steps.length / 60); }  // 步数很多时抽样估计
+    }
+    C.forEach(r => r.forEach(v => sums.add(v)));
+    const cw = vals => Math.max(44, Math.ceil(textW(vals)) + 14);
+    const L = {pad: 18, titleH: 20, titleGap: 4, cellH: 44, gap: 3, extra: 7, opW: 38,
+      cut: mode === 'block' ? bs() : 0};
+    L.cwA = cw(A.flat()); L.cwB = cw(B.flat()); L.cwC = cw([...sums]);
+    const span = (n, w) => n * w + (n - 1) * L.gap + (L.cut ? Math.floor((n - 1) / L.cut) * L.extra : 0);
+    L.wA = span(K, L.cwA); L.wB = span(N, L.cwB); L.wC = span(N, L.cwC);
+    const hMax = Math.max(span(M, L.cellH), span(K, L.cellH));
+    L.xA = L.pad; L.xB = L.xA + L.wA + L.opW; L.xC = L.xB + L.wB + L.opW;
+    L.top = L.pad + L.titleH + L.titleGap;
+    L.capY = L.top + hMax + 26;
+    let w = L.xC + L.wC + L.pad;
+    if (withCaption) {
+      g.font = `14px ${MONO}`;
+      let capW = 0;
+      for (let p = 0; p <= steps.length; p++) {
+        const st = stateAt(p);
+        capW = Math.max(capW, g.measureText(caption(st.cur, st.sum)).width);
+        if (steps.length > 120) p += Math.floor(steps.length / 60);
+      }
+      w = Math.max(w, Math.ceil(capW) + 2 * L.pad + 20);
+    }
+    L.w = w;
+    L.h = (withCaption ? L.capY + 16 : L.top + hMax) + L.pad;
+    // 内容整体水平居中
+    L.dx = Math.floor((L.w - (L.xC + L.wC + L.pad)) / 2);
+    return L;
+  }
+
+  function drawFrame(ctx, L, p, withCaption) {
+    const {sum, cnt, cur} = stateAt(p);
+    const key = (r, c) => r * 100 + c;
+    const setOf = list => new Set((list || []).map(([r, c]) => key(r, c)));
+    const aHl = setOf(cur && cur.aHl), aPair = setOf(cur && cur.aPair);
+    const bHl = setOf(cur && cur.bHl), bPair = setOf(cur && cur.bPair);
+    const cCur = setOf(cur && cur.cCur);
+
+    ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0);
+    ctx.fillStyle = PAL.bg; ctx.fillRect(0, 0, L.w, L.h);
+    ctx.translate(L.dx, 0);
+    const pos = (i, w) => i * (w + L.gap) + (L.cut ? Math.floor(i / L.cut) * L.extra : 0);
+
+    const cell = (x, y, w, fill, stroke, color, text, idx, idxColor) => {
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x + .5, y + .5, w - 1, L.cellH - 1, 6); else ctx.rect(x + .5, y + .5, w - 1, L.cellH - 1);
+      ctx.fillStyle = fill; ctx.fill();
+      ctx.lineWidth = 1; ctx.strokeStyle = stroke; ctx.stroke();
+      ctx.fillStyle = idxColor; ctx.font = `8px ${MONO}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText(idx, x + 4, y + 3);
+      if (text !== '') {
+        ctx.fillStyle = color; ctx.font = `13px ${MONO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(text, x + w / 2, y + L.cellH / 2 + 1);
+      }
+    };
+    const title = (x, name, r, c) => {
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.font = `bold 12px ${MONO}`; ctx.fillStyle = PAL.text; ctx.fillText(name, x, L.pad + L.titleH / 2);
+      ctx.font = `12px ${MONO}`; ctx.fillStyle = PAL.muted; ctx.fillText(`  ${r}×${c}`, x + ctx.measureText(name).width, L.pad + L.titleH / 2);
+    };
+    const op = (x, s) => {
+      ctx.font = `24px ${SANS}`; ctx.fillStyle = PAL.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(s, x + L.opW / 2, L.top + L.cellH / 2);
+    };
+
+    title(L.xA, 'A', M, K); title(L.xB, 'B', K, N); title(L.xC, 'C', M, N);
+    op(L.xA + L.wA, '×'); op(L.xB + L.wB, '=');
+    for (let r = 0; r < M; r++) for (let c = 0; c < K; c++) {
+      const k = key(r, c), x = L.xA + pos(c, L.cwA), y = L.top + pos(r, L.cellH);
+      if (aPair.has(k)) cell(x, y, L.cwA, PAL.a, PAL.a, '#fff', A[r][c], `${r},${c}`, '#fff');
+      else if (aHl.has(k)) cell(x, y, L.cwA, PAL.aSoft, PAL.a, PAL.text, A[r][c], `${r},${c}`, PAL.muted);
+      else cell(x, y, L.cwA, PAL.cell, PAL.border, PAL.text, A[r][c], `${r},${c}`, PAL.muted);
+    }
+    for (let r = 0; r < K; r++) for (let c = 0; c < N; c++) {
+      const k = key(r, c), x = L.xB + pos(c, L.cwB), y = L.top + pos(r, L.cellH);
+      if (bPair.has(k)) cell(x, y, L.cwB, PAL.b, PAL.b, '#fff', B[r][c], `${r},${c}`, '#fff');
+      else if (bHl.has(k)) cell(x, y, L.cwB, PAL.bSoft, PAL.b, PAL.text, B[r][c], `${r},${c}`, PAL.muted);
+      else cell(x, y, L.cwB, PAL.cell, PAL.border, PAL.text, B[r][c], `${r},${c}`, PAL.muted);
+    }
+    for (let r = 0; r < M; r++) for (let c = 0; c < N; c++) {
+      const k = key(r, c), x = L.xC + pos(c, L.cwC), y = L.top + pos(r, L.cellH), v = sum[r][c];
+      if (cCur.has(k)) cell(x, y, L.cwC, PAL.c, PAL.c, '#fff', v, `${r},${c}`, '#fff');
+      else if (cnt[r][c] === K) cell(x, y, L.cwC, PAL.done, PAL.border, PAL.text, v, `${r},${c}`, PAL.muted);
+      else if (cnt[r][c] > 0) cell(x, y, L.cwC, PAL.cSoft, PAL.c, PAL.c, v, `${r},${c}`, PAL.muted);
+      else cell(x, y, L.cwC, PAL.cell, PAL.border, PAL.text, '', `${r},${c}`, PAL.muted);
+    }
+    if (withCaption) {
+      ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0);
+      ctx.font = `14px ${MONO}`; ctx.fillStyle = PAL.text; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(caption(cur, sum), L.w / 2, L.capY);
+    }
+  }
+
+  function makeCanvas(L) {
+    const cv = document.createElement('canvas');
+    cv.width = L.w * SCALE; cv.height = L.h * SCALE;
+    return cv;
+  }
+
+  function download(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  const fileBase = () => `matmul-${mode}-${M}x${K}x${N}` + (mode === 'block' ? `-bs${bs()}` : '') +
+    (mode !== 'block' ? (fine() ? '-fine' : '-coarse') : '');
+
+  // ---------- 一个不依赖任何外部库的GIF编码器 ----------
+  // 调色板：统计所有帧的颜色，取最常见的256种，其余颜色映射到最接近的一种
+  function buildPalette(frames) {
+    const hist = new Map();
+    for (const f of frames) {
+      const d = f.data;
+      for (let i = 0; i < d.length; i += 4) {
+        const c = (d[i] << 16) | (d[i + 1] << 8) | d[i + 2];
+        hist.set(c, (hist.get(c) || 0) + 1);
+      }
+    }
+    // 最多255种颜色，留一个索引给“透明”（表示沿用上一帧）
+    const colors = [...hist.entries()].sort((x, y) => y[1] - x[1]).slice(0, 255).map(e => e[0]);
+    const index = new Map(colors.map((c, i) => [c, i]));
+    const nearest = c => {
+      if (index.has(c)) return index.get(c);
+      const r = c >> 16, g = (c >> 8) & 255, b = c & 255;
+      let best = 0, bd = Infinity;
+      colors.forEach((q, i) => {
+        const dr = r - (q >> 16), dg = g - ((q >> 8) & 255), db = b - (q & 255);
+        const dd = dr * dr * 3 + dg * dg * 4 + db * db * 2;
+        if (dd < bd) { bd = dd; best = i; }
+      });
+      index.set(c, best);
+      return best;
+    };
+    return {colors, nearest};
+  }
+
+  function lzw(pixels, minCode, out) {
+    const clear = 1 << minCode, eoi = clear + 1;
+    let size = minCode + 1, next = eoi + 1, dict = new Map();
+    let buf = 0, bits = 0;
+    const bytes = [];
+    const emit = code => {
+      buf |= code << bits; bits += size;
+      while (bits >= 8) { bytes.push(buf & 255); buf >>>= 8; bits -= 8; }
+    };
+    emit(clear);
+    let prefix = pixels[0];
+    for (let i = 1; i < pixels.length; i++) {
+      const k = pixels[i], key = (prefix << 8) | k;
+      const hit = dict.get(key);
+      if (hit !== undefined) { prefix = hit; continue; }
+      emit(prefix);
+      if (next === 4096) {
+        emit(clear);
+        dict = new Map(); size = minCode + 1; next = eoi + 1;
+      } else {
+        if (next >= (1 << size)) size++;
+        dict.set(key, next++);
+      }
+      prefix = k;
+    }
+    emit(prefix); emit(eoi);
+    if (bits > 0) bytes.push(buf & 255);
+    out.push(minCode);
+    for (let i = 0; i < bytes.length; i += 255) {
+      const chunk = bytes.slice(i, i + 255);
+      out.push(chunk.length, ...chunk);
+    }
+    out.push(0);
+  }
+
+  async function encodeGif(frames, delays, w, h, onProgress) {
+    const {colors, nearest} = buildPalette(frames);
+    const TRANS = colors.length;
+    let bitsPer = 1;
+    while ((1 << bitsPer) < colors.length + 1) bitsPer++;
+    const out = [];
+    const str = s => { for (const ch of s) out.push(ch.charCodeAt(0)); };
+    const u16 = v => out.push(v & 255, (v >> 8) & 255);
+    str('GIF89a'); u16(w); u16(h);
+    out.push(0x80 | 0x70 | (bitsPer - 1), 0, 0);
+    for (let i = 0; i < (1 << bitsPer); i++) {
+      const c = colors[i] || 0;
+      out.push(c >> 16, (c >> 8) & 255, c & 255);
+    }
+    out.push(0x21, 0xff, 11); str('NETSCAPE2.0'); out.push(3, 1, 0, 0, 0);   // 无限循环
+    let prev = null;
+    for (let f = 0; f < frames.length; f++) {
+      const d = frames[f].data, px = new Uint8Array(w * h);
+      for (let i = 0, j = 0; j < px.length; i += 4, j++) px[j] = nearest((d[i] << 16) | (d[i + 1] << 8) | d[i + 2]);
+      // 只编码和上一帧不同的矩形区域，其余部分沿用上一帧（处置方式为“不清除”）
+      let x0 = 0, y0 = 0, x1 = w - 1, y1 = h - 1;
+      if (prev) {
+        x0 = w; y0 = h; x1 = -1; y1 = -1;
+        for (let y = 0; y < h; y++) for (let x = 0, j = y * w; x < w; x++, j++) {
+          if (px[j] !== prev[j]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        }
+        if (x1 < 0) { x0 = y0 = x1 = y1 = 0; }   // 与上一帧完全相同，仍要写一个像素以保留这一帧的停留时间
+      }
+      const rw = x1 - x0 + 1, rh = y1 - y0 + 1, sub = new Uint8Array(rw * rh);
+      for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) {
+        const j = (y0 + y) * w + x0 + x;
+        // 矩形区域内没变的像素标成透明，连成一片后LZW压缩率更高
+        sub[y * rw + x] = prev && px[j] === prev[j] ? TRANS : px[j];
+      }
+      out.push(0x21, 0xf9, 4, 0x04 | (prev ? 1 : 0)); u16(delays[f]); out.push(prev ? TRANS : 0, 0);
+      out.push(0x2c); u16(x0); u16(y0); u16(rw); u16(rh); out.push(0);
+      lzw(sub, Math.max(2, bitsPer), out);
+      prev = px;
+      onProgress(f + 1, frames.length);
+      await new Promise(r => setTimeout(r, 0));   // 让出主线程，刷新进度
+    }
+    out.push(0x3b);
+    return new Uint8Array(out);
+  }
+
+  let exporting = false;
+  async function exportGif() {
+    if (exporting) return;
+    const total = steps.length + 1;
+    if (total > 200 && !confirm(`整段动画共有 ${total} 帧，文件会比较大，导出也需要一些时间。继续吗？\n（可以减小矩阵尺寸，或取消勾选“逐次乘加”来减少帧数）`)) return;
+    exporting = true; pause();
+    const st = $('exportStatus'), btn = $('btnGif');
+    btn.disabled = true;
+    try {
+      const withCap = $('inCaption').checked;
+      const L = exportLayout(withCap);
+      const cv = makeCanvas(L), ctx = cv.getContext('2d');
+      const frames = [], delays = [];
+      const step = Math.max(2, Math.round(delay() / 10));   // GIF的帧间隔单位是1/100秒
+      for (let p = 0; p <= steps.length; p++) {
+        drawFrame(ctx, L, p, withCap);
+        frames.push(ctx.getImageData(0, 0, cv.width, cv.height));
+        delays.push(p === 0 ? Math.max(step, 100) : p === steps.length ? Math.max(step, 250) : step);
+        if (p % 10 === 0) { st.textContent = `正在绘制第 ${p} / ${steps.length} 帧…`; await new Promise(r => setTimeout(r, 0)); }
+      }
+      const bytes = await encodeGif(frames, delays, cv.width, cv.height,
+        (f, n) => { st.textContent = `正在编码第 ${f} / ${n} 帧…`; });
+      download(new Blob([bytes], {type: 'image/gif'}), fileBase() + '.gif');
+      st.textContent = `已导出 ${fileBase()}.gif：${frames.length} 帧，${cv.width}×${cv.height} 像素，${(bytes.length / 1024).toFixed(0)} KB。放进书里时，img 的 width 写 ${L.w}。`;
+    } finally {
+      exporting = false; btn.disabled = false;
+    }
+  }
+
+  function exportPng() {
+    const withCap = $('inCaption').checked;
+    const L = exportLayout(withCap);
+    const cv = makeCanvas(L);
+    drawFrame(cv.getContext('2d'), L, pos, withCap);
+    cv.toBlob(b => {
+      download(b, `${fileBase()}-step${pos}.png`);
+      $('exportStatus').textContent = `已导出第 ${pos} 步的PNG：${cv.width}×${cv.height} 像素。放进书里时，img 的 width 写 ${L.w}。`;
+    }, 'image/png');
+  }
+
+  // 供调试：返回GIF字节，不触发下载
+  window.__matmulGif = async () => {
+    const L = exportLayout(true), cv = makeCanvas(L), ctx = cv.getContext('2d');
+    const frames = [], delays = [];
+    for (let p = 0; p <= steps.length; p++) { drawFrame(ctx, L, p, true); frames.push(ctx.getImageData(0, 0, cv.width, cv.height)); delays.push(50); }
+    return {bytes: await encodeGif(frames, delays, cv.width, cv.height, () => {}), w: cv.width, h: cv.height, n: frames.length};
+  };
+
+  $('btnGif').addEventListener('click', exportGif);
+  $('btnPng').addEventListener('click', exportPng);
+
+  // ---------- 播放控制 ----------
+  function stepTo(p) { pos = clamp(p, 0, steps.length); render(); }
+
+  function jumpTo(i, j) {
+    if (mode === 'outer') return;
+    stop();
+    const idx = steps.findIndex(s => s.cCur.some(([a, b]) => a === i && b === j));
+    stepTo(idx + 1);
+  }
+
+  const delay = () => Math.round(1400 / +$('inSpeed').value);
+  function tick() {
+    if (pos >= steps.length) { pause(); return; }
+    stepTo(pos + 1);
+    if (pos >= steps.length) { pause(); return; }
+    timer = setTimeout(tick, delay());
+  }
+  function play() {
+    if (pos >= steps.length) pos = 0;
+    timer = setTimeout(tick, 0);
+    render();
+  }
+  // stop只停止计时器；需要刷新按钮文字时用pause
+  function stop() { if (timer) { clearTimeout(timer); timer = null; } }
+  function pause() { stop(); render(); }
+
+  $('btnPlay').addEventListener('click', () => timer ? pause() : play());
+  $('btnNext').addEventListener('click', () => { stop(); stepTo(pos + 1); });
+  $('btnPrev').addEventListener('click', () => { stop(); stepTo(pos - 1); });
+  $('btnReset').addEventListener('click', () => { stop(); stepTo(0); });
+  $('btnAll').addEventListener('click', () => { stop(); stepTo(steps.length); });
+  $('btnFill').addEventListener('click', build);
+  $('inFill').addEventListener('change', build);
+  ['inM', 'inK', 'inN'].forEach(id => $(id).addEventListener('change', build));
+  $('inBs').addEventListener('change', layout);
+  document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.mode === mode) return;
+    mode = b.dataset.mode;
+    layout();
+  }));
+  $('inFine').addEventListener('change', () => {
+    // 切换粒度时，尽量停留在同一处
+    const cur = pos > 0 ? steps[pos - 1] : null;
+    stop(); buildSteps();
+    if (!cur) return stepTo(0);
+    if (mode === 'dot') return jumpTo(cur.i, cur.j);
+    // 外积视角：跳到同一个外积的第一步
+    stepTo(steps.findIndex(s => s.k === cur.k) + 1);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    if (e.key === 'ArrowRight') { stop(); stepTo(pos + 1); }
+    else if (e.key === 'ArrowLeft') { stop(); stepTo(pos - 1); }
+    else if (e.key === ' ') { e.preventDefault(); timer ? pause() : play(); }
+  });
+
+  build();
+})();
+</script>
+</body>
+</html>

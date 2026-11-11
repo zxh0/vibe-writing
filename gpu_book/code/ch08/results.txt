@@ -1,0 +1,288 @@
+# GPU：Tesla T4, 580.82.07, 1590 MHz, 5001 MHz, 70.00 W
+# CUDA：Cuda compilation tools, release 13.0, V13.0.88
+# ncu：/usr/local/cuda/bin/ncu  Version 2025.3.1.0 (build 36398880) (public-release)
+
+## 8.3 / 8.5 正确性（n=1024是32的整数倍，n=1000和n=1023不是）
+check  n=1024  coalesced 分块32  与cuBLAS的相对误差 1.454e-06
+check  n=1024  smem      分块 8  与cuBLAS的相对误差 1.454e-06
+check  n=1024  smem      分块16  与cuBLAS的相对误差 1.454e-06
+check  n=1024  smem      分块32  与cuBLAS的相对误差 1.454e-06
+check  n=1024  nosync1   分块32  与cuBLAS的相对误差 6.022e-01
+check  n=1024  nosync2   分块32  与cuBLAS的相对误差 9.044e-02
+check  n=1000  coalesced 分块32  与cuBLAS的相对误差 1.629e-06
+check  n=1000  smem      分块 8  与cuBLAS的相对误差 1.629e-06
+check  n=1000  smem      分块16  与cuBLAS的相对误差 1.629e-06
+check  n=1000  smem      分块32  与cuBLAS的相对误差 1.629e-06
+check  n=1000  nosync1   分块32  与cuBLAS的相对误差 6.351e-01
+check  n=1000  nosync2   分块32  与cuBLAS的相对误差 9.713e-02
+check  n=1023  coalesced 分块32  与cuBLAS的相对误差 1.420e-06
+check  n=1023  smem      分块 8  与cuBLAS的相对误差 1.420e-06
+check  n=1023  smem      分块16  与cuBLAS的相对误差 1.420e-06
+check  n=1023  smem      分块32  与cuBLAS的相对误差 1.420e-06
+check  n=1023  nosync1   分块32  与cuBLAS的相对误差 5.969e-01
+check  n=1023  nosync2   分块32  与cuBLAS的相对误差 7.452e-02
+
+## 8.4 共享内存分块与访存合并，不同规模（block 32×32）
+coalesced  n=1024  block=32x32        3.698 毫秒      580.6 GFLOPS
+smem       n=1024  block=32x32        2.878 毫秒      746.1 GFLOPS
+coalesced  n=2048  block=32x32       29.705 毫秒      578.4 GFLOPS
+smem       n=2048  block=32x32       19.168 毫秒      896.3 GFLOPS
+coalesced  n=4096  block=32x32      237.705 毫秒      578.2 GFLOPS
+smem       n=4096  block=32x32      156.601 毫秒      877.6 GFLOPS
+
+## 8.6 不同分块大小（n=4096）
+smem       n=4096  block=8x8      348.648 毫秒      394.2 GFLOPS
+smem       n=4096  block=16x16      221.507 毫秒      620.5 GFLOPS
+smem       n=4096  block=32x32      160.177 毫秒      858.0 GFLOPS
+
+## 8.5 尺寸不是分块大小的整数倍（分块32）
+smem       n=4064  block=32x32      159.744 毫秒      840.4 GFLOPS
+smem       n=4095  block=32x32      163.963 毫秒      837.6 GFLOPS
+smem       n=4096  block=32x32      162.002 毫秒      848.4 GFLOPS
+smem       n=4097  block=32x32      171.717 毫秒      801.0 GFLOPS
+
+## 每个kernel用到的寄存器和共享内存
+ Function _Z11matmul_smemILi32ELb1ELb1EEviPKfS1_Pf:
+  REG:42 STACK:0 SHARED:8192 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function _Z11matmul_smemILi32ELb1ELb0EEviPKfS1_Pf:
+  REG:42 STACK:0 SHARED:8192 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function _Z11matmul_smemILi32ELb0ELb1EEviPKfS1_Pf:
+  REG:42 STACK:0 SHARED:8192 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function _Z11matmul_smemILi16ELb1ELb1EEviPKfS1_Pf:
+  REG:39 STACK:0 SHARED:2048 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function _Z11matmul_smemILi16ELb1ELb0EEviPKfS1_Pf:
+  REG:39 STACK:0 SHARED:2048 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function _Z11matmul_smemILi16ELb0ELb1EEviPKfS1_Pf:
+  REG:39 STACK:0 SHARED:2048 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function _Z11matmul_smemILi8ELb1ELb1EEviPKfS1_Pf:
+  REG:41 STACK:0 SHARED:512 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function _Z11matmul_smemILi8ELb1ELb0EEviPKfS1_Pf:
+  REG:38 STACK:0 SHARED:512 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function _Z11matmul_smemILi8ELb0ELb1EEviPKfS1_Pf:
+  REG:41 STACK:0 SHARED:512 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+ Function _Z16matmul_coalescediPKfS0_Pf:
+  REG:49 STACK:0 SHARED:0 LOCAL:0 CONSTANT[0]:384 TEXTURE:0 SURFACE:0 SAMPLER:0
+
+## 8.1 / 8.6 Nsight Compute（n=2048）
+### coalesced，block 32×32
+[1115] matmul@127.0.0.1
+  matmul_coalesced(int, const float *, const float *, float *) (64, 64, 1)x(32, 32, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------- ----------- -------------
+    Metric Name                                                      Metric Unit  Metric Value
+    ---------------------------------------------------------------- ----------- -------------
+    dram__bytes_read.sum                                                   Gbyte          1.66
+    dram__bytes_write.sum                                                  Mbyte         22.35
+    gpu__compute_memory_throughput.avg.pct_of_peak_sustained_elapsed           %         85.60
+    gpu__time_duration.sum                                                    ms         53.61
+    l1tex__t_requests_pipe_lsu_mem_global_op_ld.sum                                536,870,912
+    l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum                        sector 1,342,177,280
+    lts__t_sectors_srcunit_tex_op_read.sum                                sector    67,110,533
+    sm__throughput.avg.pct_of_peak_sustained_elapsed                           %         85.60
+    ---------------------------------------------------------------- ----------- -------------
+
+[1178] matmul@127.0.0.1
+  matmul_coalesced(int, const float *, const float *, float *) (64, 64, 1)x(32, 32, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    -------------------------------------------------------- ----------- -------------
+    Metric Name                                              Metric Unit  Metric Value
+    -------------------------------------------------------- ----------- -------------
+    l1tex__data_bank_conflicts_pipe_lsu_mem_shared_op_ld.sum                         0
+    l1tex__throughput.avg.pct_of_peak_sustained_elapsed                %         85.64
+    sm__warps_active.avg.pct_of_peak_sustained_active                  %         98.78
+    smsp__inst_executed.sum                                         inst 1,230,503,936
+    smsp__inst_executed_op_global_ld.sum                            inst   536,870,912
+    smsp__inst_executed_op_shared_ld.sum                            inst             0
+    -------------------------------------------------------- ----------- -------------
+
+### smem，分块8
+[1227] matmul@127.0.0.1
+  void matmul_smem<8, 1, 1>(int, const float *, const float *, float *) (256, 256, 1)x(8, 8, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------- ----------- ------------
+    Metric Name                                                      Metric Unit Metric Value
+    ---------------------------------------------------------------- ----------- ------------
+    dram__bytes_read.sum                                                   Gbyte         8.47
+    dram__bytes_write.sum                                                  Mbyte        22.41
+    gpu__compute_memory_throughput.avg.pct_of_peak_sustained_elapsed           %        55.20
+    gpu__time_duration.sum                                                    ms        72.80
+    l1tex__t_requests_pipe_lsu_mem_global_op_ld.sum                                67,108,864
+    l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum                        sector  266,937,510
+    lts__t_sectors_srcunit_tex_op_read.sum                                sector  237,901,269
+    sm__throughput.avg.pct_of_peak_sustained_elapsed                           %        55.20
+    ---------------------------------------------------------------- ----------- ------------
+
+[1286] matmul@127.0.0.1
+  void matmul_smem<8, 1, 1>(int, const float *, const float *, float *) (256, 256, 1)x(8, 8, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    -------------------------------------------------------- ----------- -------------
+    Metric Name                                              Metric Unit  Metric Value
+    -------------------------------------------------------- ----------- -------------
+    l1tex__data_bank_conflicts_pipe_lsu_mem_shared_op_ld.sum                         0
+    l1tex__throughput.avg.pct_of_peak_sustained_elapsed                %         98.54
+    sm__warps_active.avg.pct_of_peak_sustained_active                  %         99.62
+    smsp__inst_executed.sum                                         inst 1,229,455,360
+    smsp__inst_executed_op_global_ld.sum                            inst    67,108,864
+    smsp__inst_executed_op_shared_ld.sum                            inst   335,544,320
+    -------------------------------------------------------- ----------- -------------
+
+### smem，分块16
+[1339] matmul@127.0.0.1
+  void matmul_smem<16, 1, 1>(int, const float *, const float *, float *) (128, 128, 1)x(16, 16, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------- ----------- ------------
+    Metric Name                                                      Metric Unit Metric Value
+    ---------------------------------------------------------------- ----------- ------------
+    dram__bytes_read.sum                                                   Gbyte         4.28
+    dram__bytes_write.sum                                                  Mbyte        22.35
+    gpu__compute_memory_throughput.avg.pct_of_peak_sustained_elapsed           %        74.46
+    gpu__time_duration.sum                                                    ms        46.27
+    l1tex__t_requests_pipe_lsu_mem_global_op_ld.sum                                33,554,432
+    l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum                        sector  133,134,498
+    lts__t_sectors_srcunit_tex_op_read.sum                                sector  134,113,048
+    sm__throughput.avg.pct_of_peak_sustained_elapsed                           %        74.46
+    ---------------------------------------------------------------- ----------- ------------
+
+[1398] matmul@127.0.0.1
+  void matmul_smem<16, 1, 1>(int, const float *, const float *, float *) (128, 128, 1)x(16, 16, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    -------------------------------------------------------- ----------- -------------
+    Metric Name                                              Metric Unit  Metric Value
+    -------------------------------------------------------- ----------- -------------
+    l1tex__data_bank_conflicts_pipe_lsu_mem_shared_op_ld.sum                         0
+    l1tex__throughput.avg.pct_of_peak_sustained_elapsed                %         95.43
+    sm__warps_active.avg.pct_of_peak_sustained_active                  %         99.63
+    smsp__inst_executed.sum                                         inst 1,027,473,408
+    smsp__inst_executed_op_global_ld.sum                            inst    33,554,432
+    smsp__inst_executed_op_shared_ld.sum                            inst   335,544,320
+    -------------------------------------------------------- ----------- -------------
+
+### smem，分块32
+[1450] matmul@127.0.0.1
+  void matmul_smem<32, 1, 1>(int, const float *, const float *, float *) (64, 64, 1)x(32, 32, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------- ----------- ------------
+    Metric Name                                                      Metric Unit Metric Value
+    ---------------------------------------------------------------- ----------- ------------
+    dram__bytes_read.sum                                                   Gbyte         1.63
+    dram__bytes_write.sum                                                  Mbyte        22.19
+    gpu__compute_memory_throughput.avg.pct_of_peak_sustained_elapsed           %        75.18
+    gpu__time_duration.sum                                                    ms        42.02
+    l1tex__t_requests_pipe_lsu_mem_global_op_ld.sum                                16,777,216
+    l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum                        sector   67,108,864
+    lts__t_sectors_srcunit_tex_op_read.sum                                sector   67,108,864
+    sm__throughput.avg.pct_of_peak_sustained_elapsed                           %        75.18
+    ---------------------------------------------------------------- ----------- ------------
+
+[1510] matmul@127.0.0.1
+  void matmul_smem<32, 1, 1>(int, const float *, const float *, float *) (64, 64, 1)x(32, 32, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    -------------------------------------------------------- ----------- ------------
+    Metric Name                                              Metric Unit Metric Value
+    -------------------------------------------------------- ----------- ------------
+    l1tex__data_bank_conflicts_pipe_lsu_mem_shared_op_ld.sum                        0
+    l1tex__throughput.avg.pct_of_peak_sustained_elapsed                %        89.14
+    sm__warps_active.avg.pct_of_peak_sustained_active                  %        99.96
+    smsp__inst_executed.sum                                         inst  817,758,208
+    smsp__inst_executed_op_global_ld.sum                            inst   16,777,216
+    smsp__inst_executed_op_shared_ld.sum                            inst  335,544,320
+    -------------------------------------------------------- ----------- ------------
+
+
+## 8.1 Nsight Compute的Speed Of Light小节（coalesced，n=2048，block 32×32）
+[1559] matmul@127.0.0.1
+  matmul_coalesced(int, const float *, const float *, float *) (64, 64, 1)x(32, 32, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: GPU Speed Of Light Throughput
+    ----------------------- ----------- -------------
+    Metric Name             Metric Unit  Metric Value
+    ----------------------- ----------- -------------
+    DRAM Frequency                  Ghz          5.00
+    SM Frequency                    Mhz        585.00
+    Elapsed Cycles                cycle    31,391,340
+    Memory Throughput                 %         85.63
+    DRAM Throughput                   %          9.81
+    Duration                         ms         53.66
+    L1/TEX Cache Throughput           %         86.09
+    L2 Cache Throughput               %          4.76
+    SM Active Cycles              cycle 31,202,520.43
+    Compute (SM) Throughput           %         85.63
+    ----------------------- ----------- -------------
+
+    INF   This workload is utilizing greater than 80.0% of the available compute or memory performance of the device.   
+          To further improve performance, work will likely need to be shifted from the most utilized to another unit.   
+          Start by analyzing workloads in the Compute Workload Analysis section.                                        
+
+
+## 8.6 Nsight Compute的Speed Of Light小节（smem，n=2048，分块32）
+[1617] matmul@127.0.0.1
+  void matmul_smem<32, 1, 1>(int, const float *, const float *, float *) (64, 64, 1)x(32, 32, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: GPU Speed Of Light Throughput
+    ----------------------- ----------- -------------
+    Metric Name             Metric Unit  Metric Value
+    ----------------------- ----------- -------------
+    DRAM Frequency                  Ghz          5.00
+    SM Frequency                    Mhz        585.00
+    Elapsed Cycles                cycle    24,581,413
+    Memory Throughput                 %         75.17
+    DRAM Throughput                   %         12.28
+    Duration                         ms         42.02
+    L1/TEX Cache Throughput           %         89.14
+    L2 Cache Throughput               %          6.03
+    SM Active Cycles              cycle 24,424,821.25
+    Compute (SM) Throughput           %         75.17
+    ----------------------- ----------- -------------
+
+    INF   Compute and Memory are well-balanced: To reduce runtime, both computation and memory traffic must be reduced. 
+          Check both the Compute Workload Analysis and Memory Workload Analysis sections.                               
+
+
+## 第11章的准备：cuBLAS在不同规模下的速度
+cublas     n=1024                     0.462 毫秒     4646.0 GFLOPS
+cublas     n=2048                     3.228 毫秒     5321.9 GFLOPS
+cublas     n=3072                    14.438 毫秒     4015.8 GFLOPS
+cublas     n=4096                    38.645 毫秒     3556.4 GFLOPS
+
+## 第11章的准备：连续运行10秒，看主频和功耗
+### cuBLAS，n=2048
+hold  cublas    n=2048  第1秒        4.845 毫秒     3546.0 GFLOPS
+hold  cublas    n=2048  第2秒        4.929 毫秒     3485.2 GFLOPS
+hold  cublas    n=2048  第3秒        4.963 毫秒     3461.7 GFLOPS
+hold  cublas    n=2048  第4秒        4.963 毫秒     3461.6 GFLOPS
+hold  cublas    n=2048  第5秒        5.036 毫秒     3411.6 GFLOPS
+hold  cublas    n=2048  第6秒        5.029 毫秒     3415.9 GFLOPS
+hold  cublas    n=2048  第7秒        5.030 毫秒     3415.3 GFLOPS
+hold  cublas    n=2048  第8秒        5.034 毫秒     3412.6 GFLOPS
+hold  cublas    n=2048  第9秒        5.046 毫秒     3404.4 GFLOPS
+hold  cublas    n=2048  第10秒        5.068 毫秒     3389.7 GFLOPS
+    采样52次  SM主频 平均771 MHz（最低690，最高1335）  功耗 平均64.0 W（最高69.0）  最高温度80℃
+    降频原因出现的比例：功耗上限 88%  温度 0%  硬件 0%
+### cuBLAS，n=4096
+hold  cublas    n=4096  第1秒       39.145 毫秒     3511.1 GFLOPS
+hold  cublas    n=4096  第2秒       39.461 毫秒     3482.9 GFLOPS
+hold  cublas    n=4096  第3秒       39.638 毫秒     3467.3 GFLOPS
+hold  cublas    n=4096  第4秒       40.265 毫秒     3413.3 GFLOPS
+hold  cublas    n=4096  第5秒       40.307 毫秒     3409.8 GFLOPS
+hold  cublas    n=4096  第6秒       40.329 毫秒     3408.0 GFLOPS
+hold  cublas    n=4096  第7秒       39.989 毫秒     3436.9 GFLOPS
+hold  cublas    n=4096  第8秒       40.306 毫秒     3409.9 GFLOPS
+hold  cublas    n=4096  第9秒       40.327 毫秒     3408.1 GFLOPS
+hold  cublas    n=4096  第10秒       40.285 毫秒     3411.7 GFLOPS
+    采样53次  SM主频 平均738 MHz（最低660，最高1080）  功耗 平均64.1 W（最高97.3）  最高温度82℃
+    降频原因出现的比例：功耗上限 89%  温度 0%  硬件 0%
+### smem，n=4096，分块32
+hold  smem      n=4096  第1秒      170.777 毫秒      804.8 GFLOPS
+hold  smem      n=4096  第2秒      171.732 毫秒      800.3 GFLOPS
+hold  smem      n=4096  第3秒      171.624 毫秒      800.8 GFLOPS
+hold  smem      n=4096  第4秒      171.490 毫秒      801.4 GFLOPS
+hold  smem      n=4096  第5秒      171.420 毫秒      801.8 GFLOPS
+hold  smem      n=4096  第6秒      171.440 毫秒      801.7 GFLOPS
+hold  smem      n=4096  第7秒      171.306 毫秒      802.3 GFLOPS
+hold  smem      n=4096  第8秒      171.155 毫秒      803.0 GFLOPS
+hold  smem      n=4096  第9秒      171.189 毫秒      802.9 GFLOPS
+hold  smem      n=4096  第10秒      170.888 毫秒      804.3 GFLOPS
+    采样55次  SM主频 平均1240 MHz（最低1125，最高1590）  功耗 平均64.8 W（最高70.5）  最高温度81℃
+    降频原因出现的比例：功耗上限 89%  温度 0%  硬件 0%
+
+## 测完时的GPU状态
+clocks.current.sm [MHz], clocks.current.memory [MHz], temperature.gpu, power.draw [W], clocks_event_reasons.active
+1575 MHz, 5000 MHz, 78, 42.81 W, 0x0000000000000004

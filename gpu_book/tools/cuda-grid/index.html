@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CUDA线程组织</title>
+<style>
+:root{
+  --bg:#f7f7f8; --panel:#ffffff; --border:#e3e5e8; --text:#16181d; --muted:#6b7280; --faint:#f1f2f4;
+  --accent:#2563eb; --accent-soft:#eff4ff; --warn:#b45309; --warn-soft:#fef3c7; --err:#dc2626;
+  --cell-stroke:#ffffff; --block-bg:#f8fafc; --block-stroke:#cbd5e1; --sel:#111827;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15171c; --panel:#1c1f26; --border:#2d3139; --text:#e6e8ec; --muted:#9aa1ad; --faint:#23262e;
+    --accent:#6ea8fe; --accent-soft:#1e2637; --warn:#fbbf24; --warn-soft:#3a2f17; --err:#f87171;
+    --cell-stroke:#1c1f26; --block-bg:#22262e; --block-stroke:#3a404b; --sel:#f9fafb;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15171c; --panel:#1c1f26; --border:#2d3139; --text:#e6e8ec; --muted:#9aa1ad; --faint:#23262e;
+  --accent:#6ea8fe; --accent-soft:#1e2637; --warn:#fbbf24; --warn-soft:#3a2f17; --err:#f87171;
+  --cell-stroke:#1c1f26; --block-bg:#22262e; --block-stroke:#3a404b; --sel:#f9fafb;
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--text);
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+.wrap{max-width:1280px; margin:0 auto; padding:24px 16px 64px}
+h1{font-size:22px; margin:0 0 4px}
+.sub{color:var(--muted); margin:0 0 16px}
+.card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:16px}
+.card h2{font-size:15px; margin:0 0 8px}
+.card h2 small{font-weight:400; color:var(--muted); font-size:12px; margin-left:6px}
+button{background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:7px;
+  padding:6px 11px; font:13px/1.4 inherit; cursor:pointer}
+button:hover{border-color:var(--accent); color:var(--accent)}
+button.on{background:var(--accent-soft); color:var(--accent); border-color:var(--accent); font-weight:600}
+.row{display:flex; gap:10px 18px; flex-wrap:wrap; align-items:flex-end}
+.grp{display:flex; flex-direction:column; gap:4px}
+.grp > span{font-size:12px; color:var(--muted)}
+.xyz{display:flex; gap:4px; align-items:center}
+.xyz label{font-size:11px; color:var(--muted)}
+input[type=number],select{background:var(--panel); color:var(--text); border:1px solid var(--border);
+  border-radius:6px; padding:5px 6px; font:13px/1.4 inherit; width:58px}
+select{width:auto}
+input:disabled{opacity:.4}
+.presets{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px}
+.msg{font-size:13px; margin-top:10px; padding:6px 10px; border-radius:6px; display:none}
+.msg.warn{display:block; background:var(--warn-soft); color:var(--warn)}
+.msg.err{display:block; background:var(--warn-soft); color:var(--err)}
+.stats{font-size:13px; color:var(--muted); margin-top:8px}
+.stats b{color:var(--text); font-weight:600}
+
+.main{display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:16px; align-items:start}
+@media (max-width:1000px){ .main{grid-template-columns:minmax(0,1fr)} }
+.views{min-width:0}
+svg{display:block; width:100%; height:auto; user-select:none}
+svg text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; fill:var(--muted)}
+svg [data-t]{cursor:pointer}
+.side{position:sticky; top:12px}
+.side h3{font-size:13px; color:var(--muted); font-weight:600; margin:12px 0 4px}
+.side h3:first-child{margin-top:0}
+.kv{width:100%; border-collapse:collapse; font-size:13px}
+.kv td{padding:3px 0; border-bottom:1px solid var(--faint); vertical-align:top}
+.kv td:first-child{color:var(--muted); white-space:nowrap; padding-right:10px}
+code, .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px}
+.formula{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px; background:var(--faint);
+  border-radius:6px; padding:6px 8px; margin:4px 0; line-height:1.7; overflow-x:auto}
+.note{font-size:12.5px; color:var(--muted); margin:6px 0 0}
+.hl{color:var(--accent); font-weight:600}
+.legend{font-size:12px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:10px; height:10px; border-radius:2px; vertical-align:-1px; margin:0 4px 0 10px}
+.legend i:first-child{margin-left:0}
+.kbd{font-family:ui-monospace,Menlo,monospace; font-size:12px; border:1px solid var(--border); border-radius:4px; padding:0 5px; color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>CUDA的grid、block与线程</h1>
+  <p class="sub">调整gridDim和blockDim，看线程怎样编号、怎样分成warp、各自负责哪个数据元素。点击任意一个线程、warp或数据元素，三个视图会一起高亮。<span class="kbd">←</span> <span class="kbd">→</span> 切换线程，<span class="kbd">↑</span> <span class="kbd">↓</span> 切换warp。</p>
+
+  <div class="card">
+    <div class="presets" id="presets"></div>
+    <div class="row">
+      <div class="grp"><span>gridDim（多少个block）</span>
+        <div class="xyz"><label>x</label><input type="number" id="gx" min="1"><label>y</label><input type="number" id="gy" min="1"><label>z</label><input type="number" id="gz" min="1"></div></div>
+      <div class="grp"><span>blockDim（每个block多少个线程）</span>
+        <div class="xyz"><label>x</label><input type="number" id="bx" min="1"><label>y</label><input type="number" id="by" min="1"><label>z</label><input type="number" id="bz" min="1"></div></div>
+      <div class="grp"><span>数据</span>
+        <select id="mode">
+          <option value="1d">一维向量 c[i]</option>
+          <option value="2d">二维矩阵 C[i][j]</option>
+          <option value="none">不映射数据</option>
+        </select></div>
+      <div class="grp" id="g1d"><span>向量长度 n</span><input type="number" id="n" min="1"></div>
+      <div class="grp" id="g2d"><span>矩阵 M 行 × N 列</span>
+        <div class="xyz"><input type="number" id="m" min="1"><label>×</label><input type="number" id="nn" min="1"></div></div>
+      <div class="grp" id="gmap"><span>线程到矩阵的映射</span>
+        <select id="map">
+          <option value="xrow">x对应行（第5章的朴素kernel）</option>
+          <option value="xcol">x对应列</option>
+        </select></div>
+      <div class="grp"><span>&nbsp;</span><button id="auto" title="按数据大小和blockDim算出刚好够用的gridDim">自动算gridDim</button></div>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <div class="main">
+    <div class="views">
+      <div class="card">
+        <h2>① 层次视图<small>grid由block组成，block由线程组成；颜色表示线程属于block里的第几个warp</small></h2>
+        <svg id="vh"></svg>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="card">
+        <h2>② 线性化视图<small>选中的block里，线程按 x 最快、y 其次、z 最慢的顺序排成一列，每32个一组就是一个warp</small></h2>
+        <svg id="vl"></svg>
+      </div>
+      <div class="card" id="cardData">
+        <h2>③ 数据视图<small id="dataSub"></small></h2>
+        <svg id="vd"></svg>
+      </div>
+    </div>
+    <div class="card side" id="side"></div>
+  </div>
+</div>
+
+<script>
+// ===================== 状态 =====================
+const PRESETS = [
+  {name:'向量加法（书中配图）', G:[4,1,1], B:[8,1,1], mode:'1d', n:30, sel:[2,5],
+   note:'第5章的例子：n = 30，每个block 8个线程，需要4个block。block 3最后两个线程越界，靠 if (i < n) 跳过。'},
+  {name:'朴素kernel，32×32', G:[2,2,1], B:[32,32,1], mode:'2d', M:64, N:64, map:'xrow', sel:[0,0],
+   note:'x对应行。一个warp是x方向相邻的32个线程，也就是同一列、相邻的32行：写C时要碰32个不同的行。'},
+  {name:'朴素kernel，8×8', G:[8,8,1], B:[8,8,1], mode:'2d', M:64, N:64, map:'xrow', sel:[0,0],
+   note:'还是x对应行，block换成8×8。一个warp变成8行×4列，碰到的行少了很多。第5章实测它比32×32快2.7倍。'},
+  {name:'x对应列（第7章）', G:[2,2,1], B:[32,32,1], mode:'2d', M:64, N:64, map:'xcol', sel:[0,0],
+   note:'把x改成对应列。一个warp是同一行、相邻的32列，写C时只碰一行，地址连续。第7章会解释为什么这样快得多。'},
+  {name:'三维block', G:[2,1,1], B:[4,4,4], mode:'none', sel:[0,0],
+   note:'4×4×4的block，共64个线程，分成2个warp。每个warp是z方向相邻的两层，可以看到z变化最慢。'},
+  {name:'block大小不是32的倍数', G:[2,1,1], B:[6,6,1], mode:'none', sel:[0,32],
+   note:'6×6的block有36个线程，要用2个warp，第二个warp只有4个线程，其余28个通道空闲。所以blockDim通常取32的倍数。'},
+];
+const MAX_THREADS = 8192, MAX_ELEMS = 8192;
+const $ = id => document.getElementById(id);
+let S = null;        // 当前参数
+let T = [];          // 所有线程
+let sel = {b:0, t:0};
+let presetNote = '';
+
+function readInputs() {
+  const v = id => Math.max(1, parseInt($(id).value) || 1);
+  return {G:{x:v('gx'), y:v('gy'), z:v('gz')}, B:{x:v('bx'), y:v('by'), z:v('bz')},
+          mode:$('mode').value, n:v('n'), M:v('m'), N:v('nn'), map:$('map').value};
+}
+function writeInputs(s) {
+  $('gx').value = s.G.x; $('gy').value = s.G.y; $('gz').value = s.G.z;
+  $('bx').value = s.B.x; $('by').value = s.B.y; $('bz').value = s.B.z;
+  $('mode').value = s.mode; $('n').value = s.n; $('m').value = s.M; $('nn').value = s.N; $('map').value = s.map;
+}
+// 一维数据只用x，二维数据不用z：把用不到的维度固定为1
+function lockDims(s) {
+  const lockY = s.mode === '1d', lockZ = s.mode !== 'none';
+  for (const p of ['g', 'b']) {
+    $(p + 'y').disabled = lockY; $(p + 'z').disabled = lockZ;
+  }
+  if (lockY) { s.G.y = s.B.y = 1; }
+  if (lockZ) { s.G.z = s.B.z = 1; }
+  $('g1d').style.display = s.mode === '1d' ? '' : 'none';
+  $('g2d').style.display = s.mode === '2d' ? '' : 'none';
+  $('gmap').style.display = s.mode === '2d' ? '' : 'none';
+  $('cardData').style.display = s.mode === 'none' ? 'none' : '';
+}
+
+// ===================== 计算每个线程 =====================
+function build(s) {
+  const nb = s.G.x * s.G.y * s.G.z, nt = s.B.x * s.B.y * s.B.z;
+  const out = [];
+  for (let b = 0; b < nb; b++) {
+    const bx = b % s.G.x, by = Math.floor(b / s.G.x) % s.G.y, bz = Math.floor(b / (s.G.x * s.G.y));
+    for (let t = 0; t < nt; t++) {
+      const tx = t % s.B.x, ty = Math.floor(t / s.B.x) % s.B.y, tz = Math.floor(t / (s.B.x * s.B.y));
+      const th = {b, t, bx, by, bz, tx, ty, tz, warp:Math.floor(t / 32), lane:t % 32,
+                  gxi:bx * s.B.x + tx, gyi:by * s.B.y + ty, gzi:bz * s.B.z + tz, elem:null, oob:false};
+      if (s.mode === '1d') {
+        th.elem = {i:th.gxi};
+        th.oob = th.gxi >= s.n;
+      } else if (s.mode === '2d') {
+        const i = s.map === 'xrow' ? th.gxi : th.gyi, j = s.map === 'xrow' ? th.gyi : th.gxi;
+        th.elem = {i, j};
+        th.oob = i >= s.M || j >= s.N;
+      }
+      out.push(th);
+    }
+  }
+  return out;
+}
+const key = th => th.b + ',' + th.t;
+const getT = (b, t) => T[b * (S.B.x * S.B.y * S.B.z) + t];
+
+// ===================== 颜色 =====================
+function isDark() {
+  const r = document.documentElement.dataset.theme;
+  return r ? r === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function warpColor(w, faded) {
+  const h = (w * 137.5 + 205) % 360;
+  if (isDark()) return faded ? `hsl(${h} 22% 26%)` : `hsl(${h} 45% 42%)`;
+  return faded ? `hsl(${h} 50% 93%)` : `hsl(${h} 70% 78%)`;
+}
+
+// ===================== 视图①：层次 =====================
+const W = 900;
+function drawHier() {
+  const {G, B} = S, m = 10, p = 6, gap = 10, head = 18, lgap = 8;
+  const cw = (W - 2 * m - (G.x - 1) * gap - G.x * 2 * p) / (G.x * B.x);
+  const c = Math.max(3, Math.min(24, Math.floor(cw * 10) / 10));
+  const bw = B.x * c + 2 * p;
+  const layerH = B.y * c, bh = head + B.z * layerH + (B.z - 1) * lgap + p;
+  const selT = getT(sel.b, sel.t);
+  const o = [];
+  let y = m;
+  const showLbl = c >= 18;
+  for (let gz = 0; gz < G.z; gz++) {
+    if (G.z > 1) { o.push(`<text x="${m}" y="${y + 12}" font-size="12">blockIdx.z = ${gz}</text>`); y += 18; }
+    for (let gy = 0; gy < G.y; gy++) for (let gx = 0; gx < G.x; gx++) {
+      const b = gx + gy * G.x + gz * G.x * G.y;
+      const x0 = m + gx * (bw + gap), y0 = y + gy * (bh + gap);
+      const isSel = b === sel.b;
+      o.push(`<rect x="${x0}" y="${y0}" width="${bw}" height="${bh}" rx="5" fill="var(--block-bg)" stroke="${isSel ? 'var(--accent)' : 'var(--block-stroke)'}" stroke-width="${isSel ? 2.5 : 1}"/>`);
+      const lbl = G.z > 1 ? `(${gx},${gy},${gz})` : G.y > 1 ? `(${gx},${gy})` : `${gx}`;
+      if (bw > 40) o.push(`<text x="${x0 + p}" y="${y0 + 13}" font-size="${bw > 90 ? 11 : 9}" ${isSel ? 'style="fill:var(--accent);font-weight:600"' : ''}>block ${lbl}</text>`);
+      for (let tz = 0; tz < B.z; tz++) {
+        const ly = y0 + head + tz * (layerH + lgap);
+        if (B.z > 1 && c >= 8) o.push(`<text x="${x0 + bw - p}" y="${ly - 1}" font-size="9" text-anchor="end">z=${tz}</text>`);
+        for (let ty = 0; ty < B.y; ty++) for (let tx = 0; tx < B.x; tx++) {
+          const t = tx + ty * B.x + tz * B.x * B.y;
+          const th = getT(b, t);
+          o.push(cellSvg(th, x0 + p + tx * c, ly + ty * c, c, selT));
+          if (showLbl) o.push(`<text x="${x0 + p + tx * c + c / 2}" y="${ly + ty * c + c / 2 + 3}" font-size="8" text-anchor="middle" pointer-events="none" style="fill:var(--text)">${B.y > 1 ? tx + ',' + ty : tx}</text>`);
+        }
+      }
+    }
+    y += G.y * bh + (G.y - 1) * gap + 14;
+  }
+  setSvg('vh', o, y);
+}
+// 一个线程（或它负责的数据元素）的方块
+function cellSvg(th, x, y, c, selT, faded) {
+  const inWarp = th.b === selT.b && th.warp === selT.warp;
+  const isSel = th.b === selT.b && th.t === selT.t;
+  const g = c > 6 ? 0.8 : 0.4;
+  let fill = th.oob ? 'none' : warpColor(th.warp, faded);
+  let stroke = th.oob ? 'var(--muted)' : 'var(--cell-stroke)', sw = th.oob ? 0.8 : g, dash = th.oob ? ' stroke-dasharray="2 2"' : '';
+  if (inWarp) { stroke = 'var(--sel)'; sw = Math.min(1.6, c / 8); }
+  if (isSel) { stroke = 'var(--accent)'; sw = Math.max(2, c / 6); }
+  return `<rect data-t="${key(th)}" x="${x + g / 2}" y="${y + g / 2}" width="${c - g}" height="${c - g}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"${dash}/>`;
+}
+
+// ===================== 视图②：线性化 =====================
+function drawLinear() {
+  const {B} = S, nt = B.x * B.y * B.z, left = 64, m = 8;
+  const c = Math.min(26, (W - left - m) / 32);
+  const rows = Math.ceil(nt / 32);
+  const selT = getT(sel.b, sel.t);
+  const o = [];
+  const lbl = th => B.z > 1 ? `${th.tx},${th.ty},${th.tz}` : B.y > 1 ? `${th.tx},${th.ty}` : `${th.tx}`;
+  const fs = B.z > 1 ? 6.5 : B.y > 1 ? 7.5 : 9;
+  for (let r = 0; r < rows; r++) {
+    const y = m + r * (c + 4);
+    const isW = r === selT.warp;
+    o.push(`<text x="${m}" y="${y + c / 2 + 4}" font-size="11" data-w="${r}" style="cursor:pointer${isW ? ';fill:var(--accent);font-weight:600' : ''}">warp ${r}</text>`);
+    for (let l = 0; l < 32; l++) {
+      const t = r * 32 + l, x = left + l * c;
+      if (t >= nt) {   // 不足32个线程的warp：空闲的通道
+        o.push(`<rect x="${x + 1}" y="${y + 1}" width="${c - 2}" height="${c - 2}" fill="none" stroke="var(--block-stroke)" stroke-dasharray="2 2"/>`);
+        continue;
+      }
+      const th = getT(sel.b, t);
+      o.push(cellSvg(th, x, y, c, selT));
+      if (c >= 14) o.push(`<text x="${x + c / 2}" y="${y + c / 2 + 3}" font-size="${fs}" text-anchor="middle" pointer-events="none" style="fill:var(--text)">${lbl(th)}</text>`);
+    }
+  }
+  o.push(`<text x="${left}" y="${m + rows * (c + 4) + 12}" font-size="11">每格里的数字是threadIdx（${B.z > 1 ? 'x,y,z' : B.y > 1 ? 'x,y' : 'x'}）；一行是一个warp，虚线格表示warp里空闲的通道</text>`);
+  setSvg('vl', o, m + rows * (c + 4) + 22);
+}
+
+// ===================== 视图③：数据 =====================
+function owners() {
+  const map = new Map();
+  for (const th of T) if (th.elem && !th.oob) {
+    const k = S.mode === '1d' ? String(th.elem.i) : th.elem.i + ',' + th.elem.j;
+    if (!map.has(k)) map.set(k, []);
+    map.get(k).push(th);
+  }
+  return map;
+}
+function drawData() {
+  if (S.mode === 'none') return;
+  const own = owners(), selT = getT(sel.b, sel.t), o = [], m = 8;
+  let rows, cols, at;
+  if (S.mode === '1d') {
+    cols = Math.min(S.n, 32); rows = Math.ceil(S.n / cols);
+    at = (r, cc) => { const i = r * cols + cc; return i < S.n ? String(i) : null; };
+    $('dataSub').textContent = `向量 c，长度 ${S.n}，每行画32个元素。颜色是负责它的线程所在的warp，选中的block颜色深，其他block颜色浅`;
+  } else {
+    rows = S.M; cols = S.N;
+    at = (r, cc) => r + ',' + cc;
+    $('dataSub').textContent = `矩阵 C，${S.M}行×${S.N}列，按行主序存放。颜色是负责它的线程所在的warp，选中的block颜色深，其他block颜色浅`;
+  }
+  const left = 36, top = 20;
+  const c = Math.max(3, Math.min(24, (W - left - m) / cols));
+  let missing = 0;
+  if (S.mode === '2d') o.push(`<text x="${left}" y="12" font-size="11">列 j →</text><text x="2" y="12" font-size="11">行 i ↓</text>`);
+  for (let r = 0; r < rows; r++) {
+    if (S.mode === '1d' || r % Math.max(1, Math.ceil(12 / c)) === 0)
+      o.push(`<text x="${left - 4}" y="${top + r * c + c / 2 + 3}" font-size="9" text-anchor="end">${S.mode === '1d' ? r * cols : r}</text>`);
+    for (let cc = 0; cc < cols; cc++) {
+      const k = at(r, cc);
+      if (k === null) continue;
+      const x = left + cc * c, y = top + r * c;
+      const ths = own.get(k);
+      if (!ths) {   // 没有线程负责的元素
+        missing++;
+        o.push(`<rect x="${x + .5}" y="${y + .5}" width="${c - 1}" height="${c - 1}" fill="none" stroke="var(--err)" stroke-width="1"/><line x1="${x + 2}" y1="${y + c - 2}" x2="${x + c - 2}" y2="${y + 2}" stroke="var(--err)" stroke-width="1"/>`);
+        continue;
+      }
+      const mine = ths.find(t => t.b === selT.b && t.t === selT.t) || ths.find(t => t.b === selT.b) || ths[0];
+      o.push(cellSvg(mine, x, y, c, selT, mine.b !== selT.b));
+    }
+  }
+  setSvg('vd', o, top + rows * c + 10);
+  return missing;
+}
+
+function setSvg(id, parts, h) {
+  const el = $(id);
+  el.setAttribute('viewBox', `0 0 ${W} ${Math.max(20, h)}`);
+  el.innerHTML = parts.join('');
+}
+
+// ===================== 侧栏 =====================
+function side() {
+  const th = getT(sel.b, sel.t), {G, B} = S;
+  const nt = B.x * B.y * B.z;
+  const d3 = (a, b, c) => G.z > 1 || B.z > 1 ? `(${a}, ${b}, ${c})` : (G.y > 1 || B.y > 1 ? `(${a}, ${b})` : `${a}`);
+  let h = `<h3>选中的线程</h3><table class="kv">
+    <tr><td>blockIdx</td><td class="mono">${d3(th.bx, th.by, th.bz)}</td></tr>
+    <tr><td>threadIdx</td><td class="mono">${d3(th.tx, th.ty, th.tz)}</td></tr>
+    <tr><td>block内的序号</td><td class="mono">${th.t}</td></tr>
+    <tr><td>所属warp</td><td class="mono">warp ${th.warp}，第 ${th.lane} 个通道</td></tr></table>`;
+  h += `<div class="formula">序号 = x + y·blockDim.x + z·blockDim.x·blockDim.y<br>= ${th.tx} + ${th.ty}×${B.x} + ${th.tz}×${B.x}×${B.y} = ${th.t}<br>warp = ⌊${th.t} / 32⌋ = ${th.warp}</div>`;
+  if (S.mode === '1d') {
+    h += `<h3>负责的元素</h3><div class="formula">i = blockIdx.x × blockDim.x + threadIdx.x<br>= ${th.bx} × ${B.x} + ${th.tx} = ${th.gxi}</div>`;
+    h += th.oob ? `<p class="note"><span class="hl">i = ${th.gxi} ≥ n = ${S.n}</span>，越界，<code>if (i &lt; n)</code> 让它什么都不做。</p>` : `<p class="note">计算 <span class="hl">c[${th.gxi}]</span></p>`;
+  } else if (S.mode === '2d') {
+    const xr = S.map === 'xrow';
+    h += `<h3>负责的元素</h3><div class="formula">${xr ? 'i' : 'j'} = blockIdx.x × blockDim.x + threadIdx.x = ${th.bx} × ${B.x} + ${th.tx} = ${th.gxi}<br>${xr ? 'j' : 'i'} = blockIdx.y × blockDim.y + threadIdx.y = ${th.by} × ${B.y} + ${th.ty} = ${th.gyi}</div>`;
+    h += th.oob ? `<p class="note"><span class="hl">越界</span>（矩阵是${S.M}×${S.N}），什么都不做。</p>` : `<p class="note">计算 <span class="hl">C[${th.elem.i}][${th.elem.j}]</span>：读A的第${th.elem.i}行、B的第${th.elem.j}列</p>`;
+  }
+  // 这个warp的情况
+  const mates = [];
+  for (let t = th.warp * 32; t < Math.min(nt, th.warp * 32 + 32); t++) mates.push(getT(th.b, t));
+  h += `<h3>选中的warp（warp ${th.warp}）</h3><p class="note" style="margin-top:0">有 <b>${mates.length}</b> 个线程${mates.length < 32 ? `，<span class="hl">另外 ${32 - mates.length} 个通道空闲</span>` : ''}。`;
+  const span = k => [...new Set(mates.map(k))].sort((a, b) => a - b);
+  const rng = a => a.length === 1 ? `${a[0]}` : (a[a.length - 1] - a[0] + 1 === a.length ? `${a[0]}～${a[a.length - 1]}` : a.join(', '));
+  h += ` threadIdx.x 取 ${rng(span(t => t.tx))}` + (B.y > 1 ? `，y 取 ${rng(span(t => t.ty))}` : '') + (B.z > 1 ? `，z 取 ${rng(span(t => t.tz))}` : '') + '。</p>';
+  const inr = mates.filter(t => !t.oob);
+  if (S.mode === '2d' && inr.length) {
+    const rs = span(t => t.elem.i).filter(i => i < S.M), cs = span(t => t.elem.j).filter(j => j < S.N);
+    h += `<p class="note">负责C中 <span class="hl">${rs.length} 行 × ${cs.length} 列</span> 的元素。按行主序，C的同一行在内存中是连续的，所以这个warp写C时，${rs.length === 1 ? '只访问 <span class="hl">1 段</span>连续的内存' : `要访问 <span class="hl">${rs.length} 段</span>互不相连的内存`}。读A时涉及 ${rs.length} 个不同的行，读B时涉及 ${cs.length} 个不同的列。</p>`;
+  } else if (S.mode === '1d' && inr.length) {
+    const is = span(t => t.elem.i);
+    h += `<p class="note">负责 c[${rng(is)}]，在内存中是连续的一段。</p>`;
+  }
+  if (presetNote) h += `<h3>这个例子</h3><p class="note" style="margin-top:0">${presetNote}</p>`;
+  $('side').innerHTML = h;
+}
+
+function legend() {
+  const nt = S.B.x * S.B.y * S.B.z, nw = Math.ceil(nt / 32);
+  let h = '';
+  for (let w = 0; w < Math.min(nw, 12); w++) h += `<i style="background:${warpColor(w)}"></i>warp ${w}`;
+  if (nw > 12) h += `　…共${nw}个warp`;
+  h += `<i style="background:none;border:1px dashed var(--muted)"></i>越界的线程<i style="background:none;border:2px solid var(--accent)"></i>选中的线程`;
+  $('legend').innerHTML = h;
+}
+
+// ===================== 渲染 =====================
+function render() {
+  drawHier(); drawLinear();
+  const missing = drawData() || 0;
+  side(); legend();
+  const nb = S.G.x * S.G.y * S.G.z, nt = S.B.x * S.B.y * S.B.z;
+  const oob = T.filter(t => t.oob).length;
+  $('stats').innerHTML = `共 <b>${nb}</b> 个block × 每个 <b>${nt}</b> 个线程 = <b>${nb * nt}</b> 个线程；每个block分成 <b>${Math.ceil(nt / 32)}</b> 个warp` +
+    (S.mode !== 'none' ? `；越界的线程 <b>${oob}</b> 个` + (missing ? `；<span style="color:var(--err)">没有线程负责的元素 <b>${missing}</b> 个（grid不够大）</span>` : '') : '');
+}
+
+function apply(fromInputs = true) {
+  const s = fromInputs ? readInputs() : S;
+  lockDims(s);
+  writeInputs(s);
+  const nb = s.G.x * s.G.y * s.G.z, nt = s.B.x * s.B.y * s.B.z;
+  const msg = $('msg');
+  msg.className = 'msg';
+  if (nt > 1024 || s.B.z > 64) {
+    msg.className = 'msg err';
+    msg.textContent = nt > 1024 ? `每个block最多1024个线程，现在是 ${nt} 个，CUDA会拒绝启动这个kernel。` : 'blockDim.z最大是64。';
+    return;
+  }
+  if (nb * nt > MAX_THREADS) {
+    msg.className = 'msg warn';
+    msg.textContent = `线程总数 ${nb * nt} 太多，画不下（上限 ${MAX_THREADS}）。请减小gridDim或blockDim。`;
+    return;
+  }
+  if (s.mode === '2d' && s.M * s.N > MAX_ELEMS || s.mode === '1d' && s.n > MAX_ELEMS) {
+    msg.className = 'msg warn';
+    msg.textContent = `数据元素太多，画不下（上限 ${MAX_ELEMS}）。`;
+    return;
+  }
+  S = s;
+  T = build(S);
+  if (sel.b >= nb) sel.b = 0;
+  if (sel.t >= nt) sel.t = 0;
+  render();
+}
+
+// ===================== 交互 =====================
+function pick(e) {
+  const r = e.target.closest('[data-t]');
+  if (r) { const [b, t] = r.dataset.t.split(',').map(Number); sel = {b, t}; render(); return; }
+  const w = e.target.closest('[data-w]');
+  if (w) { sel.t = Math.min(+w.dataset.w * 32, S.B.x * S.B.y * S.B.z - 1); render(); }
+}
+['vh', 'vl', 'vd'].forEach(id => $(id).addEventListener('click', pick));
+document.addEventListener('keydown', e => {
+  if (e.target.closest && e.target.closest('input,select')) return;
+  const nt = S.B.x * S.B.y * S.B.z, nb = S.G.x * S.G.y * S.G.z;
+  let t = sel.b * nt + sel.t;
+  if (e.key === 'ArrowRight') t = Math.min(nb * nt - 1, t + 1);
+  else if (e.key === 'ArrowLeft') t = Math.max(0, t - 1);
+  else if (e.key === 'ArrowDown') { sel.t = Math.min(nt - 1, (Math.floor(sel.t / 32) + 1) * 32); render(); e.preventDefault(); return; }
+  else if (e.key === 'ArrowUp') { sel.t = Math.max(0, (Math.floor(sel.t / 32) - 1) * 32); render(); e.preventDefault(); return; }
+  else return;
+  e.preventDefault();
+  sel = {b:Math.floor(t / nt), t:t % nt};
+  render();
+});
+for (const id of ['gx', 'gy', 'gz', 'bx', 'by', 'bz', 'n', 'm', 'nn', 'mode', 'map'])
+  $(id).addEventListener('change', () => { presetNote = ''; markPreset(-1); apply(); });
+$('auto').onclick = () => {
+  const s = readInputs();
+  if (s.mode === '1d') s.G.x = Math.ceil(s.n / s.B.x);
+  else if (s.mode === '2d') {
+    const rowsDim = s.map === 'xrow' ? 'x' : 'y', colsDim = s.map === 'xrow' ? 'y' : 'x';
+    s.G[rowsDim] = Math.ceil(s.M / s.B[rowsDim]);
+    s.G[colsDim] = Math.ceil(s.N / s.B[colsDim]);
+  }
+  writeInputs(s); presetNote = ''; markPreset(-1); apply();
+};
+function markPreset(i) { document.querySelectorAll('#presets button').forEach((b, k) => b.classList.toggle('on', k === i)); }
+$('presets').innerHTML = PRESETS.map((p, i) => `<button data-i="${i}">${p.name}</button>`).join('');
+$('presets').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const p = PRESETS[+b.dataset.i];
+  writeInputs({G:{x:p.G[0], y:p.G[1], z:p.G[2]}, B:{x:p.B[0], y:p.B[1], z:p.B[2]}, mode:p.mode,
+               n:p.n || 30, M:p.M || 16, N:p.N || 16, map:p.map || 'xrow'});
+  sel = {b:p.sel[0], t:p.sel[1]};
+  presetNote = p.note;
+  markPreset(+b.dataset.i);
+  apply();
+};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => S && render());
+
+// 初始：第一个预设
+$('presets').querySelector('button').click();
+</script>
+</body>
+</html>

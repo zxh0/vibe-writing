@@ -1,0 +1,3 @@
+matmul
+*.ncu-rep
+gpu.log

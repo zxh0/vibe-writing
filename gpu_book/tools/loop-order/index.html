@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>循环顺序演示</title>
+<style>
+:root{
+  --bg:#f7f7f8; --panel:#ffffff; --border:#e3e5e8; --text:#16181d; --muted:#6b7280;
+  --accent:#2563eb; --accent-soft:#eff4ff; --cell:#ffffff;
+  --a:#dc2626; --a-soft:#fdecec; --b:#16a34a; --b-soft:#e8f6ee;
+  --c:#d97706; --c-soft:#fdf3e2; --done:#eef0f3; --code:#f2f3f5;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15171c; --panel:#1c1f26; --border:#2d3139; --text:#e6e8ec; --muted:#9aa1ad;
+    --accent:#6ea8fe; --accent-soft:#1e2637; --cell:#1c1f26;
+    --a:#f87171; --a-soft:#3a1f22; --b:#4ade80; --b-soft:#1b3326;
+    --c:#fbbf24; --c-soft:#3a2f17; --done:#252931; --code:#15171c;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:24px 16px 64px}
+h1{font-size:22px; margin:0 0 4px}
+.sub{color:var(--muted); margin:0 0 20px}
+.card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:16px}
+.row{display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end}
+label.f{display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--muted)}
+input[type=number],select{
+  background:var(--panel); color:var(--text); border:1px solid var(--border);
+  border-radius:7px; padding:7px 9px; font:13px/1.4 inherit; width:76px;
+}
+select{width:auto}
+input[type=range]{width:140px; accent-color:var(--accent)}
+input:focus,select:focus{outline:2px solid var(--accent-soft); border-color:var(--accent)}
+label.chk{display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text); padding-bottom:7px; cursor:pointer}
+button{
+  background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:7px;
+  padding:7px 12px; font:13px/1.4 inherit; cursor:pointer;
+}
+button:hover{border-color:var(--accent); color:var(--accent)}
+button.primary{background:var(--accent); border-color:var(--accent); color:#fff; min-width:72px}
+button.primary:hover{opacity:.9; color:#fff}
+button:disabled{opacity:.4; cursor:default}
+.tabs{display:inline-flex; flex-wrap:wrap; border:1px solid var(--border); border-radius:8px; overflow:hidden}
+.tabs button{border:0; border-radius:0; border-right:1px solid var(--border); padding:6px 12px; line-height:1.3}
+.tabs button:last-child{border-right:0}
+.tabs button .o{font:600 14px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; display:block}
+.tabs button .h{font-size:11px; color:var(--muted); display:block; min-height:14px}
+.tabs button.on{background:var(--accent-soft); color:var(--accent)}
+.stage-scroll{overflow-x:auto; padding:4px 0}
+#cv{display:block; margin:0 auto}
+.ctrl{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:14px}
+.ctrl.export{margin-top:10px; padding-top:12px; border-top:1px dashed var(--border)}
+.status{font-size:12px; color:var(--muted)}
+.progress{margin-left:auto; font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums}
+.note{color:var(--muted); font-size:13px; margin:0 0 6px}
+.note:last-child{margin-bottom:0}
+.note b{color:var(--text)}
+code{font:12.5px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+@media (max-width:560px){ .progress{margin-left:0; width:100%} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>循环顺序演示</h1>
+  <p class="sub">C = A × B 的三重循环有六种排列，算出的结果和计算量完全相同，访问内存的顺序却大不一样。</p>
+
+  <div class="card">
+    <div class="row">
+      <label class="f">循环顺序（外 → 内）
+        <div class="tabs" id="tabs"></div>
+      </label>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <label class="f">M（A的行数）<input type="number" id="inM" min="1" max="6" value="4"></label>
+      <label class="f">K（A的列数 = B的行数）<input type="number" id="inK" min="1" max="6" value="4"></label>
+      <label class="f">N（B的列数）<input type="number" id="inN" min="1" max="6" value="4"></label>
+      <label class="f">元素取值
+        <select id="inFill">
+          <option value="seq">顺序整数</option>
+          <option value="digit">随机整数（0到9）</option>
+        </select>
+      </label>
+      <button id="btnFill">重新生成</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="stage-scroll"><canvas id="cv"></canvas></div>
+    <div class="ctrl">
+      <button class="primary" id="btnPlay">播放</button>
+      <button id="btnPrev">上一步</button>
+      <button id="btnNext">下一步</button>
+      <button id="btnReset">重置</button>
+      <button id="btnAll">直接算完</button>
+      <label class="f">速度<input type="range" id="inSpeed" min="1" max="10" value="5"></label>
+      <span class="progress" id="progress"></span>
+    </div>
+    <div class="ctrl export">
+      <button id="btnGif">导出GIF</button>
+      <button id="btnPng">导出当前帧PNG</button>
+      <label class="chk"><input type="checkbox" id="inCaption" checked>附带说明文字</label>
+      <span class="status" id="exportStatus">导出整段动画（从第0步到最后一步），帧间隔取当前速度，图片为2倍分辨率。</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="note" id="note"></p>
+    <p class="note"><b>怎么看：</b>中间一排是三个矩阵，深色的格子是这一步访问的元素，浅色的是最内层循环这一轮会扫过的元素。
+      下面三条是同样三个矩阵在内存里的样子：按行主序排成一维数组，每一行之间留了一道缝。
+      箭头从上一步访问的地址指向这一步的地址，上面的数字是两次访问相隔几个元素：<code>+1</code>是紧挨着的下一个，<code>不动</code>是同一个地址，数字越大，跳得越远。
+      右边统计到目前为止，“连续”（不动或+1）和“跳跃”（其余情况）各有多少次。</p>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const MAX = 6;
+  const ORDERS = ['ijk', 'ikj', 'jik', 'jki', 'kij', 'kji'];
+  const HINT = {ijk: '点积视角', kij: '外积视角'};
+  const NOTES = {
+    ijk: `<b>ijk：</b>第1章的点积视角。最内层是 k，一次把 C 的一个元素算完。
+      最内层循环里，A 在一行上往右走，是连续的；B 却在一列上往下走，每一步跳过一整行；C 一直停在同一个元素上。`,
+    ikj: `<b>ikj：</b>第2章换成的版本。固定 C 的第 i 行，k 每走一步，就把 B 的第 k 行乘以 a<sub>ik</sub>，加到 C 的第 i 行上。
+      也就是说，C 的一行是 B 各行的线性组合。最内层是 j，A 停在一个元素上不动，B 和 C 都在各自的一行上往右走，全部连续。
+      从内存条上看，k 加一时 B 从第 k 行的末尾走到第 k+1 行的开头，也是紧挨着的，所以算完 C 的一行，就把整个 B 从头到尾顺序读了一遍。
+      C 每一轮都要跳回这一行的开头，所以统计里会有几次跳跃；不过一行很短，一直留在缓存里，这几次跳跃并不贵。`,
+    jik: `<b>jik：</b>和 ijk 一样是点积视角，最内层也是 k，只是按列的顺序去算 C 的元素。最内层循环的访存和 ijk 完全相同：B 每一步跳一整行。`,
+    jki: `<b>jki：</b>最内层是 i：B 不动，A 和 C 都在一列上往下走，每一步跳过一整行。两个矩阵都在跳，这是六种顺序里访存最差的一类。`,
+    kij: `<b>kij：</b>第1章的外积视角。k 在最外层，每一轮把 A 的第 k 列和 B 的第 k 行的外积加到整个 C 上。
+      内层两重循环和 ikj 一样，最内层的 j 让 B 和 C 都连续访问。区别在于，每一轮 k 都要把整个 C 读写一遍；ikj 则只盯着 C 的一行，反复读的是 B。
+      矩阵很大、放不进缓存时，这个差别就会显现出来。`,
+    kji: `<b>kji：</b>外积视角的另一种写法，最内层是 i：B 不动，A 和 C 都在一列上往下走，和 jki 一样两个矩阵都在跳。`,
+  };
+
+  let order = 'ikj';
+  let M, K, N, A, B;
+  let steps = [];   // 每一步：{i, j, k}
+  let pos = 0;      // 已执行的步数
+  let timer = null;
+
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const readDim = el => { const v = clamp(parseInt(el.value, 10) || 1, 1, MAX); el.value = v; return v; };
+  const range = n => Array.from({length: n}, (_, i) => i);
+  const dimOf = v => ({i: M, j: N, k: K})[v];
+  const addr = {
+    A: s => s.i * K + s.k,
+    B: s => s.k * N + s.j,
+    C: s => s.i * N + s.j,
+  };
+
+  function build() {
+    stop();
+    M = readDim($('inM')); K = readDim($('inK')); N = readDim($('inN'));
+    const rnd = () => Math.floor(Math.random() * 10);
+    const seq = $('inFill').value === 'seq';
+    A = range(M).map(i => range(K).map(k => seq ? i * K + k + 1 : rnd()));
+    B = range(K).map(k => range(N).map(j => seq ? k * N + j + 1 : rnd()));
+    buildSteps();
+  }
+
+  function buildSteps() {
+    stop();
+    steps = [];
+    const [o0, o1, o2] = order;
+    for (let x = 0; x < dimOf(o0); x++)
+      for (let y = 0; y < dimOf(o1); y++)
+        for (let z = 0; z < dimOf(o2); z++) steps.push({[o0]: x, [o1]: y, [o2]: z});
+    pos = 0;
+    $('note').innerHTML = NOTES[order];
+    document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.o === order));
+    render();
+  }
+
+  // 执行完前p步之后的状态
+  function stateAt(p) {
+    const sum = range(M).map(() => new Array(N).fill(0));
+    const cnt = range(M).map(() => new Array(N).fill(0));
+    const stat = {A: [0, 0], B: [0, 0], C: [0, 0]};   // [连续, 跳跃]
+    for (let t = 0; t < p; t++) {
+      const s = steps[t];
+      sum[s.i][s.j] += A[s.i][s.k] * B[s.k][s.j];
+      cnt[s.i][s.j]++;
+      if (t > 0) for (const m of 'ABC') {
+        const d = addr[m](s) - addr[m](steps[t - 1]);
+        stat[m][d === 0 || d === 1 ? 0 : 1]++;
+      }
+    }
+    const cur = p > 0 ? steps[p - 1] : null;
+    const prev = p > 1 ? steps[p - 2] : null;
+    return {sum, cnt, stat, cur, prev};
+  }
+
+  // 最内层循环这一轮会扫过的所有 (i, j, k)
+  function sweepOf(cur) {
+    const inner = order[2];
+    return range(dimOf(inner)).map(v => ({...cur, [inner]: v}));
+  }
+
+  function strideText(m) {
+    const v = order[2];
+    const d = {A: {i: K, k: 1, j: 0}, B: {k: N, j: 1, i: 0}, C: {i: N, j: 1, k: 0}}[m][v];
+    if (d === 0) return '不动';
+    if (d === 1) return '连续';
+    return `每步跳 ${d} 个元素`;
+  }
+  const summary = () => `最内层 ${order[2]}：A ${strideText('A')}，B ${strideText('B')}，C ${strideText('C')}`;
+
+  function caption(cur, sum) {
+    if (!cur) return `${order} 顺序：最外层 ${order[0]}，中间 ${order[1]}，最内层 ${order[2]}`;
+    const {i, j, k} = cur;
+    const now = sum[i][j], prev = now - A[i][k] * B[k][j];
+    return `i=${i}, j=${j}, k=${k}：c[${i}][${j}] = ${prev} + ${A[i][k]}×${B[k][j]} = ${now}`;
+  }
+
+  // ---------- 绘制（屏幕和导出共用） ----------
+  const MONO = 'ui-monospace,SFMono-Regular,Menlo,Consolas,monospace';
+  const SANS = '-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+  // 导出的图片固定使用浅色配色，便于放进书里
+  const LIGHT = {
+    bg: '#ffffff', border: '#d9dce1', text: '#16181d', muted: '#6b7280', cell: '#ffffff',
+    a: '#dc2626', aSoft: '#fdecec', b: '#16a34a', bSoft: '#e8f6ee',
+    c: '#d97706', cSoft: '#fdf3e2', done: '#eef0f3', code: '#f2f3f5',
+  };
+  function screenPal() {
+    const s = getComputedStyle(document.documentElement), v = n => s.getPropertyValue(n).trim();
+    return {bg: v('--panel'), border: v('--border'), text: v('--text'), muted: v('--muted'), cell: v('--cell'),
+      a: v('--a'), aSoft: v('--a-soft'), b: v('--b'), bSoft: v('--b-soft'),
+      c: v('--c'), cSoft: v('--c-soft'), done: v('--done'), code: v('--code')};
+  }
+
+  const codeLines = () => {
+    const bound = {i: 'M', j: 'N', k: 'K'};
+    return [
+      ...[...order].map((v, d) => ({ind: d, text: `for (${v} = 0; ${v} < ${bound[v]}; ${v}++)`, v})),
+      {ind: 3, text: 'C[i][j] += A[i][k] * B[k][j];'},
+    ];
+  };
+
+  function layout(withCaption) {
+    const g = document.createElement('canvas').getContext('2d');
+    g.font = `13px ${MONO}`;
+    const tw = s => g.measureText(String(s)).width;
+    const L = {pad: 18, cellH: 36, gap: 3, opW: 34, titleH: 20, lineH: 22,
+      sc: 20, sg: 2, rowGap: 7, stripLabelW: 120, statW: 150, arcH: 30, stripGap: 22};
+    // 矩阵单元格宽度：取所有可能出现的数字中最宽的那个
+    const total = range(M).map(i => range(N).map(j => range(K).reduce((s, k) => s + A[i][k] * B[k][j], 0)));
+    const cw = vals => Math.max(L.cellH, Math.ceil(Math.max(...vals.map(tw))) + 14);
+    L.cwA = cw(A.flat()); L.cwB = cw(B.flat()); L.cwC = cw(total.flat());
+    const span = (n, w) => n * w + (n - 1) * L.gap;
+    L.wA = span(K, L.cwA); L.wB = span(N, L.cwB); L.wC = span(N, L.cwC);
+    const matW = L.wA + L.opW + L.wB + L.opW + L.wC;
+
+    // 代码区
+    L.codeTop = L.pad;
+    const codeW = Math.max(...codeLines().map(l => l.ind * 18 + tw(l.text))) + 24 + 70;
+    L.codeW = Math.ceil(codeW);
+    L.codeH = 4 * L.lineH + 16;
+
+    // 矩阵区
+    L.matTop = L.codeTop + L.codeH + 22;
+    L.cellTop = L.matTop + L.titleH + 4;
+    const matH = span(Math.max(M, K), L.cellH);
+
+    // 内存条：A 有 M 行、每行 K 个；B 有 K 行、每行 N 个；C 有 M 行、每行 N 个
+    L.strips = [['A', M, K], ['B', K, N], ['C', M, N]].map(([m, rows, cols]) =>
+      ({m, rows, cols, w: rows * cols * (L.sc + L.sg) - L.sg + (rows - 1) * L.rowGap}));
+    const stripW = Math.max(...L.strips.map(s => s.w));
+    L.stripTop = L.cellTop + matH + 30;
+    L.stripH = L.arcH + L.sc + 16;
+    L.strips.forEach((s, n) => { s.y = L.stripTop + n * (L.stripH + L.stripGap) + L.arcH; });
+    const stripsBottom = L.stripTop + 3 * L.stripH + 2 * L.stripGap;
+    const stripRowW = L.stripLabelW + stripW + 16 + L.statW;
+
+    let w = Math.max(matW, stripRowW, L.codeW) + 2 * L.pad;
+    L.capY = stripsBottom + 18;
+    if (withCaption) {
+      g.font = `14px ${MONO}`;
+      w = Math.max(w, Math.ceil(g.measureText(summary()).width) + 2 * L.pad + 20);
+      let capW = 0;
+      for (const s of [null, ...steps.slice(-1)]) capW = Math.max(capW, g.measureText(caption(s, total)).width);
+      w = Math.max(w, Math.ceil(capW) + 2 * L.pad + 40);
+    }
+    L.w = Math.ceil(w);
+    L.h = Math.ceil((withCaption ? L.capY + 22 + 16 : stripsBottom) + L.pad);
+    L.matX = Math.floor((L.w - matW) / 2);
+    L.xA = L.matX; L.xB = L.xA + L.wA + L.opW; L.xC = L.xB + L.wB + L.opW;
+    L.stripX = Math.floor((L.w - stripRowW) / 2);
+    L.codeX = Math.floor((L.w - L.codeW) / 2);
+    return L;
+  }
+
+  function drawFrame(ctx, L, P, scale, p, withCaption) {
+    const {sum, cnt, stat, cur, prev} = stateAt(p);
+    const sweep = cur ? sweepOf(cur) : [];
+    const has = (list, f) => new Set(list.map(f));
+    const aSweep = has(sweep, addr.A), bSweep = has(sweep, addr.B), cSweep = has(sweep, addr.C);
+
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+    ctx.fillStyle = P.bg; ctx.fillRect(0, 0, L.w, L.h);
+
+    const rrect = (x, y, w, h, r) => {
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x + .5, y + .5, w - 1, h - 1, r); else ctx.rect(x + .5, y + .5, w - 1, h - 1);
+    };
+    const text = (s, x, y, font, color, align = 'left', base = 'middle') => {
+      ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = base; ctx.fillText(s, x, y);
+    };
+
+    // 代码
+    rrect(L.codeX, L.codeTop, L.codeW, L.codeH, 8); ctx.fillStyle = P.code; ctx.fill();
+    ctx.strokeStyle = P.border; ctx.lineWidth = 1; ctx.stroke();
+    codeLines().forEach((l, n) => {
+      const y = L.codeTop + 8 + n * L.lineH + L.lineH / 2;
+      const x = L.codeX + 12 + l.ind * 18;
+      if (l.v) {
+        text(l.text, x, y, `13px ${MONO}`, P.text);
+        if (cur) text(`${l.v} = ${cur[l.v]}`, L.codeX + L.codeW - 12, y, `bold 13px ${MONO}`, P.c, 'right');
+      } else {
+        // 语句里三个矩阵的名字用各自的颜色
+        ctx.font = `13px ${MONO}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        let cx = x;
+        for (const part of l.text.split(/(A|B|C)/)) {
+          ctx.fillStyle = {A: P.a, B: P.b, C: P.c}[part] || P.text;
+          ctx.font = (part.length === 1 && 'ABC'.includes(part) ? 'bold ' : '') + `13px ${MONO}`;
+          ctx.fillText(part, cx, y); cx += ctx.measureText(part).width;
+        }
+      }
+    });
+
+    // 矩阵
+    const cell = (x, y, w, fill, stroke, color, val, idx, idxColor, lw = 1) => {
+      rrect(x, y, w, L.cellH, 6);
+      ctx.fillStyle = fill; ctx.fill(); ctx.lineWidth = lw; ctx.strokeStyle = stroke; ctx.stroke();
+      text(idx, x + 4, y + 3, `8px ${MONO}`, idxColor, 'left', 'top');
+      if (val !== '') text(val, x + w / 2, y + L.cellH / 2 + 1, `13px ${MONO}`, color, 'center');
+    };
+    const title = (x, name, r, c) => {
+      const y = L.matTop + L.titleH / 2;
+      text(name, x, y, `bold 12px ${MONO}`, P.text);
+      text(`  ${r}×${c}`, x + ctx.measureText(name).width, y, `12px ${MONO}`, P.muted);
+    };
+    const op = (x, s) => text(s, x + L.opW / 2, L.cellTop + L.cellH / 2, `22px ${SANS}`, P.muted, 'center');
+    title(L.xA, 'A', M, K); title(L.xB, 'B', K, N); title(L.xC, 'C', M, N);
+    op(L.xA + L.wA, '×'); op(L.xB + L.wB, '=');
+    const cx = (c, w) => c * (w + L.gap), cy = r => L.cellTop + r * (L.cellH + L.gap);
+    for (let r = 0; r < M; r++) for (let c = 0; c < K; c++) {
+      const a = r * K + c, x = L.xA + cx(c, L.cwA), y = cy(r);
+      if (cur && a === addr.A(cur)) cell(x, y, L.cwA, P.a, P.a, '#fff', A[r][c], `${r},${c}`, '#fff');
+      else if (aSweep.has(a)) cell(x, y, L.cwA, P.aSoft, P.a, P.text, A[r][c], `${r},${c}`, P.muted);
+      else cell(x, y, L.cwA, P.cell, P.border, P.text, A[r][c], `${r},${c}`, P.muted);
+    }
+    for (let r = 0; r < K; r++) for (let c = 0; c < N; c++) {
+      const a = r * N + c, x = L.xB + cx(c, L.cwB), y = cy(r);
+      if (cur && a === addr.B(cur)) cell(x, y, L.cwB, P.b, P.b, '#fff', B[r][c], `${r},${c}`, '#fff');
+      else if (bSweep.has(a)) cell(x, y, L.cwB, P.bSoft, P.b, P.text, B[r][c], `${r},${c}`, P.muted);
+      else cell(x, y, L.cwB, P.cell, P.border, P.text, B[r][c], `${r},${c}`, P.muted);
+    }
+    for (let r = 0; r < M; r++) for (let c = 0; c < N; c++) {
+      const a = r * N + c, x = L.xC + cx(c, L.cwC), y = cy(r), v = sum[r][c];
+      const sw = cSweep.has(a);
+      if (cur && a === addr.C(cur)) cell(x, y, L.cwC, P.c, P.c, '#fff', v, `${r},${c}`, '#fff');
+      else if (cnt[r][c] === K) cell(x, y, L.cwC, sw ? P.cSoft : P.done, sw ? P.c : P.border, P.text, v, `${r},${c}`, P.muted);
+      else if (cnt[r][c] > 0) cell(x, y, L.cwC, P.cSoft, P.c, P.c, v, `${r},${c}`, P.muted);
+      else cell(x, y, L.cwC, sw ? P.cSoft : P.cell, sw ? P.c : P.border, P.text, '', `${r},${c}`, P.muted);
+    }
+
+    // 内存条
+    const colors = {A: [P.a, P.aSoft], B: [P.b, P.bSoft], C: [P.c, P.cSoft]};
+    const sweeps = {A: aSweep, B: bSweep, C: cSweep};
+    const x0 = L.stripX + L.stripLabelW;
+    for (const s of L.strips) {
+      const [dark, soft] = colors[s.m];
+      const ax = a => x0 + a * (L.sc + L.sg) + Math.floor(a / s.cols) * L.rowGap;
+      text(s.m, L.stripX, s.y + L.sc / 2, `bold 13px ${MONO}`, dark);
+      text('在内存中', L.stripX + 14, s.y + L.sc / 2, `12px ${SANS}`, P.muted);
+      const curA = cur ? addr[s.m](cur) : -1;
+      for (let a = 0; a < s.rows * s.cols; a++) {
+        const x = ax(a);
+        rrect(x, s.y, L.sc, L.sc, 3);
+        if (a === curA) { ctx.fillStyle = dark; ctx.fill(); ctx.strokeStyle = dark; }
+        else if (sweeps[s.m].has(a)) { ctx.fillStyle = soft; ctx.fill(); ctx.strokeStyle = dark; }
+        else { ctx.fillStyle = P.cell; ctx.fill(); ctx.strokeStyle = P.border; }
+        ctx.lineWidth = 1; ctx.stroke();
+      }
+      // 每一行下面标上行号
+      for (let r = 0; r < s.rows; r++) {
+        const xl = ax(r * s.cols), xr = ax(r * s.cols + s.cols - 1) + L.sc;
+        text(`第${r}行`, (xl + xr) / 2, s.y + L.sc + 9, `10px ${SANS}`, P.muted, 'center');
+      }
+      // 从上一步的地址指向这一步的地址
+      if (cur && prev) {
+        const pa = addr[s.m](prev), d = curA - pa;
+        const xc = ax(curA) + L.sc / 2, top = s.y - 3;
+        if (d === 0) {
+          text('不动', xc, top - 9, `bold 11px ${SANS}`, dark, 'center');
+        } else {
+          const xp = ax(pa) + L.sc / 2;
+          const h = Math.min(L.arcH - 10, 12 + Math.abs(xc - xp) * 0.1);
+          ctx.beginPath(); ctx.moveTo(xp, top);
+          ctx.bezierCurveTo(xp, top - h * 1.3, xc, top - h * 1.3, xc, top);
+          ctx.strokeStyle = dark; ctx.lineWidth = 1.5; ctx.stroke();
+          // 箭头
+          ctx.beginPath(); ctx.moveTo(xc, top); ctx.lineTo(xc - 3.5, top - 6); ctx.lineTo(xc + 3.5, top - 6); ctx.closePath();
+          ctx.fillStyle = dark; ctx.fill();
+          const label = d > 0 ? `+${d}` : `−${-d}`;
+          const lx = clamp((xp + xc) / 2, x0 + 10, x0 + s.w - 10), ly = top - h - 4;
+          ctx.font = `bold 11px ${MONO}`;
+          const lw = ctx.measureText(label).width + 6;
+          ctx.fillStyle = P.bg; ctx.fillRect(lx - lw / 2, ly - 7, lw, 14);
+          text(label, lx, ly, `bold 11px ${MONO}`, dark, 'center');
+        }
+      }
+      // 统计
+      const sx = L.stripX + L.stripLabelW + Math.max(...L.strips.map(t => t.w)) + 16, sy = s.y + L.sc / 2;
+      text('连续', sx, sy, `12px ${SANS}`, P.muted);
+      text(String(stat[s.m][0]), sx + 30, sy, `bold 13px ${MONO}`, P.text);
+      text('跳跃', sx + 72, sy, `12px ${SANS}`, P.muted);
+      text(String(stat[s.m][1]), sx + 102, sy, `bold 13px ${MONO}`, stat[s.m][1] ? dark : P.text);
+    }
+
+    if (withCaption) {
+      text(caption(cur, sum), L.w / 2, L.capY, `14px ${MONO}`, P.text, 'center');
+      text(summary(), L.w / 2, L.capY + 22, `13px ${SANS}`, P.muted, 'center');
+    }
+  }
+
+  // ---------- 屏幕渲染 ----------
+  function render() {
+    const cv = $('cv'), dpr = window.devicePixelRatio || 1;
+    const L = layout(true);
+    cv.width = L.w * dpr; cv.height = L.h * dpr;
+    cv.style.width = L.w + 'px'; cv.style.height = L.h + 'px';
+    drawFrame(cv.getContext('2d'), L, screenPal(), dpr, pos, true);
+    $('progress').textContent = `第 ${pos} / ${steps.length} 步（每步一次乘加）`;
+    $('btnPlay').textContent = timer ? '暂停' : '播放';
+  }
+
+  // ---------- 导出GIF / PNG ----------
+  const SCALE = 2;
+  function makeCanvas(L) {
+    const cv = document.createElement('canvas');
+    cv.width = L.w * SCALE; cv.height = L.h * SCALE;
+    return cv;
+  }
+  function download(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  const fileBase = () => `loop-${order}-${M}x${K}x${N}`;
+
+  // 一个不依赖任何外部库的GIF编码器（与 matmul-demo 相同）
+  // 调色板：统计所有帧的颜色，取最常见的255种，其余颜色映射到最接近的一种
+  function buildPalette(frames) {
+    const hist = new Map();
+    for (const f of frames) {
+      const d = f.data;
+      for (let i = 0; i < d.length; i += 4) {
+        const c = (d[i] << 16) | (d[i + 1] << 8) | d[i + 2];
+        hist.set(c, (hist.get(c) || 0) + 1);
+      }
+    }
+    // 留一个索引给“透明”（表示沿用上一帧）
+    const colors = [...hist.entries()].sort((x, y) => y[1] - x[1]).slice(0, 255).map(e => e[0]);
+    const index = new Map(colors.map((c, i) => [c, i]));
+    const nearest = c => {
+      if (index.has(c)) return index.get(c);
+      const r = c >> 16, g = (c >> 8) & 255, b = c & 255;
+      let best = 0, bd = Infinity;
+      colors.forEach((q, i) => {
+        const dr = r - (q >> 16), dg = g - ((q >> 8) & 255), db = b - (q & 255);
+        const dd = dr * dr * 3 + dg * dg * 4 + db * db * 2;
+        if (dd < bd) { bd = dd; best = i; }
+      });
+      index.set(c, best);
+      return best;
+    };
+    return {colors, nearest};
+  }
+
+  function lzw(pixels, minCode, out) {
+    const clear = 1 << minCode, eoi = clear + 1;
+    let size = minCode + 1, next = eoi + 1, dict = new Map();
+    let buf = 0, bits = 0;
+    const bytes = [];
+    const emit = code => {
+      buf |= code << bits; bits += size;
+      while (bits >= 8) { bytes.push(buf & 255); buf >>>= 8; bits -= 8; }
+    };
+    emit(clear);
+    let prefix = pixels[0];
+    for (let i = 1; i < pixels.length; i++) {
+      const k = pixels[i], key = (prefix << 8) | k;
+      const hit = dict.get(key);
+      if (hit !== undefined) { prefix = hit; continue; }
+      emit(prefix);
+      if (next === 4096) {
+        emit(clear);
+        dict = new Map(); size = minCode + 1; next = eoi + 1;
+      } else {
+        if (next >= (1 << size)) size++;
+        dict.set(key, next++);
+      }
+      prefix = k;
+    }
+    emit(prefix); emit(eoi);
+    if (bits > 0) bytes.push(buf & 255);
+    out.push(minCode);
+    for (let i = 0; i < bytes.length; i += 255) {
+      const chunk = bytes.slice(i, i + 255);
+      out.push(chunk.length, ...chunk);
+    }
+    out.push(0);
+  }
+
+  async function encodeGif(frames, delays, w, h, onProgress) {
+    const {colors, nearest} = buildPalette(frames);
+    const TRANS = colors.length;
+    let bitsPer = 1;
+    while ((1 << bitsPer) < colors.length + 1) bitsPer++;
+    const out = [];
+    const str = s => { for (const ch of s) out.push(ch.charCodeAt(0)); };
+    const u16 = v => out.push(v & 255, (v >> 8) & 255);
+    str('GIF89a'); u16(w); u16(h);
+    out.push(0x80 | 0x70 | (bitsPer - 1), 0, 0);
+    for (let i = 0; i < (1 << bitsPer); i++) {
+      const c = colors[i] || 0;
+      out.push(c >> 16, (c >> 8) & 255, c & 255);
+    }
+    out.push(0x21, 0xff, 11); str('NETSCAPE2.0'); out.push(3, 1, 0, 0, 0);   // 无限循环
+    let prev = null;
+    for (let f = 0; f < frames.length; f++) {
+      const d = frames[f].data, px = new Uint8Array(w * h);
+      for (let i = 0, j = 0; j < px.length; i += 4, j++) px[j] = nearest((d[i] << 16) | (d[i + 1] << 8) | d[i + 2]);
+      // 只编码和上一帧不同的矩形区域，其余部分沿用上一帧
+      let x0 = 0, y0 = 0, x1 = w - 1, y1 = h - 1;
+      if (prev) {
+        x0 = w; y0 = h; x1 = -1; y1 = -1;
+        for (let y = 0; y < h; y++) for (let x = 0, j = y * w; x < w; x++, j++) {
+          if (px[j] !== prev[j]) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        }
+        if (x1 < 0) { x0 = y0 = x1 = y1 = 0; }
+      }
+      const rw = x1 - x0 + 1, rh = y1 - y0 + 1, sub = new Uint8Array(rw * rh);
+      for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) {
+        const j = (y0 + y) * w + x0 + x;
+        sub[y * rw + x] = prev && px[j] === prev[j] ? TRANS : px[j];
+      }
+      out.push(0x21, 0xf9, 4, 0x04 | (prev ? 1 : 0)); u16(delays[f]); out.push(prev ? TRANS : 0, 0);
+      out.push(0x2c); u16(x0); u16(y0); u16(rw); u16(rh); out.push(0);
+      lzw(sub, Math.max(2, bitsPer), out);
+      prev = px;
+      onProgress(f + 1, frames.length);
+      await new Promise(r => setTimeout(r, 0));
+    }
+    out.push(0x3b);
+    return new Uint8Array(out);
+  }
+
+  let exporting = false;
+  async function exportGif() {
+    if (exporting) return;
+    const total = steps.length + 1;
+    if (total > 130 && !confirm(`整段动画共有 ${total} 帧，文件会比较大，导出也需要一些时间。继续吗？\n（可以减小矩阵尺寸来减少帧数）`)) return;
+    exporting = true; pause();
+    const st = $('exportStatus'), btn = $('btnGif');
+    btn.disabled = true;
+    try {
+      const withCap = $('inCaption').checked;
+      const L = layout(withCap), cv = makeCanvas(L), ctx = cv.getContext('2d');
+      const frames = [], delays = [];
+      const step = Math.max(2, Math.round(delay() / 10));   // GIF的帧间隔单位是1/100秒
+      for (let p = 0; p <= steps.length; p++) {
+        drawFrame(ctx, L, LIGHT, SCALE, p, withCap);
+        frames.push(ctx.getImageData(0, 0, cv.width, cv.height));
+        delays.push(p === 0 ? Math.max(step, 100) : p === steps.length ? Math.max(step, 250) : step);
+        if (p % 10 === 0) { st.textContent = `正在绘制第 ${p} / ${steps.length} 帧…`; await new Promise(r => setTimeout(r, 0)); }
+      }
+      const bytes = await encodeGif(frames, delays, cv.width, cv.height,
+        (f, n) => { st.textContent = `正在编码第 ${f} / ${n} 帧…`; });
+      download(new Blob([bytes], {type: 'image/gif'}), fileBase() + '.gif');
+      st.textContent = `已导出 ${fileBase()}.gif：${frames.length} 帧，${cv.width}×${cv.height} 像素，${(bytes.length / 1024).toFixed(0)} KB。放进书里时，img 的 width 写 ${L.w}。`;
+    } finally {
+      exporting = false; btn.disabled = false;
+    }
+  }
+
+  function exportPng() {
+    const withCap = $('inCaption').checked;
+    const L = layout(withCap), cv = makeCanvas(L);
+    drawFrame(cv.getContext('2d'), L, LIGHT, SCALE, pos, withCap);
+    cv.toBlob(b => {
+      download(b, `${fileBase()}-step${pos}.png`);
+      $('exportStatus').textContent = `已导出第 ${pos} 步的PNG：${cv.width}×${cv.height} 像素。放进书里时，img 的 width 写 ${L.w}。`;
+    }, 'image/png');
+  }
+
+  // 供调试：返回GIF字节，不触发下载
+  window.__loopGif = async () => {
+    const L = layout(true), cv = makeCanvas(L), ctx = cv.getContext('2d');
+    const frames = [], delays = [];
+    for (let p = 0; p <= steps.length; p++) { drawFrame(ctx, L, LIGHT, SCALE, p, true); frames.push(ctx.getImageData(0, 0, cv.width, cv.height)); delays.push(50); }
+    return {bytes: await encodeGif(frames, delays, cv.width, cv.height, () => {}), w: cv.width, h: cv.height, n: frames.length};
+  };
+
+  // ---------- 播放控制 ----------
+  function stepTo(p) { pos = clamp(p, 0, steps.length); render(); }
+  const delay = () => Math.round(1400 / +$('inSpeed').value);
+  function tick() {
+    if (pos >= steps.length) { pause(); return; }
+    stepTo(pos + 1);
+    if (pos >= steps.length) { pause(); return; }
+    timer = setTimeout(tick, delay());
+  }
+  function play() {
+    if (pos >= steps.length) pos = 0;
+    timer = setTimeout(tick, 0);
+    render();
+  }
+  function stop() { if (timer) { clearTimeout(timer); timer = null; } }
+  function pause() { stop(); render(); }
+
+  $('tabs').innerHTML = ORDERS.map(o =>
+    `<button data-o="${o}"><span class="o">${o}</span><span class="h">${HINT[o] || ''}</span></button>`).join('');
+  document.querySelectorAll('#tabs button').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.o === order) return;
+    order = b.dataset.o;
+    buildSteps();
+  }));
+  $('btnPlay').addEventListener('click', () => timer ? pause() : play());
+  $('btnNext').addEventListener('click', () => { stop(); stepTo(pos + 1); });
+  $('btnPrev').addEventListener('click', () => { stop(); stepTo(pos - 1); });
+  $('btnReset').addEventListener('click', () => { stop(); stepTo(0); });
+  $('btnAll').addEventListener('click', () => { stop(); stepTo(steps.length); });
+  $('btnGif').addEventListener('click', exportGif);
+  $('btnPng').addEventListener('click', exportPng);
+  $('btnFill').addEventListener('click', build);
+  $('inFill').addEventListener('change', build);
+  ['inM', 'inK', 'inN'].forEach(id => $(id).addEventListener('change', build));
+  document.addEventListener('keydown', e => {
+    const t = e.target;
+    if (t && t.tagName && (t.tagName === 'INPUT' || t.tagName === 'SELECT')) return;
+    if (e.key === 'ArrowRight') { stop(); stepTo(pos + 1); }
+    else if (e.key === 'ArrowLeft') { stop(); stepTo(pos - 1); }
+    else if (e.key === ' ') { e.preventDefault(); timer ? pause() : play(); }
+  });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
+
+  build();
+})();
+</script>
+</body>
+</html>

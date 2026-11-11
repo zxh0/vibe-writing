@@ -1,0 +1,43 @@
+# GPU：Tesla T4, 580.82.07, 15360 MiB, 1590 MHz, 5001 MHz, 70.00 W
+# CUDA：Cuda compilation tools, release 13.0, V13.0.88
+# CPU：Intel(R) Xeon(R) CPU @ 2.00GHz，2个逻辑CPU
+
+## 5.4 向量加法
+主机→设备  256MiB     58.748 毫秒       4.6 GB/s
+设备→主机  256MiB     57.355 毫秒       4.7 GB/s
+vector_add  n=67108864  block=256  grid=262144      3.056 毫秒     263.5 GB/s
+检查：全部正确（0个元素不一致）
+
+## 5.6 正确性
+check   n=1000  naive   最大绝对误差 8.392e-05   相对误差 1.558e-06
+check   n=1000  cublas  最大绝对误差 2.289e-05   相对误差 4.250e-07
+check   n=1024  naive   最大绝对误差 8.011e-05   相对误差 1.608e-06
+check   n=1024  cublas  最大绝对误差 1.907e-05   相对误差 3.827e-07
+
+## 5.7 朴素kernel，不同规模
+naive   n=256  block=32x32        1.135 毫秒       29.6 GFLOPS
+naive   n=512  block=32x32        4.730 毫秒       56.8 GFLOPS
+naive   n=1024  block=32x32       35.148 毫秒       61.1 GFLOPS
+naive   n=2048  block=32x32      277.734 毫秒       61.9 GFLOPS
+naive   n=4096  block=32x32     2220.083 毫秒       61.9 GFLOPS
+
+## 5.7 朴素kernel，不同block大小（n=4096）
+naive   n=4096  block=8x8      818.884 毫秒      167.8 GFLOPS
+naive   n=4096  block=16x16     1232.211 毫秒      111.5 GFLOPS
+naive   n=4096  block=32x32     2244.808 毫秒       61.2 GFLOPS
+
+## 5.8 cuBLAS
+cublas  n=256                     0.020 毫秒     1639.9 GFLOPS
+cublas  n=512                     0.050 毫秒     5382.7 GFLOPS
+cublas  n=1024                     0.372 毫秒     5776.7 GFLOPS
+cublas  n=2048                     2.878 毫秒     5968.6 GFLOPS
+cublas  n=4096                    41.637 毫秒     3300.9 GFLOPS
+
+## 实测T4的两块天花板
+fp32 FMA  blocks=640  threads=256      2.846 毫秒     7544.3 GFLOPS
+read   256MiB      0.967 毫秒     277.5 GB/s   （理论值320 GB/s）
+copy   256MiB      2.338 毫秒     229.6 GB/s   （理论值320 GB/s）
+
+## 测完时的GPU状态
+clocks.current.sm [MHz], clocks.current.memory [MHz], temperature.gpu, power.draw [W], clocks_event_reasons.active
+1575 MHz, 5000 MHz, 71, 46.55 W, 0x0000000000000004

@@ -1,0 +1,18 @@
+# 机器：Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz，6核12线程
+# 内存：2条 DDR4 2400 MHz
+
+## 峰值算力
+scalar threads=1     0.314 秒      15.3 GFLOPS
+avx2   threads=1     0.313 秒     122.7 GFLOPS
+avx2   threads=2     0.322 秒     238.3 GFLOPS
+avx2   threads=3     0.341 秒     337.5 GFLOPS
+avx2   threads=6     0.381 秒     605.3 GFLOPS
+avx2   threads=12    0.732 秒     629.7 GFLOPS
+
+## 内存带宽
+read  threads=1    0.0182 秒    14.7 GB/s
+read  threads=6    0.0122 秒    22.0 GB/s
+copy  threads=1    0.0401 秒    13.4 GB/s
+copy  threads=6    0.0328 秒    16.4 GB/s
+add   threads=1    0.0607 秒    13.3 GB/s    1.10 GFLOPS
+add   threads=6    0.0601 秒    13.4 GB/s    1.12 GFLOPS

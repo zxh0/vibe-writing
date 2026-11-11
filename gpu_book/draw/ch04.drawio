@@ -1,0 +1,1723 @@
+<mxfile host="65bd71144e">
+    <diagram name="cpu-vs-gpu" id="cpu-vs-gpu">
+        <mxGraphModel dx="1111" dy="825" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="cpu-vs-gpu-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="40" y="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-3" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="计算单元" vertex="1">
+                    <mxGeometry height="24" width="100" x="62" y="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="170" y="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-5" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="控制逻辑" vertex="1">
+                    <mxGeometry height="24" width="100" x="192" y="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="300" y="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-7" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="缓存" vertex="1">
+                    <mxGeometry height="24" width="100" x="322" y="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="430" y="14" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-9" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="内存" vertex="1">
+                    <mxGeometry height="24" width="100" x="452" y="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#475569;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=3;" value="" vertex="1">
+                    <mxGeometry height="300" width="380" x="40" y="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="控制" vertex="1">
+                    <mxGeometry height="70" width="60" x="55" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="120" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="120" y="112" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="L1 / L2" vertex="1">
+                    <mxGeometry height="35" width="110" x="55" y="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="控制" vertex="1">
+                    <mxGeometry height="70" width="60" x="175" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="240" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="240" y="112" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="L1 / L2" vertex="1">
+                    <mxGeometry height="35" width="110" x="175" y="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="控制" vertex="1">
+                    <mxGeometry height="70" width="60" x="295" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="360" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="360" y="112" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="L1 / L2" vertex="1">
+                    <mxGeometry height="35" width="110" x="295" y="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="控制" vertex="1">
+                    <mxGeometry height="70" width="60" x="55" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="120" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-25" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="120" y="232" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="L1 / L2" vertex="1">
+                    <mxGeometry height="35" width="110" x="55" y="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="控制" vertex="1">
+                    <mxGeometry height="70" width="60" x="175" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-28" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="240" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="240" y="232" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-30" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="L1 / L2" vertex="1">
+                    <mxGeometry height="35" width="110" x="175" y="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="控制" vertex="1">
+                    <mxGeometry height="70" width="60" x="295" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-32" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="360" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-33" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="计算" vertex="1">
+                    <mxGeometry height="33" width="45" x="360" y="232" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-34" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="L1 / L2" vertex="1">
+                    <mxGeometry height="35" width="110" x="295" y="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="L3缓存" vertex="1">
+                    <mxGeometry height="30" width="350" x="55" y="315" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-36" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="内存（DRAM）" vertex="1">
+                    <mxGeometry height="30" width="380" x="40" y="374" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-37" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="CPU：少量强大的核心，大部分面积&lt;br&gt;用在控制逻辑和缓存上" vertex="1">
+                    <mxGeometry height="44" width="380" x="40" y="412" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-38" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#475569;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=3;" value="" vertex="1">
+                    <mxGeometry height="300" width="380" x="480" y="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-39" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-42" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-43" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-45" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-46" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-47" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-48" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-49" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-50" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-51" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-52" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-53" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-54" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-55" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-56" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-57" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-58" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-59" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-60" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-61" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-62" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-63" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-64" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-65" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-66" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-67" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-68" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-69" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-70" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-71" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-72" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-73" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-74" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-75" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-76" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-77" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-78" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-79" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-80" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-81" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-82" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-83" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-84" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-85" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-86" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-87" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-88" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-89" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-90" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-91" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-92" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="115" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-93" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-94" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-95" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-96" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-97" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-98" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-99" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-100" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-101" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-102" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-103" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-104" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-105" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-106" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-107" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-108" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-109" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-110" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-111" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-112" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-113" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-114" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-115" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-116" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-117" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-118" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-119" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-120" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-121" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-122" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-123" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-124" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-125" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-126" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-127" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-128" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-129" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-130" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-131" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-132" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-133" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-134" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-135" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-136" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-137" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-138" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-139" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-140" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-141" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-142" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-143" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-144" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-145" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-146" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-147" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-148" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-149" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-150" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-151" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-152" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-153" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-154" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-155" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-156" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-157" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-158" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-159" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-160" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-161" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-162" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-163" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-164" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-165" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-166" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-167" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-168" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-169" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-170" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-171" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-172" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-173" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-174" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-175" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-176" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-177" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-178" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-179" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-180" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-181" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-182" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-183" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-184" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-185" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-186" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-187" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-188" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-189" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-190" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-191" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-192" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-193" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-194" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-195" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-196" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-197" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-198" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-199" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-200" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-201" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-202" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-203" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-204" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-205" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-206" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-207" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-208" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-209" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-210" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-211" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-212" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-213" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-214" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-215" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-216" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-217" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-218" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-219" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="14" x="495" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-220" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="10" x="512" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-221" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="528" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-222" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="547.5" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-223" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="567" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-224" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="586.5" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-225" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="606" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-226" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="625.5" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-227" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="645" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-228" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="664.5" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-229" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="684" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-230" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="703.5" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-231" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="723" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-232" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="742.5" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-233" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="762" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-234" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="781.5" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-235" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="801" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-236" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="820.5" y="275" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-237" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="L2缓存" vertex="1">
+                    <mxGeometry height="30" width="350" x="495" y="315" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-238" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="显存（DRAM）" vertex="1">
+                    <mxGeometry height="30" width="380" x="480" y="374" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-239" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="GPU：大量简单的计算单元，控制逻辑&lt;br&gt;和缓存只占一小部分" vertex="1">
+                    <mxGeometry height="44" width="380" x="480" y="412" as="geometry"/>
+                </mxCell>
+                <mxCell id="cpu-vs-gpu-240" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="示意图，只表示面积分配的倾向，比例并非实测" vertex="1">
+                    <mxGeometry height="24" width="820" x="40" y="460" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="t4-overview" id="t4-overview">
+        <mxGraphModel dx="833" dy="619" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="t4-overview-2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=17;fontColor=#111827;fontFamily=PingFang SC;fontStyle=1;" value="T4（TU104，启用40个SM）" vertex="1">
+                    <mxGeometry height="28" width="600" x="150" y="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#475569;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=3;" value="" vertex="1">
+                    <mxGeometry height="360" width="600" x="150" y="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="230" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="274.2" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="318.4" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="362.6" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="406.8" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="451" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="495.20000000000005" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="539.4000000000001" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="583.6" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="627.8" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="230" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="274.2" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="318.4" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="362.6" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="406.8" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="451" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="495.20000000000005" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="539.4000000000001" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="583.6" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="627.8" y="126" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="230" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-25" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="274.2" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="318.4" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="362.6" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-28" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="406.8" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="451" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-30" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="495.20000000000005" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="539.4000000000001" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-32" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="583.6" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-33" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="627.8" y="252" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-34" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="230" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="274.2" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-36" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="318.4" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-37" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="362.6" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-38" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="406.8" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-39" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="451" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="495.20000000000005" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="539.4000000000001" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-42" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="583.6" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-43" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="SM" vertex="1">
+                    <mxGeometry height="38" width="38" x="627.8" y="298" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-44" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="L2缓存 4MiB，所有SM共享" vertex="1">
+                    <mxGeometry height="44" width="435.8" x="230" y="188" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-45" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="显存&lt;br&gt;控制器" vertex="1">
+                    <mxGeometry height="54" width="50" x="160" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-46" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="GDDR6" vertex="1">
+                    <mxGeometry height="46" width="60" x="70" y="84" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-47" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="160" y="107" as="sourcePoint"/>
+                        <mxPoint x="130" y="107" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4-overview-48" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="显存&lt;br&gt;控制器" vertex="1">
+                    <mxGeometry height="54" width="50" x="160" y="146" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-49" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="GDDR6" vertex="1">
+                    <mxGeometry height="46" width="60" x="70" y="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-50" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="160" y="173" as="sourcePoint"/>
+                        <mxPoint x="130" y="173" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4-overview-51" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="显存&lt;br&gt;控制器" vertex="1">
+                    <mxGeometry height="54" width="50" x="160" y="212" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-52" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="GDDR6" vertex="1">
+                    <mxGeometry height="46" width="60" x="70" y="216" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-53" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="160" y="239" as="sourcePoint"/>
+                        <mxPoint x="130" y="239" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4-overview-54" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="显存&lt;br&gt;控制器" vertex="1">
+                    <mxGeometry height="54" width="50" x="160" y="278" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-55" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="GDDR6" vertex="1">
+                    <mxGeometry height="46" width="60" x="70" y="282" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-56" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="160" y="305" as="sourcePoint"/>
+                        <mxPoint x="130" y="305" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4-overview-57" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="显存&lt;br&gt;控制器" vertex="1">
+                    <mxGeometry height="54" width="50" x="690" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-58" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="GDDR6" vertex="1">
+                    <mxGeometry height="46" width="60" x="770" y="84" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-59" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="740" y="107" as="sourcePoint"/>
+                        <mxPoint x="770" y="107" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4-overview-60" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="显存&lt;br&gt;控制器" vertex="1">
+                    <mxGeometry height="54" width="50" x="690" y="146" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-61" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="GDDR6" vertex="1">
+                    <mxGeometry height="46" width="60" x="770" y="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-62" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="740" y="173" as="sourcePoint"/>
+                        <mxPoint x="770" y="173" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4-overview-63" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="显存&lt;br&gt;控制器" vertex="1">
+                    <mxGeometry height="54" width="50" x="690" y="212" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-64" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="GDDR6" vertex="1">
+                    <mxGeometry height="46" width="60" x="770" y="216" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-65" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="740" y="239" as="sourcePoint"/>
+                        <mxPoint x="770" y="239" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4-overview-66" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="显存&lt;br&gt;控制器" vertex="1">
+                    <mxGeometry height="54" width="50" x="690" y="278" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-67" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="GDDR6" vertex="1">
+                    <mxGeometry height="46" width="60" x="770" y="282" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-68" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=1.5;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="740" y="305" as="sourcePoint"/>
+                        <mxPoint x="770" y="305" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4-overview-69" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#6b7280;fontFamily=PingFang SC;" value="显存：8个32位控制器，共256位，16GB GDDR6，320GB/s" vertex="1">
+                    <mxGeometry height="24" width="760" x="70" y="516" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-70" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#16a34a;strokeWidth=1;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="PCIe 3.0 x16 接口" vertex="1">
+                    <mxGeometry height="26" width="300" x="300" y="386" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-71" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=2;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="450" y="412" as="sourcePoint"/>
+                        <mxPoint x="450" y="470" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="t4-overview-72" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="15.75GB/s" vertex="1">
+                    <mxGeometry height="24" width="200" x="460" y="430" as="geometry"/>
+                </mxCell>
+                <mxCell id="t4-overview-73" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="主机（CPU与主机内存）" vertex="1">
+                    <mxGeometry height="36" width="200" x="350" y="470" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="turing-sm" id="turing-sm">
+        <mxGraphModel dx="850" dy="632" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="turing-sm-2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=17;fontColor=#111827;fontFamily=PingFang SC;fontStyle=1;" value="一个Turing SM" vertex="1">
+                    <mxGeometry height="28" width="770" x="40" y="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#475569;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=2;" value="" vertex="1">
+                    <mxGeometry height="526" width="770" x="40" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=12;fontColor=#111827;fontFamily=PingFang SC;" value="L1 指令缓存" vertex="1">
+                    <mxGeometry height="20" width="750" x="50" y="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=3;" value="" vertex="1">
+                    <mxGeometry height="426" width="180" x="50" y="86" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-6" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="处理块 0" vertex="1">
+                    <mxGeometry height="20" width="160" x="58" y="88" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="L0 指令缓存" vertex="1">
+                    <mxGeometry height="20" width="160" x="60" y="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Warp 调度器&lt;br&gt;+ 分发单元" vertex="1">
+                    <mxGeometry height="36" width="160" x="60" y="134" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fde68a;strokeColor=#ca8a04;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="寄存器文件 64KiB" vertex="1">
+                    <mxGeometry height="24" width="160" x="60" y="176" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-10" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="INT32 ×16" vertex="1">
+                    <mxGeometry height="18" width="160" x="60" y="206" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="62" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="82" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="102" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="122" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="142" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="162" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="182" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="202" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="62" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="82" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="102" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="122" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="142" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="162" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-25" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="182" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-26" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="202" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-27" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="FP32 ×16" vertex="1">
+                    <mxGeometry height="18" width="160" x="60" y="268" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-28" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="62" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="82" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-30" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="102" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="122" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-32" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="142" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-33" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="162" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-34" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="182" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="202" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-36" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="62" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-37" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="82" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-38" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="102" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-39" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="122" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="142" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="162" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-42" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="182" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-43" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="202" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-44" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="Tensor Core ×2" vertex="1">
+                    <mxGeometry height="18" width="160" x="60" y="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-45" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9d5ff;strokeColor=#7e22ce;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Tensor&lt;br&gt;Core" vertex="1">
+                    <mxGeometry height="40" width="78" x="60" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-46" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9d5ff;strokeColor=#7e22ce;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Tensor&lt;br&gt;Core" vertex="1">
+                    <mxGeometry height="40" width="78" x="142" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-47" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="LD/ST ×4" vertex="1">
+                    <mxGeometry height="18" width="160" x="60" y="396" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-48" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="60" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-49" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="101" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-50" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="142" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-51" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="183" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-52" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="SFU ×4" vertex="1">
+                    <mxGeometry height="18" width="160" x="60" y="452" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-53" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="60" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-54" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="101" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-55" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="142" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-56" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="183" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-57" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=3;" value="" vertex="1">
+                    <mxGeometry height="426" width="180" x="240" y="86" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-58" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="处理块 1" vertex="1">
+                    <mxGeometry height="20" width="160" x="248" y="88" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-59" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="L0 指令缓存" vertex="1">
+                    <mxGeometry height="20" width="160" x="250" y="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-60" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Warp 调度器&lt;br&gt;+ 分发单元" vertex="1">
+                    <mxGeometry height="36" width="160" x="250" y="134" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-61" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fde68a;strokeColor=#ca8a04;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="寄存器文件 64KiB" vertex="1">
+                    <mxGeometry height="24" width="160" x="250" y="176" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-62" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="INT32 ×16" vertex="1">
+                    <mxGeometry height="18" width="160" x="250" y="206" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-63" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="252" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-64" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="272" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-65" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="292" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-66" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="312" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-67" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="332" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-68" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="352" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-69" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="372" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-70" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="392" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-71" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="252" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-72" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="272" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-73" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="292" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-74" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="312" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-75" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="332" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-76" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="352" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-77" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="372" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-78" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="392" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-79" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="FP32 ×16" vertex="1">
+                    <mxGeometry height="18" width="160" x="250" y="268" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-80" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="252" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-81" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="272" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-82" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="292" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-83" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="312" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-84" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="332" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-85" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="352" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-86" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="372" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-87" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="392" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-88" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="252" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-89" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="272" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-90" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="292" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-91" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="312" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-92" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="332" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-93" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="352" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-94" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="372" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-95" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="392" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-96" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="Tensor Core ×2" vertex="1">
+                    <mxGeometry height="18" width="160" x="250" y="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-97" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9d5ff;strokeColor=#7e22ce;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Tensor&lt;br&gt;Core" vertex="1">
+                    <mxGeometry height="40" width="78" x="250" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-98" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9d5ff;strokeColor=#7e22ce;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Tensor&lt;br&gt;Core" vertex="1">
+                    <mxGeometry height="40" width="78" x="332" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-99" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="LD/ST ×4" vertex="1">
+                    <mxGeometry height="18" width="160" x="250" y="396" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-100" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="250" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-101" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="291" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-102" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="332" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-103" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="373" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-104" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="SFU ×4" vertex="1">
+                    <mxGeometry height="18" width="160" x="250" y="452" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-105" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="250" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-106" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="291" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-107" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="332" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-108" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="373" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-109" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=3;" value="" vertex="1">
+                    <mxGeometry height="426" width="180" x="430" y="86" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-110" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="处理块 2" vertex="1">
+                    <mxGeometry height="20" width="160" x="438" y="88" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-111" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="L0 指令缓存" vertex="1">
+                    <mxGeometry height="20" width="160" x="440" y="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-112" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Warp 调度器&lt;br&gt;+ 分发单元" vertex="1">
+                    <mxGeometry height="36" width="160" x="440" y="134" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-113" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fde68a;strokeColor=#ca8a04;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="寄存器文件 64KiB" vertex="1">
+                    <mxGeometry height="24" width="160" x="440" y="176" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-114" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="INT32 ×16" vertex="1">
+                    <mxGeometry height="18" width="160" x="440" y="206" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-115" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="442" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-116" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="462" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-117" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="482" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-118" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="502" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-119" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="522" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-120" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="542" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-121" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="562" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-122" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="582" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-123" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="442" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-124" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="462" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-125" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="482" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-126" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="502" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-127" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="522" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-128" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="542" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-129" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="562" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-130" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="582" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-131" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="FP32 ×16" vertex="1">
+                    <mxGeometry height="18" width="160" x="440" y="268" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-132" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="442" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-133" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="462" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-134" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="482" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-135" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="502" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-136" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="522" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-137" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="542" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-138" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="562" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-139" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="582" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-140" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="442" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-141" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="462" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-142" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="482" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-143" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="502" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-144" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="522" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-145" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="542" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-146" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="562" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-147" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="582" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-148" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="Tensor Core ×2" vertex="1">
+                    <mxGeometry height="18" width="160" x="440" y="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-149" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9d5ff;strokeColor=#7e22ce;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Tensor&lt;br&gt;Core" vertex="1">
+                    <mxGeometry height="40" width="78" x="440" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-150" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9d5ff;strokeColor=#7e22ce;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Tensor&lt;br&gt;Core" vertex="1">
+                    <mxGeometry height="40" width="78" x="522" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-151" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="LD/ST ×4" vertex="1">
+                    <mxGeometry height="18" width="160" x="440" y="396" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-152" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="440" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-153" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="481" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-154" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="522" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-155" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="563" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-156" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="SFU ×4" vertex="1">
+                    <mxGeometry height="18" width="160" x="440" y="452" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-157" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="440" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-158" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="481" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-159" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="522" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-160" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="563" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-161" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=3;" value="" vertex="1">
+                    <mxGeometry height="426" width="180" x="620" y="86" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-162" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="处理块 3" vertex="1">
+                    <mxGeometry height="20" width="160" x="628" y="88" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-163" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#475569;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="L0 指令缓存" vertex="1">
+                    <mxGeometry height="20" width="160" x="630" y="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-164" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fed7aa;strokeColor=#c2410c;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Warp 调度器&lt;br&gt;+ 分发单元" vertex="1">
+                    <mxGeometry height="36" width="160" x="630" y="134" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-165" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fde68a;strokeColor=#ca8a04;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="寄存器文件 64KiB" vertex="1">
+                    <mxGeometry height="24" width="160" x="630" y="176" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-166" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="INT32 ×16" vertex="1">
+                    <mxGeometry height="18" width="160" x="630" y="206" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-167" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="632" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-168" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="652" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-169" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="672" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-170" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="692" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-171" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="712" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-172" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="732" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-173" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="752" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-174" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="772" y="226" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-175" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="632" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-176" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="652" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-177" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="672" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-178" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="692" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-179" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="712" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-180" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="732" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-181" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="752" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-182" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="772" y="246" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-183" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="FP32 ×16" vertex="1">
+                    <mxGeometry height="18" width="160" x="630" y="268" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-184" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="632" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-185" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="652" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-186" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="672" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-187" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="692" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-188" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="712" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-189" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="732" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-190" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="752" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-191" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="772" y="288" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-192" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="632" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-193" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="652" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-194" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="672" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-195" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="692" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-196" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="712" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-197" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="732" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-198" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="752" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-199" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="16" width="16" x="772" y="308" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-200" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="Tensor Core ×2" vertex="1">
+                    <mxGeometry height="18" width="160" x="630" y="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-201" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9d5ff;strokeColor=#7e22ce;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Tensor&lt;br&gt;Core" vertex="1">
+                    <mxGeometry height="40" width="78" x="630" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-202" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9d5ff;strokeColor=#7e22ce;strokeWidth=1;fontSize=11;fontColor=#111827;fontFamily=PingFang SC;" value="Tensor&lt;br&gt;Core" vertex="1">
+                    <mxGeometry height="40" width="78" x="712" y="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-203" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="LD/ST ×4" vertex="1">
+                    <mxGeometry height="18" width="160" x="630" y="396" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-204" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="630" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-205" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="671" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-206" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="712" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-207" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e2e8f0;strokeColor=#475569;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="LD/&lt;br&gt;ST" vertex="1">
+                    <mxGeometry height="30" width="37" x="753" y="416" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-208" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#6b7280;fontFamily=PingFang SC;" value="SFU ×4" vertex="1">
+                    <mxGeometry height="18" width="160" x="630" y="452" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-209" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="630" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-210" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="671" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-211" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="712" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-212" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cffafe;strokeColor=#0891b2;strokeWidth=1;fontSize=9;fontColor=#111827;fontFamily=PingFang SC;" value="SFU" vertex="1">
+                    <mxGeometry height="30" width="37" x="753" y="472" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-213" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#bfdbfe;strokeColor=#2563eb;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="L1缓存 / 共享内存，共96KiB" vertex="1">
+                    <mxGeometry height="40" width="750" x="50" y="522" as="geometry"/>
+                </mxCell>
+                <mxCell id="turing-sm-214" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#6b7280;fontFamily=PingFang SC;" value="每个SM另有2个FP64单元、4个纹理单元和1个RT Core，图中没有画出" vertex="1">
+                    <mxGeometry height="24" width="770" x="40" y="584" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="host-device" id="host-device">
+        <mxGraphModel dx="833" dy="619" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="host-device-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#475569;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=3;" value="" vertex="1">
+                    <mxGeometry height="330" width="280" x="40" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-3" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;fontStyle=1;" value="主机（Host）" vertex="1">
+                    <mxGeometry height="22" width="280" x="40" y="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#475569;strokeWidth=1.5;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;rounded=1;arcSize=3;" value="" vertex="1">
+                    <mxGeometry height="330" width="280" x="540" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-5" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;fontStyle=1;" value="设备（Device）：T4" vertex="1">
+                    <mxGeometry height="22" width="280" x="540" y="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=15;fontColor=#111827;fontFamily=PingFang SC;" value="CPU" vertex="1">
+                    <mxGeometry height="56" width="200" x="80" y="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcf5e3;strokeColor=#16a34a;strokeWidth=1;fontSize=15;fontColor=#111827;fontFamily=PingFang SC;" value="GPU（40个SM）" vertex="1">
+                    <mxGeometry height="56" width="200" x="580" y="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="160" width="240" x="60" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-9" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="主机内存" vertex="1">
+                    <mxGeometry height="20" width="240" x="60" y="204" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=16;fontColor=#111827;fontFamily=PingFang SC;" value="A" vertex="1">
+                    <mxGeometry height="50" width="50" x="86" y="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=16;fontColor=#111827;fontFamily=PingFang SC;" value="B" vertex="1">
+                    <mxGeometry height="50" width="50" x="156" y="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=16;fontColor=#111827;fontFamily=PingFang SC;" value="C" vertex="1">
+                    <mxGeometry height="50" width="50" x="226" y="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#475569;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="160" width="240" x="560" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-14" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#111827;fontFamily=PingFang SC;" value="显存 16GB" vertex="1">
+                    <mxGeometry height="20" width="240" x="560" y="204" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=16;fontColor=#111827;fontFamily=PingFang SC;" value="A" vertex="1">
+                    <mxGeometry height="50" width="50" x="586" y="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=16;fontColor=#111827;fontFamily=PingFang SC;" value="B" vertex="1">
+                    <mxGeometry height="50" width="50" x="656" y="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#475569;strokeWidth=1;fontSize=16;fontColor=#111827;fontFamily=PingFang SC;" value="C" vertex="1">
+                    <mxGeometry height="50" width="50" x="726" y="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-18" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=none;strokeWidth=1;fontSize=14;fontColor=#111827;fontFamily=PingFang SC;" value="" vertex="1">
+                    <mxGeometry height="210" width="200" x="330" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-19" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=12;fontColor=#16a34a;fontFamily=PingFang SC;" value="PCIe 3.0 x16&lt;br&gt;15.75GB/s" vertex="1">
+                    <mxGeometry height="34" width="200" x="330" y="346" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-20" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#2563eb;strokeWidth=2.5;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="300" y="265" as="sourcePoint"/>
+                        <mxPoint x="560" y="265" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="host-device-21" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#2563eb;fontFamily=PingFang SC;" value="① 把A、B复制到显存" vertex="1">
+                    <mxGeometry height="24" width="200" x="330" y="236" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-22" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#6b7280;strokeWidth=2;endSize=6;dashed=1;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="280" y="118" as="sourcePoint"/>
+                        <mxPoint x="580" y="118" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="host-device-23" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#6b7280;fontFamily=PingFang SC;" value="② 通知GPU开始计算" vertex="1">
+                    <mxGeometry height="24" width="240" x="310" y="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-24" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#d97706;strokeWidth=2.5;endSize=6;startArrow=classic;startSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="680" y="200" as="sourcePoint"/>
+                        <mxPoint x="680" y="146" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="host-device-25" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;fontSize=12;fontColor=#d97706;fontFamily=PingFang SC;" value="③ 计算C = AB&lt;br&gt;显存带宽320GB/s" vertex="1">
+                    <mxGeometry height="40" width="140" x="688" y="156" as="geometry"/>
+                </mxCell>
+                <mxCell id="host-device-26" edge="1" parent="1" style="endArrow=classic;html=1;strokeColor=#dc2626;strokeWidth=2.5;endSize=6;" value="">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="560" y="325" as="sourcePoint"/>
+                        <mxPoint x="300" y="325" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="host-device-27" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=13;fontColor=#dc2626;fontFamily=PingFang SC;" value="④ 把C复制回主机" vertex="1">
+                    <mxGeometry height="24" width="200" x="330" y="296" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

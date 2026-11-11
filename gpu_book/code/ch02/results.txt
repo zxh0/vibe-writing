@@ -1,0 +1,59 @@
+# 机器：Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz，6核12线程
+# L1d 32KB，L2 256KB，L3 12MB
+# Apple clang version 17.0.0 (clang-1700.0.13.5)
+
+## 2.1 Python三重循环
+n=64      0.016 秒  0.0324 GFLOPS  与NumPy的最大差异 8.9e-15
+n=128     0.118 秒  0.0354 GFLOPS  与NumPy的最大差异 2.5e-14
+n=256     1.267 秒  0.0265 GFLOPS  与NumPy的最大差异 7.1e-14
+
+## 2.2 C语言：-O0与-O2（ijk）
+ijk      n=2048  bs=64   threads=1     117.224 秒      0.15 GFLOPS
+ijk      n=2048  bs=64   threads=1      56.748 秒      0.30 GFLOPS
+
+## 2.3 循环顺序（-O2，不向量化）
+ikj      n=2048  bs=64   threads=1       4.640 秒      3.70 GFLOPS
+
+## 2.4 SIMD（-O3 -march=native）
+ijk      n=2048  bs=64   threads=1      72.830 秒      0.24 GFLOPS
+ikj      n=2048  bs=64   threads=1       4.013 秒      4.28 GFLOPS
+ikj      n=256   bs=64   threads=1       0.008 秒      4.07 GFLOPS
+ikj      n=256   bs=64   threads=1       0.002 秒     22.13 GFLOPS
+ikj      n=512   bs=64   threads=1       0.070 秒      3.82 GFLOPS
+ikj      n=512   bs=64   threads=1       0.012 秒     22.88 GFLOPS
+
+## 2.5 Cache与分块（-O3 -march=native）
+ikj      n=256   bs=64   threads=1       0.001 秒     26.11 GFLOPS
+blocked  n=256   bs=64   threads=1       0.002 秒     20.64 GFLOPS
+ikj      n=512   bs=64   threads=1       0.012 秒     23.08 GFLOPS
+blocked  n=512   bs=64   threads=1       0.014 秒     19.81 GFLOPS
+ikj      n=1024  bs=64   threads=1       0.283 秒      7.60 GFLOPS
+blocked  n=1024  bs=64   threads=1       0.141 秒     15.28 GFLOPS
+ikj      n=2048  bs=64   threads=1       4.014 秒      4.28 GFLOPS
+blocked  n=2048  bs=64   threads=1       1.283 秒     13.39 GFLOPS
+ikj      n=4096  bs=64   threads=1      33.076 秒      4.16 GFLOPS
+blocked  n=4096  bs=64   threads=1      11.434 秒     12.02 GFLOPS
+blocked  n=2048  bs=16   threads=1      11.866 秒      1.45 GFLOPS
+blocked  n=2048  bs=32   threads=1       1.356 秒     12.67 GFLOPS
+blocked  n=2048  bs=64   threads=1       1.557 秒     11.03 GFLOPS
+blocked  n=2048  bs=128  threads=1       1.480 秒     11.61 GFLOPS
+blocked  n=2048  bs=256  threads=1       1.111 秒     15.46 GFLOPS
+
+## 2.6 多线程（-O3 -march=native，分块64）
+threads  n=2048  bs=64   threads=1       1.334 秒     12.88 GFLOPS
+threads  n=2048  bs=64   threads=2       0.672 秒     25.57 GFLOPS
+threads  n=2048  bs=64   threads=3       0.524 秒     32.78 GFLOPS
+threads  n=2048  bs=64   threads=6       0.349 秒     49.30 GFLOPS
+threads  n=2048  bs=64   threads=12      0.332 秒     51.73 GFLOPS
+
+## 2.7 NumPy
+NumPy 2.5.4，BLAS：accelerate unknown，线程数：1
+n=512      0.006 秒      41.6 GFLOPS
+n=1024     0.053 秒      40.3 GFLOPS
+n=2048     0.431 秒      39.9 GFLOPS
+n=4096     2.694 秒      51.0 GFLOPS
+NumPy 2.5.4，BLAS：accelerate unknown，线程数：默认
+n=512      0.001 秒     202.4 GFLOPS
+n=1024     0.012 秒     177.5 GFLOPS
+n=2048     0.106 秒     161.9 GFLOPS
+n=4096     0.832 秒     165.2 GFLOPS

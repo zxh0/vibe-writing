@@ -1,0 +1,129 @@
+# GPU：Tesla T4, 580.82.07, 1590 MHz, 5001 MHz, 70.00 W
+# CUDA：Cuda compilation tools, release 13.0, V13.0.88
+# ncu：/usr/local/cuda/bin/ncu  Version 2025.3.1.0 (build 36398880) (public-release)
+
+## 7.2 访存合并的微基准：步长
+stride   1      0.075 毫秒   有效带宽   222.9 GB/s
+stride   2      0.131 毫秒   有效带宽   127.8 GB/s
+stride   4      0.246 毫秒   有效带宽    68.3 GB/s
+stride   8      0.507 毫秒   有效带宽    33.1 GB/s
+stride  16      1.007 毫秒   有效带宽    16.7 GB/s
+stride  32      1.099 毫秒   有效带宽    15.3 GB/s
+
+## 7.2 访存合并的微基准：起始偏移
+offset   0      0.075 毫秒   有效带宽   224.4 GB/s
+offset   1      0.077 毫秒   有效带宽   216.7 GB/s
+offset   4      0.077 毫秒   有效带宽   217.0 GB/s
+offset   8      0.077 毫秒   有效带宽   217.4 GB/s
+offset  16      0.079 毫秒   有效带宽   212.4 GB/s
+offset  32      0.076 毫秒   有效带宽   220.5 GB/s
+
+## 7.4 正确性
+check  n=1000  naive     与cuBLAS的相对误差 1.629e-06
+check  n=1000  coalesced 与cuBLAS的相对误差 1.629e-06
+check  n=1024  naive     与cuBLAS的相对误差 1.454e-06
+check  n=1024  coalesced 与cuBLAS的相对误差 1.454e-06
+
+## 7.4 两种映射，不同规模（block 32×32）
+naive      n=1024  block=32x32       35.209 毫秒       61.0 GFLOPS
+coalesced  n=1024  block=32x32        3.018 毫秒      711.5 GFLOPS
+naive      n=2048  block=32x32      278.188 毫秒       61.8 GFLOPS
+coalesced  n=2048  block=32x32       29.100 毫秒      590.4 GFLOPS
+naive      n=4096  block=32x32     2216.005 毫秒       62.0 GFLOPS
+coalesced  n=4096  block=32x32      246.560 毫秒      557.4 GFLOPS
+
+## 7.4 两种映射，不同block大小（n=4096）
+naive      n=4096  block=8x8      778.840 毫秒      176.5 GFLOPS
+coalesced  n=4096  block=8x8      561.567 毫秒      244.7 GFLOPS
+naive      n=4096  block=16x16     1194.633 毫秒      115.0 GFLOPS
+coalesced  n=4096  block=16x16      377.829 毫秒      363.8 GFLOPS
+naive      n=4096  block=32x32     2216.457 毫秒       62.0 GFLOPS
+coalesced  n=4096  block=32x32      267.829 毫秒      513.2 GFLOPS
+
+## 7.1 / 7.4 Nsight Compute（n=2048）
+### naive，block 32×32
+[1909] matmul@127.0.0.1
+  matmul_naive(int, const float *, const float *, float *) (64, 64, 1)x(32, 32, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------- ----------- -------------
+    Metric Name                                                      Metric Unit  Metric Value
+    ---------------------------------------------------------------- ----------- -------------
+    dram__bytes_read.sum                                                   Gbyte          2.24
+    dram__bytes_write.sum                                                  Mbyte         22.74
+    gpu__compute_memory_throughput.avg.pct_of_peak_sustained_elapsed           %         49.71
+    gpu__time_duration.sum                                                    ms        761.96
+    l1tex__t_requests_pipe_lsu_mem_global_op_ld.sum                                536,870,912
+    l1tex__t_requests_pipe_lsu_mem_global_op_st.sum                                    131,072
+    l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum                        sector 8,858,365,615
+    l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum                        sector     4,195,836
+    lts__t_sectors_srcunit_tex_op_read.sum                                sector    73,084,034
+    sm__throughput.avg.pct_of_peak_sustained_elapsed                           %          6.03
+    ---------------------------------------------------------------- ----------- -------------
+
+### naive，block 8×8
+[2006] matmul@127.0.0.1
+  matmul_naive(int, const float *, const float *, float *) (256, 256, 1)x(8, 8, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------- ----------- -------------
+    Metric Name                                                      Metric Unit  Metric Value
+    ---------------------------------------------------------------- ----------- -------------
+    dram__bytes_read.sum                                                   Gbyte         10.19
+    dram__bytes_write.sum                                                  Mbyte         42.21
+    gpu__compute_memory_throughput.avg.pct_of_peak_sustained_elapsed           %         49.85
+    gpu__time_duration.sum                                                    ms        207.28
+    l1tex__t_requests_pipe_lsu_mem_global_op_ld.sum                                536,870,912
+    l1tex__t_requests_pipe_lsu_mem_global_op_st.sum                                    131,072
+    l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum                        sector 2,415,753,008
+    l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum                        sector     1,009,774
+    lts__t_sectors_srcunit_tex_op_read.sum                                sector   249,835,826
+    sm__throughput.avg.pct_of_peak_sustained_elapsed                           %         22.15
+    ---------------------------------------------------------------- ----------- -------------
+
+### coalesced，block 32×32
+[2075] matmul@127.0.0.1
+  matmul_coalesced(int, const float *, const float *, float *) (64, 64, 1)x(32, 32, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: Command line profiler metrics
+    ---------------------------------------------------------------- ----------- -------------
+    Metric Name                                                      Metric Unit  Metric Value
+    ---------------------------------------------------------------- ----------- -------------
+    dram__bytes_read.sum                                                   Gbyte          1.67
+    dram__bytes_write.sum                                                  Mbyte         22.34
+    gpu__compute_memory_throughput.avg.pct_of_peak_sustained_elapsed           %         85.67
+    gpu__time_duration.sum                                                    ms         53.61
+    l1tex__t_requests_pipe_lsu_mem_global_op_ld.sum                                536,870,912
+    l1tex__t_requests_pipe_lsu_mem_global_op_st.sum                                    131,072
+    l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum                        sector 1,342,177,280
+    l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum                        sector       524,288
+    lts__t_sectors_srcunit_tex_op_read.sum                                sector    67,110,599
+    sm__throughput.avg.pct_of_peak_sustained_elapsed                           %         85.67
+    ---------------------------------------------------------------- ----------- -------------
+
+
+## 7.1 Nsight Compute的Speed Of Light小节（naive，n=2048，block 32×32）
+[2136] matmul@127.0.0.1
+  matmul_naive(int, const float *, const float *, float *) (64, 64, 1)x(32, 32, 1), Context 1, Stream 7, Device 0, CC 7.5
+    Section: GPU Speed Of Light Throughput
+    ----------------------- ----------- --------------
+    Metric Name             Metric Unit   Metric Value
+    ----------------------- ----------- --------------
+    DRAM Frequency                  Ghz           5.00
+    SM Frequency                    Mhz         585.00
+    Elapsed Cycles                cycle    445,748,667
+    Memory Throughput                 %          49.71
+    DRAM Throughput                   %           0.93
+    Duration                         ms         761.96
+    L1/TEX Cache Throughput           %          99.42
+    L2 Cache Throughput               %           0.39
+    SM Active Cycles              cycle 442,605,687.82
+    Compute (SM) Throughput           %           6.03
+    ----------------------- ----------- --------------
+
+    OPT   This workload exhibits low compute throughput and memory bandwidth utilization relative to the peak           
+          performance of this device. Achieved compute throughput and/or memory bandwidth below 60.0% of peak           
+          typically indicate latency issues. Look at Scheduler Statistics and Warp State Statistics for potential       
+          reasons.                                                                                                      
+
+
+## 测完时的GPU状态
+clocks.current.sm [MHz], clocks.current.memory [MHz], temperature.gpu, power.draw [W], clocks_event_reasons.active
+1320 MHz, 5000 MHz, 69, 37.38 W, 0x0000000000000000
