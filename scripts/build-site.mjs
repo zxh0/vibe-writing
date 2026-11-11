@@ -25,6 +25,7 @@ const NOTES = {
   title: '图解 LLM 系列笔记',
   subtitle: 'LLM Notes',
   status: '连载中',
+  cover: 'aigc/front.png',
   blurb: '一篇一个主题，解读 LLM 相关的论文和核心公式，能画图的地方都画图。从 DeepSeek 的 MLA、Flash Attention、位置编码，一路写到 Kimi Delta Attention、LongCat Sparse Attention。',
 }
 
@@ -81,7 +82,7 @@ const BOOKS = [
     subtitle: 'Train a Toy LLM (from Scratch)',
     status: '构思和初稿',
     blurb: '《自己动手写LLM推理引擎》的姊妹篇：从零训练一个自己的小模型，最后再用第一本的引擎把它跑起来。两本书首尾相接。',
-    cover: 'images/aigc/front.png',
+    cover: 'aigc/front.png',
     published: [],
   },
   {
@@ -100,7 +101,7 @@ const BOOKS = [
     subtitle: 'How to Make a Huge Matmul Fast',
     status: '构思和初稿',
     blurb: '整本书只围绕一个问题：一个超级大的矩阵乘法，怎样才能算得快？从最朴素的版本一步步优化到接近 cuBLAS，顺路学完 GPU 的全部核心概念。',
-    cover: 'images/aigc/front.png',
+    cover: 'aigc/front.png',
     published: [],
     tools: {
       'matmul-demo': '矩阵乘法演示',
@@ -265,11 +266,15 @@ function buildNotes() {
   }
   if (notes.length === 0) throw new Error(`${NOTES.dir}/ 下没有找到符合 YYYY-MM-DD-Slug.md 的文件`)
 
-  copyDir(path.join(srcDir, 'images'), path.join(publicDir, NOTES.route, 'images'))
+  const pub = path.join(publicDir, NOTES.route)
+  copyDir(path.join(srcDir, 'images'), path.join(pub, 'images'))
+  copyDir(path.join(srcDir, 'aigc'), path.join(pub, 'aigc'))
+  fs.copyFileSync(path.join(srcDir, NOTES.cover), path.join(pub, 'cover.png'))
 
   return {
     ...NOTES,
     link: `/${NOTES.route}`,
+    cover: `/${NOTES.route}/cover.png`,
     count: notes.length,
     // 侧边栏按时间正序（跟 README 一致，系列文章前后有依赖），列表页倒序
     sidebar: notes.map(({ date, title, link, collapsed, items }) => ({ text: title, link, collapsed, items })),
@@ -327,7 +332,7 @@ function buildBook(book) {
     if (!names.includes(name)) throw new Error(`${book.dir}/chapters/${name} 不存在，但列在 published 里`)
   }
 
-  // 插图和 AI 生成的章首图各占站点上这本书自己的子目录；封面另拷一份成 cover.png
+  // 插图和 AI 生成的章首图各占站点上这本书自己的子目录；封面（aigc/ 下）另拷一份成 cover.png
   const pub = path.join(publicDir, book.route)
   copyDir(path.join(bookDir, 'images'), path.join(pub, 'images'))
   copyDir(path.join(bookDir, 'aigc'), path.join(pub, 'aigc'))

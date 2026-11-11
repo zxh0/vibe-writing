@@ -6,7 +6,6 @@ import { notes, books } from '../../sidebar.json'
 const cards = [
   {
     ...notes,
-    cover: undefined as string | undefined,
     progress: `共 ${notes.count} 篇，最新一篇 ${notes.latest[0].date}`,
   },
   ...Object.values(books).map((b) => ({

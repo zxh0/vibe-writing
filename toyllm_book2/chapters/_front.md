@@ -5,4 +5,4 @@
 
 ⚠️免责申明：本书还在很早期的草稿阶段，书中内容可能有很多逻辑混乱、甚至胡言乱语的地方，我会慢慢改进！
 
-![front](../images/aigc/front.png)
+![front](../aigc/front.png)

@@ -44,7 +44,7 @@ npm run build            # prepare:site + vitepress build -> docs/.vitepress/dis
 
 ## llm_notes/
 
-Standalone deep-dive articles, published separately from the books. One Markdown file per article, named `YYYY-MM-DD-Slug.md` by publication date, with draw.io sources in `llm_notes/draw/` and exported assets in `llm_notes/images/<slug>/`. `llm_notes/README.md` lists them all, oldest first, and is the index to keep in sync when adding one; the workspace `README.md` links only to the folder.
+Standalone deep-dive articles, published separately from the books. One Markdown file per article, named `YYYY-MM-DD-Slug.md` by publication date, with draw.io sources in `llm_notes/draw/`, exported assets in `llm_notes/images/<slug>/` and the series' AI-generated cover in `llm_notes/aigc/front.png` (every area keeps its AI art in its own `aigc/`). `llm_notes/README.md` lists them all, oldest first, and is the index to keep in sync when adding one; the workspace `README.md` links only to the folder.
 
 These are **hand-written by the author and deliberately not AI-polished**. When editing them, limit changes to what was asked (e.g. a typo fix) and preserve the author's voice.
 
