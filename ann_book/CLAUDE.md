@@ -83,7 +83,7 @@ python3 ../.claude/skills/check-prose/scripts/check.py    chapters/03_ch01_neuro
 python3 merge.py
 ```
 
-The online edition (https://zxh0.github.io/ann-book/) is built outside this workspace; there is no site pipeline here.
+The online edition is https://zxh0.github.io/vibe-writing/ann, built by the workspace-wide pipeline (`scripts/build-site.mjs` at the repo root, see the root `CLAUDE.md`). Chapters go up one at a time: add the chapter file's name to this book's `published` list there.
 
 Both linters take files, directories, or several paths, and recurse (`chapters/`, `code/`, or the whole book). The `fix.py` next to each `check.py` auto-fixes the mechanical rules; both accept `--dry-run`. They are repo-wide and configured by `../.claude/lint-scope.json` — see the root `CLAUDE.md`.
 

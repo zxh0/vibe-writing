@@ -19,6 +19,20 @@
   letter-spacing: 0.02em;
 }
 
+/* 表格撑满正文宽度。VitePress 默认 display: block 让表格只按内容收缩；
+   窄屏上退回默认，表格可以横向滚动，不撑破页面。 */
+.vp-doc table {
+  display: table;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .vp-doc table {
+    display: block;
+    width: auto;
+  }
+}
+
 /* 插图：居中、不超出正文宽度 */
 .vp-doc img {
   display: block;
@@ -28,8 +42,9 @@
 }
 
 /* 示意图是白底线稿，深色模式下直接铺开会太刺眼，
-   统一放进一张白色卡片里，浅色模式下几乎看不出边界。 */
-.vp-doc img[src*="/images/"] {
+   统一放进一张白色卡片里，浅色模式下几乎看不出边界。
+   AI 生成的章首图和封面（/aigc/ 下，或 images/aigc/ 下）不算。 */
+.vp-doc img[src*="/images/"]:not([src*="/aigc/"]) {
   background: #fff;
   padding: 12px;
   border: 1px solid var(--vp-c-divider);
@@ -47,15 +62,15 @@
   max-width: none;
 }
 
-/* 首页的书：封面 + 简介的卡片 */
-.book-cards {
+/* 首页：笔记和各本书并排的卡片 */
+.area-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.25rem;
   margin: 1.5rem 0 0;
 }
 
-.book-card {
+.area-card {
   display: flex;
   flex-direction: column;
   border: 1px solid var(--vp-c-divider);
@@ -68,12 +83,13 @@
   transition: border-color 0.25s, box-shadow 0.25s;
 }
 
-.book-card:hover {
+.area-card:hover {
   border-color: var(--vp-c-brand-1);
   box-shadow: var(--vp-shadow-2);
 }
 
-.book-card img {
+.area-card img,
+.area-card-placeholder {
   display: block;
   width: 100%;
   margin: 0;
@@ -83,11 +99,28 @@
   object-fit: cover;
 }
 
-.book-card-body {
+/* 还没有封面的书：用英文副标题铺一块底色占位 */
+.area-card-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, var(--vp-c-brand-soft), var(--vp-c-bg-elv));
+  color: var(--vp-c-brand-1);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.area-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: 1rem 1.25rem 1.25rem;
 }
 
-.book-card-body h3 {
+.area-card-body h3 {
   margin: 0;
   border: none;
   padding: 0;
@@ -96,22 +129,28 @@
   color: var(--vp-c-brand-1);
 }
 
-.book-card p {
+.area-card p {
   margin: 0.4rem 0 0;
   text-align: left;
 }
 
-.book-card-sub {
+.area-card-sub {
   color: var(--vp-c-text-3);
   font-size: 0.85em;
 }
 
-.book-card-blurb {
+.area-card-status {
+  color: var(--vp-c-text-2);
+}
+
+.area-card-blurb {
   font-size: 0.92em;
   line-height: 1.7;
 }
 
-.book-card-progress {
+.area-card-progress {
+  margin-top: auto !important;
+  padding-top: 0.6rem;
   color: var(--vp-c-text-3);
   font-size: 0.82em;
 }
@@ -142,7 +181,7 @@
   font-weight: 500;
 }
 
-/* 本书的目录：已发布的章节能点开，还没写完的先灰着列出来 */
+/* 一本书的目录：已发布的章节能点开，还没写完的先灰着列出来 */
 .book-toc {
   margin: 1.25rem 0 0;
   padding: 0;
@@ -160,5 +199,59 @@
 }
 
 .book-toc a {
+  font-weight: 500;
+}
+
+/* 小工具卡片：一行一个，自上而下排 */
+.tool-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 1.5rem 0 0;
+}
+
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1.4rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.tool-card:hover {
+  border-color: var(--vp-c-brand-1);
+  box-shadow: var(--vp-shadow-2);
+}
+
+.tool-card h3 {
+  margin: 0;
+  border: none;
+  padding: 0;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--vp-c-brand-1);
+}
+
+.tool-card p {
+  margin: 0.5rem 0 0;
+  text-align: left;
+}
+
+.tool-card-blurb {
+  font-size: 0.92em;
+  line-height: 1.7;
+}
+
+/* 「打开工具 →」贴在卡片底部 */
+.tool-card-open {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  color: var(--vp-c-brand-1);
+  font-size: 0.88em;
   font-weight: 500;
 }

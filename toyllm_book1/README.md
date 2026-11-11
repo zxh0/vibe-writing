@@ -4,7 +4,7 @@
 
 一本正在写的中文书：用 Python + PyTorch 从零手写一个 LLM 推理引擎，借此理解 LLM 到底是怎么推理的。
 
-在线阅读（支持全文搜索和公式渲染）：https://zxh0.github.io/llm-engine-book/
+在线阅读（支持全文搜索和公式渲染）：https://zxh0.github.io/vibe-writing/llm-engine
 
 PDF 版本：https://github.com/zxh0/llm-engine-book/releases
 
@@ -54,15 +54,16 @@ PDF 版本：https://github.com/zxh0/llm-engine-book/releases
 | `images/` | 章节配图（PNG） |
 | `draw/` | 配图的 draw.io 源文件 |
 | `tools/` | 写书时顺手做的纯前端小工具，见下 |
-| `scripts/`、`docs/` | VitePress 站点的生成脚本和页面，`npm run build` 一键构建 |
 
 ## 工具
 
 都是单个 HTML 文件，打开就能用，数据不出浏览器。
 
-* [safetensors 参数布局查看器](tools/safetensors-viewer/)（[在线版](https://zxh0.github.io/llm-engine-book/tools/safetensors-viewer/)）
-* [正弦位置编码热力图](tools/sinpe-heatmap/)（[在线版](https://zxh0.github.io/llm-engine-book/tools/sinpe-heatmap/)）
-* [RoPE 旋转角度](tools/rope-angles/)（[在线版](https://zxh0.github.io/llm-engine-book/tools/rope-angles/)）
+* [safetensors 参数布局查看器](tools/safetensors-viewer/)（[在线版](https://zxh0.github.io/vibe-writing/llm-engine/tools/safetensors-viewer/)）
+* [正弦位置编码热力图](tools/sinpe-heatmap/)（[在线版](https://zxh0.github.io/vibe-writing/llm-engine/tools/sinpe-heatmap/)）
+* [RoPE 旋转角度](tools/rope-angles/)（[在线版](https://zxh0.github.io/vibe-writing/llm-engine/tools/rope-angles/)）
+* [主流模型的嵌入维度](tools/embed-dims/)（[在线版](https://zxh0.github.io/vibe-writing/llm-engine/tools/embed-dims/)）
+* [参数量立方体](tools/param-cubes/)（[在线版](https://zxh0.github.io/vibe-writing/llm-engine/tools/param-cubes/)）
 
 ## 状态
 

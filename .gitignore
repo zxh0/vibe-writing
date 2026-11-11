@@ -1,13 +1,13 @@
 .DS_Store
 .venv/
+__pycache__/
 
-# VitePress 站点：以下都是从 notes/ 和 book/ 生成的产物
+# VitePress 站点：docs/ 下只有 index.md、各区的落地页和 .vitepress/ 里的配置和主题是手写的，
+# docs/<仓库目录>/、docs/public/ 和 sidebar.json 都是 scripts/build-site.mjs 从
+# llm_notes/ 和各本书生成的产物
 node_modules/
-docs/notes/
-docs/book/
-docs/public/
+docs/*/
+!docs/.vitepress/
 docs/.vitepress/sidebar.json
 docs/.vitepress/dist/
 docs/.vitepress/cache/
-
-__pycache__/

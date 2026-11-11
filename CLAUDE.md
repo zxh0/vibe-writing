@@ -22,9 +22,25 @@ Book layout is mostly shared: `chapters/` is the manuscript source, `code/` the 
 
 ## Git
 
-This directory is **not** a repo root. It is `y2026/write/` inside the larger `~/me/github/notes` repo, whose default branch is `master`; writing happens on `dev`. Keep commits scoped to the area being worked on.
+This directory is the repo root (`github.com/zxh0/vibe-writing`, formerly `ann-book`), and `main` is the only branch; writing is committed straight to it. Keep commits scoped to the area being worked on, with the 【区域】 prefix the history uses (【仓库】, 【toyllm】, 【站点】…).
 
-The published sites (https://zxh0.github.io/ann-book/ for `ann_book`, https://zxh0.github.io/llm-engine-book/ for `toyllm_book1`) are built outside this tree. There is no VitePress pipeline here: no `package.json`, `docs/` or `scripts/build-site.mjs`.
+## Site
+
+One VitePress site for the whole workspace, published at https://zxh0.github.io/vibe-writing/ by `.github/workflows/deploy.yml` on every push to `main` (GitHub Pages, source = GitHub Actions). The homepage lists the notes and every book side by side; `/notes` is the notes, `/<route>` each book's own 进度和目录 page, `/<route>/tools` a book's 小工具 if it has any. Locally:
+
+```bash
+npm ci                   # once
+npm run dev              # prepare:site + vitepress dev
+npm run build            # prepare:site + vitepress build -> docs/.vitepress/dist
+```
+
+`scripts/build-site.mjs` is the only content pipeline; its `NOTES` and `BOOKS` tables are the single place that maps a repo directory to a route (`ann_book` → `/ann`, `toyllm_book1` → `/llm-engine`, `toyllm_book2` → `/llm-train`, `toy_agent_book` → `/agent`, `gpu_book` → `/gpu`, `tpu_book` → `/tpu`), with each book's title, status, blurb, cover and `published` list. Hand-written site files are `docs/index.md` (homepage), one landing page per area (`docs/notes.md`, `docs/ann.md`, `docs/llm-engine.md`, …) and `docs/.vitepress/` (config, theme, the `AreaCards`/`BookToc`/`NoteList`/`ToolCards` components). Everything else under `docs/` (`docs/<repo dir>/`, `docs/public/`, `sidebar.json`) is regenerated on every run and gitignored.
+
+- **Notes publish automatically**: every `llm_notes/YYYY-MM-DD-Slug.md` gets a page; the sidebar runs oldest-first, the list page newest-first.
+- **Book chapters go up one at a time**: `published` in a book's `BOOKS` entry lists the chapter files that get a page; the rest only show as grey titles on the book's landing page. Publishing a chapter means adding its filename there. Chapter files are `chNN_*.md` plus `afterword.md`, `appendix.md`, `x_?_*.md` (`_front.md`, `_preface.md`, `todo.md` never publish); `ann_book` is the exception with `NN_slug.md` names and `##` chapter titles that get promoted one level.
+- **Tools** (`<book>/tools/<dir>/index.html`) are copied verbatim to `/<route>/tools/<dir>/` and listed on `/<route>/tools`; the `tools` map in the `BOOKS` entry gives each a display title, the blurb is the first paragraph of its README. Adding a tool = a directory plus one line in that map.
+- Generated page files keep the repo path (`docs/ann_book/chapters/03_ch01_neuron.md`) and are mapped to clean URLs (`/ann/ch01-neuron`) through VitePress `rewrites`, so the edit link and the last-updated lookup (`transformPageData` in `config.mts`, since generated files have no git history of their own) resolve straight back to the source file.
+- `<img src="../images/chNN/x.png" width="N">` tags become Markdown images under `/<route>/images/` with the width carried through (`style="zoom:50%"` is dropped); `../aigc/` likewise under `/<route>/aigc/`; notes' `./images/` under `/notes/images/`.
 
 ## llm_notes/
 
