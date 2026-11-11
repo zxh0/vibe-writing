@@ -35,7 +35,7 @@ python3 merge.py --check    # exit 1 if Book.md is out of sync with chapters/ (v
 
 ## Chapters
 
-前言, 第零章–第十四章, 后记, and appendices A–D. Chapters 0–10 are written; **11–14 are TODO stubs** — a heading and a few keywords each, nothing to preserve.
+前言, 第零章–第十四章, 后记, and appendices A–D. Chapters 0–5 are written; 6 is an AI-drafted first version (figures still TODO) awaiting the author's rewrite; 7 is a rough draft; **8–14 are outlines or TODO stubs** — keywords, links and draft fragments (10 already holds some toy code and figures worth keeping).
 
 | # | Topic | | # | Topic |
 |---|-------|-|---|-------|
@@ -83,7 +83,7 @@ python3 ../.claude/skills/check-prose/scripts/check.py    chapters/03_ch01_neuro
 python3 merge.py
 ```
 
-Then, if the chapter is ready for the site, add its filename to `published` in `../scripts/build-site.mjs` and run `npm run build` from the repo root (see the root `CLAUDE.md`, **Site**); chapters not listed there appear on the site only as grey titles.
+The online edition (https://zxh0.github.io/ann-book/) is built outside this workspace; there is no site pipeline here.
 
 Both linters take files, directories, or several paths, and recurse (`chapters/`, `code/`, or the whole book). The `fix.py` next to each `check.py` auto-fixes the mechanical rules; both accept `--dry-run`. They are repo-wide and configured by `../.claude/lint-scope.json` — see the root `CLAUDE.md`.
 

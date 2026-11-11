@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Per-area rule scoping, shared by the repo's lint skills.
 
-The repo holds two books and a folder of notes. Most conventions (formula
+The workspace holds several books and a folder of notes. Most conventions (formula
 formatting, em-dashes, math-vs-code) are genuinely repo-wide, but a few are
 not: the notes deliberately follow each paper's own notation, so the 符号记法
 rule must not fire there.
@@ -13,7 +13,7 @@ exemptions live in one file at the repo root:
 
     {
       "scopes": [
-        {"path": "notes/**", "disable": ["符号记法"]}
+        {"path": "llm_notes/**", "disable": ["符号记法"]}
       ]
     }
 

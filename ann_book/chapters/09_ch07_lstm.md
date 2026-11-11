@@ -77,17 +77,17 @@ $$
 \mathbf{o} &= \sigma(W_{ox}\mathbf{x} + W_{oh}\mathbf{h} + \mathbf{b}_o) \\
 \hat{\mathbf{c}} &= \mathrm{tanh}(W_{cx}\mathbf{x} + W_{ch}\mathbf{h} + \mathbf{b}_c) \\
 \mathbf{c}' &= \mathbf{f} * \mathbf{c} + \mathbf{i} * \hat{\mathbf{c}} \\
-\mathbf{h}' &= \mathbf{o} * \mathrm{tanh}(\mathbf{c}) \\
+\mathbf{h}' &= \mathbf{o} * \mathrm{tanh}(\mathbf{c}') \\
 \mathbf{y} &= W_{hy}\mathbf{h}' + \mathbf{b}_y
 \end{aligned}
 $$
 
 从上图中，以及公式，可以看到，LSTM 包含三个门和一个“细胞门”，它们的输入都是当前输入 $\mathbf{x}$ 和上一时刻的隐藏状态 $\mathbf{h}$ ：
 
-- **遗忘门（Forget Gate）**：决定旧记忆 $\mathbf{c}$ 中哪些内容需要保留，对应上面公式第一行。遗忘门输出的是一个0～1直接的权重向量。
+- **遗忘门（Forget Gate）**：决定旧记忆 $\mathbf{c}$ 中哪些内容需要保留，对应上面公式第一行。遗忘门输出的是一个0～1之间的权重向量。
 - **输入门（Input Gate）**：决定当前新信息有多少被写入记忆，对应上面公式第二行
 - **输出门（Output Gate）**：决定当前记忆中有多少被用于输出，对应上面公式第三行
-- **候选“门”（Cell Gate）**：生成候选记忆内容（新的信息），对应上面公式地五行
+- **候选“门”（Cell Gate）**：生成候选记忆内容（新的信息），对应上面公式第四行
 
 上面的图，以及这个计算公式，太复杂了。所以我们需要把它拆解，一个门一个门来理解。我们先来看遗忘门，如下图所示：
 
@@ -102,7 +102,7 @@ $$
 \end{aligned}
 $$
 
-遗忘门的输出 $\mathbf{f}$ ，是一个元素取值在0～1之间的权重向量。它和记忆 $\mathbf{c}$ 进行逐元素相乘，这是它能决定忘掉那些东西的核心。如果 $\mathbf{f}$ 的某个元素解决于0，则模型倾向于忘记对应状态。否则，如果接近于1，模型倾向于保留对应状态。
+遗忘门的输出 $\mathbf{f}$ ，是一个元素取值在0～1之间的权重向量。它和记忆 $\mathbf{c}$ 进行逐元素相乘，这是它能决定忘掉那些东西的核心。如果 $\mathbf{f}$ 的某个元素接近于0，则模型倾向于忘记对应状态。否则，如果接近于1，模型倾向于保留对应状态。
 
 再来看输入门，如下图所示。
 
@@ -124,7 +124,7 @@ $$
 \mathbf{c}' = \mathbf{f} * \mathbf{c} + \mathbf{i} * \hat{\mathbf{c}}
 $$
 
-然后，被遗忘门塞选后的记忆，加上被输入门塞选后的候选记忆，就得到了新的记忆状态。见上面的公式。
+然后，被遗忘门筛选后的记忆，加上被输入门筛选后的候选记忆，就得到了新的记忆状态。见上面的公式。
 
 懂了遗忘门和输入门，输出门就相对好理解了。它基本上就是之前RNN层，只是略微改变了一下。差别在于，我们把记忆状态 $\mathbf{c}$ 也考虑了进来。输出门的计算逻辑如下图所示：
 
@@ -135,7 +135,7 @@ $$
 $$
 \begin{aligned}
 \mathbf{o} &= \sigma(W_{ox}\mathbf{x} + W_{oh}\mathbf{h} + \mathbf{b}_o) \\
-\mathbf{h}' &= \mathbf{o} * \mathrm{tanh}(\mathbf{c}) \\
+\mathbf{h}' &= \mathbf{o} * \mathrm{tanh}(\mathbf{c}') \\
 \mathbf{y} &= W_{hy}\mathbf{h}' + \mathbf{b}_y
 \end{aligned}
 $$
@@ -160,7 +160,7 @@ def new_lstm_layer(forget_gate,
         vec_c_new = vec_f * vec_c + vec_i * vec_c_hat
         vec_h_new = vec_o * tanh(vec_c_new)
         vec_y = fc_layer(vec_h_new)
-        return vec_y
+        return vec_y, vec_h_new, vec_c_new
     return layer
 ```
 
@@ -168,7 +168,7 @@ def new_lstm_layer(forget_gate,
 
 ### 门控循环单元
 
-LSTM 效果强、但结构重、计算贵；GRU 是 LSTM 的精简版，用更少参数、更快速度，换取接近的效果，在轻量化 / 低算力 / 短序列场景性价比碾压 LSTM。很多任务里，根本用不到这么复杂的三门机制。于是门控循环单元（Gated Recurrent Unit，简称GRU），对LSTM进行来简化。
+LSTM 效果强、但结构重、计算贵；GRU 是 LSTM 的精简版，用更少参数、更快速度，换取接近的效果，在轻量化 / 低算力 / 短序列场景性价比碾压 LSTM。很多任务里，根本用不到这么复杂的三门机制。于是门控循环单元（Gated Recurrent Unit，简称GRU），对LSTM进行了简化。
 
 GRU的主要简化：去掉细胞状态，重新回到单个隐藏状态 $\mathbf{h}$ 。三个门改成两个门。其中**重置门** （Reset Gate）：控制“过往历史要不要清空”。**更新门** （Update Gate）控制“旧记忆保留多少、新记忆写入多少”。下面是GRU的示意图：
 
@@ -180,7 +180,7 @@ $$
 \begin{aligned}
 \mathbf{z} &= \sigma(W_{zx}\mathbf{x} + W_{zh}\mathbf{h} + \mathbf{b}_z) \\
 \mathbf{r} &= \sigma(W_{rx}\mathbf{x} + W_{rh}\mathbf{h} + \mathbf{b}_r) \\
-\hat{\mathbf{h}} &= \mathrm{tanh}(W_{hx}\mathbf{x} + W_{hh}(\mathbf{r} * \mathbf{h}) + \mathbf{b}_t) \\
+\hat{\mathbf{h}} &= \mathrm{tanh}(W_{hx}\mathbf{x} + W_{hh}(\mathbf{r} * \mathbf{h}) + \mathbf{b}_h) \\
 \mathbf{h}' &= (1 - \mathbf{z})*\mathbf{h} + \mathbf{z} * \hat{\mathbf{h}} \\
 \mathbf{y} &= W_{hy}\mathbf{h}' + \mathbf{b}_y
 \end{aligned}
@@ -189,14 +189,14 @@ $$
 玩具代码：
 
 ```python
-def new_gru_layer(update_gate, reset_gate, tanh_gate):
+def new_gru_layer(update_gate, reset_gate, tanh_gate, fc_layer):
     def layer(vec_x, vec_h):
         vec_z = update_gate(vec_x, vec_h)
         vec_r = reset_gate(vec_x, vec_h)
         vec_h_hat = tanh_gate(vec_x, vec_r * vec_h)
         vec_h_new = (1 - vec_z) * vec_h + vec_z * vec_h_hat
         vec_y = fc_layer(vec_h_new)
-        return vec_y
+        return vec_y, vec_h_new
     return layer
 ```
 

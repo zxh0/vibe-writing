@@ -8,8 +8,10 @@
 | 1986 | [Learning representations by back-propagating errors](https://www.nature.com/articles/323533a0) | Hinton+   | 反向传播     |
 | 1989 | [Backpropagation Applied to Handwritten Zip Code Recognition](http://yann.lecun.com/exdb/publis/pdf/lecun-89e.pdf) | 杨立昆等  | CNN          |
 | 1991 | Adaptive Mixtures of Local Experts                           | Hinton+   | MoE          |
+| 1994 | A New Algorithm for Data Compression                         | Philip Gage | BPE        |
 | 1997 | Long Short-Term Memory                                       |           | LSTM         |
 | 1998 | [GradientBased Learning Applied to Document Recognition](http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf) | 杨立昆等  | LeNet-5      |
+| 2003 | A Neural Probabilistic Language Model                        | Bengio+   | 词嵌入       |
 | 2012 | ImageNet Classification with Deep Convolutional Neural Networks |           | AlexNet      |
 | 2013 | [Efficient Estimation of Word Representations in Vector Space](https://arxiv.org/abs/1301.3781) | Google    | Word2Vec     |
 | 2013 | [Distributed Representations of Words and Phrases and their Compositionality](https://arxiv.org/abs/1310.4546) | Google    | Word2Vec     |
@@ -18,7 +20,7 @@
 | 2014 | [Neural Machine Translation by Jointly Learning to Align and Translate](https://arxiv.org/abs/1409.0473) |           | Attention    |
 | 2015 | [Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift](https://arxiv.org/abs/1502.03167) | Google    | Batch Norm   |
 | 2015 | [Effective Approaches to Attention-based Neural Machine Translation](https://arxiv.org/abs/1508.04025) |           | Attention    |
-| 2015 | [Neural Machine Translation of Rare Words with Subword Units](https://arxiv.org/abs/1508.07909) |           | BEP          |
+| 2015 | [Neural Machine Translation of Rare Words with Subword Units](https://arxiv.org/abs/1508.07909) |           | BPE          |
 | 2015 | [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385) | Microsoft | ResNet       |
 | 2016 | [Layer Normalization](https://arxiv.org/abs/1607.06450)      | Hinton+   | Layer Norm   |
 | 2017 | [Attention Is All You Need](https://arxiv.org/abs/1706.03762) | Google    | Transformer  |

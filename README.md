@@ -1,28 +1,11 @@
-# 人人能懂的人工神经网络
+# 写作
 
-在线阅读（支持全文搜索和公式渲染）：https://zxh0.github.io/ann-book/
+笔记和书：
 
-书：
-
-* [人人能懂的人工神经网络](book/Book.md)（WIP，[在线版](https://zxh0.github.io/ann-book/book)）
-
-> 《自己动手写LLM推理引擎》和几个小工具（safetensors 参数布局查看器等）已经搬到了独立仓库 [llm-engine-book](https://github.com/zxh0/llm-engine-book)，在线版在 https://zxh0.github.io/llm-engine-book/ 。
-
-笔记：
-
-* [图解DeepSeek-V4(Pro)核心公式](notes/2026-06-25-DSv4.md)
-* [图解DeepSeek-V2 MLA公式](notes/2026-06-27-DSv2MLA.md)
-* [图解Flash Attention核心原理](notes/2026-07-02-FA.md)
-* [图解位置编码](notes/2026-07-05-PE.md)
-* [图解MiniMax Sparse Attention](notes/2026-07-11-MSA.md)
-* [图解DeepSeek训练过程](notes/2026-07-14-DSTrain.md)
-* [图解Kimi K3 Stable LatentMoE](notes/2026-07-30-LatentMoE.md)
-* [图解Kimi Attention Residuals](notes/2026-08-01-AttnRes.md)
-* [图解Kimi Delta Attention](notes/2026-08-08-KDA.md)
-* [图解KDA续（数学知识补充）](notes/2026-08-12-LAMath.md)
-* [图解LongCat Sparse Attention](notes/2026-08-22-LSA.md)
-* [图解N-gram Embedding](notes/2026-08-28-NgE.md)
-* [图解LLM（大白话版）](notes/2026-08-30-LLM.md)
-* [图解LLM并行策略（基础篇）](notes/2026-09-06-Paral.md)
-* [图解Compressed Sparse Attention 2](notes/2026-09-23-CSA2.md)
-
+* [LLM学习笔记](llm_notes)（共15篇）
+* [人人能懂的人工神经网络](ann_book/)（WIP，[在线版](https://zxh0.github.io/ann-book/)）
+* [自己动手写LLM推理引擎](toyllm_book1/)（WIP，[在线版](https://zxh0.github.io/llm-engine-book/)）
+* [自己动手训练LLM](toyllm_book2/)（WIP，构思和初稿）
+* [自己动手写智能体](toy_agent_book/)（写作计划）
+* [GPU学习笔记](gpu_book/)（WIP，构思和初稿）
+* [从零设计TPU](tpu_book/)（写作计划）

@@ -11,7 +11,8 @@
 | https://adamharley.com/nn_vis/cnn/2d.html                    | 可视化卷积神经网络2D版本 |      |
 | https://adamharley.com/nn_vis/cnn/3d.html                    | 可视化卷积神经网络3D版本 |      |
 | https://poloclub.github.io/transformer-explainer/            | Transformer架构可视化    |      |
-| https://tiktokenizer.vercel.app/                             |                          |      |
+| https://tiktokenizer.vercel.app/                             | 可视化分词结果           | 第六章 |
+| https://remykarem.github.io/word2vec-demo/                   | 可视化Word2Vec词嵌入     | 第六章 |
 | https://erdem.pl/2021/05/understanding-positional-encoding-in-transformers | 位置编码                 |      |
 |                                                              |                          |      |
 |                                                              |                          |      |

@@ -1,6 +1,6 @@
 ---
 name: check-formulas
-description: This skill should be used when the user asks to "check formulas", "verify math", "check equations", "检查公式", or mentions formula errors in a markdown file. Covers the whole repo: the book and the notes.
+description: This skill should be used when the user asks to "check formulas", "verify math", "check equations", "检查公式", or mentions formula errors in a markdown file. Covers the whole workspace: every book and the notes.
 version: 1.0.0
 ---
 
@@ -14,7 +14,7 @@ version: 1.0.0
 
 ## Scope
 
-**整个仓库通用** —— 书和 `notes/` 面向的都是 GitHub 的 Markdown 渲染，公式格式要求完全一致。
+**整个仓库通用** —— 书和 `llm_notes/` 面向的都是 GitHub 的 Markdown 渲染，公式格式要求完全一致。
 与 `check-prose` 共用仓库根的 `.claude/lint-scope.json` 做区域豁免和排除（格式见那个技能的
 SKILL.md）；目前公式规则在所有区域都全开，只排除了 `CLAUDE.md` 这类非书稿文件。
 
@@ -27,13 +27,13 @@ SKILL.md）；目前公式规则在所有区域都全开，只排除了 `CLAUDE.
 python3 scripts/check.py .
 
 # 单个文件 / 整本书 / 笔记
-python3 scripts/check.py book/chapters/03_ch01_neuron.md
-python3 scripts/check.py book/ notes/
+python3 scripts/check.py ann_book/chapters/03_ch01_neuron.md
+python3 scripts/check.py ann_book/ llm_notes/
 
 # 自动修复（覆盖原文件）。fix.py 是整体一趟改写，无法只改部分规则，
-# 所以务必先用 --dry-run 看 diff，尤其是对作者手写的 notes/
-python3 scripts/fix.py --dry-run notes/2026-07-05-PE.md
-python3 scripts/fix.py book/chapters/
+# 所以务必先用 --dry-run 看 diff，尤其是对作者手写的 llm_notes/
+python3 scripts/fix.py --dry-run llm_notes/2026-07-05-PE.md
+python3 scripts/fix.py ann_book/chapters/
 ```
 
 目录会递归展开 `*.md`，自动跳过点目录和生成的 `Book.md`。` ``` ` 代码块里的内容不检查也不修改：JSON、终端输出里的 `$` 只是普通字符，不是公式。同理，一行里只有一个 `$`、没有配对的，也不当作公式处理。

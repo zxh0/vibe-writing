@@ -44,6 +44,23 @@
 | Hyperparameter               |               | 超参数       |      |
 | Convolution Kernel           | Kernel        | 卷积核       |      |
 | Kernel Size                  |               | 卷积核大小   |      |
+| Tokenization                 |               | 分词 | 第六章 |
+| Token                        |               | 词元 | 第六章 |
+| Vocabulary                   |               | 词表 | 第六章 |
+| Token ID                     |               | 词元ID | 第六章 |
+| Out-of-Vocabulary            | OOV           | 未登录词 | 第六章 |
+| Subword                      |               | 子词 | 第六章 |
+| Byte Pair Encoding           | BPE           | 字节对编码 | 第六章 |
+| Byte-level BPE               |               | 字节级BPE | 第六章 |
+| Word Embedding               |               | 词嵌入 | 第六章 |
+| Dense Vector                 |               | 稠密向量 | 第六章 |
+| Feature                      |               | 特征 | 第六章 |
+| Feature Vector               |               | 特征向量 | 第六章 |
+| Cosine Similarity            |               | 余弦相似度 | 第六章 |
+| Embedding Matrix             |               | 嵌入矩阵 | 第六章 |
+| Self-Supervised Learning     |               | 自监督学习 | 第六章 |
+| Pre-training                 |               | 预训练 | 第六章 |
+| Word-Level RNN               |               | 单词级RNN | 第六章 |
 |                              |               |              |      |
 |                              |               |              |      |
 |                              |               |              |      |

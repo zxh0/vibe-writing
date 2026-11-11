@@ -21,14 +21,16 @@ against `masked`, report from `lines`.
 """
 
 import re
+import unicodedata
 import sys
 
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 from lintscope import disabled_rules, keep, excluded
 
-from prose import (INLINE_CODE_PAT, block_is_exempt, has_exempt_marker,
-                   iter_code_blocks, iter_formulas, iter_targets,
+from prose import (IMG_STYLE_PAT, IMG_WIDTH_PAT, INLINE_CODE_PAT,
+                   block_is_exempt, has_exempt_marker, img_want_width,
+                   iter_code_blocks, iter_formulas, iter_img_tags, iter_targets,
                    is_runnable_example, is_toy, logical_lines, mask_lines,
                    read_lines)
 
@@ -61,8 +63,8 @@ def rule_notation(lines, masked, path):
 
     for lineno, content, _kind in iter_formulas(lines):
         for m in BOLD_UPPER_PAT.finditer(content):
-            # 子规则名，好让 lint-scope.json 能单独关掉它（用 Goodfellow 记法、
-            # 粗体大写=矩阵的书稿需要）；本书和 notes 都是「矩阵非粗体大写」。
+            # 子规则名，好让 lint-scope.json 单独关掉它：这本书用 Goodfellow
+            # 那一套（粗体大写=矩阵），所以 lint-scope.json 里对全书关掉了它。
             add(lineno, f"粗体大写 `\\{m.group(1)}{{{m.group(2)}...}}`："
                         f"粗体只表示向量（小写），矩阵应用非粗体大写 `{m.group(2)}`",
                 rule="符号记法/粗体大写")
@@ -131,16 +133,163 @@ def rule_no_em_dash(lines, masked, path):
     return issues
 
 
+# 规则5 论文引用：全书第一次出现写《标题》（arXiv:编号），之后只写标题
+TITLE_PAT = re.compile(r'《([A-Za-z][^》]*)》')
+ARXIV_TAIL_PAT = re.compile(r'\s*（arXiv:\d{4}\.\d{4,5}）')
+PAPER_WINDOW = 30  # 书名号前后多少个字符内出现「论文」，就当它是论文而不是书
+# 不在 arXiv 上的老论文：只写《标题》，不要求编号。新加一篇前先确认 arXiv 上确实没有。
+NO_ARXIV = {
+    "On the Resemblance and Containment of Documents",  # Broder 1997，MinHash
+}
+
+
+# 附录：x_a_matrix.md（toyllm）、18_appendix_a_scientists.md（ann_book）、appendix.md（gpu/tpu）
+APPENDIX_PAT = re.compile(r'^(x_[a-z]_.+|(\d{2}_)?appendix(_.+)?)\.md$')
+NUMBERED_PAT = re.compile(r'^\d{2}_.+\.md$')
+
+
+def _book_order(path):
+    """同目录下按书里的顺序排好的书稿，不含附录（附录不查这条规则，见下）。
+
+    认两种命名，和各书 merge.py 的顺序一致：
+    - 编号前缀 00_front、01_preface、02_ch00_basics……17_afterword：按文件名排；
+    - _front、_preface、ch01……ch14、afterword：afterword 排在最后。
+    只对 chapters/ 这种「一章一个文件」的目录有意义；两种都不像时返回只含
+    自己的列表，规则退化成单文件内检查。
+    """
+    d = os.path.dirname(os.path.abspath(path))
+    names = sorted(n for n in os.listdir(d)
+                   if n.endswith('.md') and not APPENDIX_PAT.match(n))
+    if any(NUMBERED_PAT.match(n) for n in names):
+        return [os.path.join(d, n) for n in names if NUMBERED_PAT.match(n)]
+    if not any(re.match(r'ch\d{2}_', n) for n in names):
+        return [os.path.abspath(path)]
+    head = [n for n in names if n.startswith('_') or re.match(r'ch\d{2}_', n)]
+    tail = [n for n in names if n == 'afterword.md']
+    return [os.path.join(d, n) for n in head + tail]
+
+
+def _citations(lines, masked):
+    """[(行号, 标题, 有没有编号, 是不是论文), ...]，按出现顺序。"""
+    out = []
+    for i, text in enumerate(masked, 1):
+        raw = lines[i - 1]
+        for m in TITLE_PAT.finditer(text):
+            tagged = bool(ARXIV_TAIL_PAT.match(raw, m.end()))
+            near = text[max(0, m.start() - PAPER_WINDOW):m.end() + PAPER_WINDOW]
+            out.append((i, m.group(1), tagged, tagged or '论文' in near))
+    return out
+
+
+def rule_paper_citation(lines, masked, path):
+    """论文在全书第一次出现时写《标题》（arXiv:编号），后面各章只写标题。
+
+    「全书第一次」按文件名顺序算，所以要把整本书一起扫，单查一章也会先读
+    它前面的各章。书名号里是英文、前后 30 个字符内有「论文」或带了编号的，
+    才当成论文；像《Build a Large Language Model (From Scratch)》这样的书不管。
+    附录（x_X_*.md、NN_appendix_*.md、appendix.md）不查：论文列表本来就要把每篇的编号再写一遍。
+    """
+    if APPENDIX_PAT.match(os.path.basename(path)):
+        return []
+    seen = set()
+    me = os.path.abspath(path)
+    for p in _book_order(path):
+        if p == me:
+            break
+        if excluded(p):
+            continue
+        prev = read_lines(p)
+        for _i, title, _tagged, _paper in _citations(prev, mask_lines(prev)):
+            seen.add(title)
+
+    issues = []
+    for i, title, tagged, paper in _citations(lines, masked):
+        if title in seen:
+            if tagged:
+                issues.append((i, "论文引用",
+                               f"《{title}》前面已经出现过，arXiv编号只在全书第一次出现时写",
+                               lines[i - 1].rstrip()))
+            continue
+        if paper:
+            seen.add(title)
+            if not tagged and title not in NO_ARXIV:
+                issues.append((i, "论文引用",
+                               f"《{title}》在全书第一次出现，要写成《标题》（arXiv:编号）",
+                               lines[i - 1].rstrip()))
+    return issues
+
+
+
+# 规则6 图片宽度：用 width 属性，值是图片像素宽度的一半
+def rule_img_width(lines, masked, path):
+    """<img> 用 width="像素宽度的一半"，不用 style="zoom:50%"。
+
+    插图都是两倍像素（Retina 截图、export_drawio.py 的 SCALE = 2），要按一半显示。
+    `zoom` 只有 Typora 认，GitHub 会把整个 style 属性删掉；width 是标准 HTML 属性，
+    到处都认。图片文件不在（images/ 不进 git）时只查 style，不查宽度。
+    """
+    issues = []
+    for i, m in iter_img_tags(lines):
+        tag = m.group(0)
+        want = img_want_width(tag, path)
+        have = IMG_WIDTH_PAT.search(tag)
+        if IMG_STYLE_PAT.search(tag):
+            hint = f'width="{want}"' if want else 'width="像素宽度的一半"'
+            issues.append((i, "图片宽度", f"不要用 style 缩放（GitHub 会删掉它），改成 {hint}",
+                           lines[i - 1].rstrip()))
+        elif want is not None and (not have or int(have.group(1)) != want):
+            now = f'现在是 {have.group(1)}' if have else '现在没写'
+            issues.append((i, "图片宽度", f'width 应为图片像素宽度的一半 {want}（{now}）',
+                           lines[i - 1].rstrip()))
+    return issues
+
+
+# 规则7 代码块宽度：纸质书一行放不下太长的代码和输出
+CODE_WIDTH = 80  # 列数，汉字和全角标点算两列
+
+
+def display_width(text):
+    """按等宽字体算一行占几列：东亚宽字符（汉字、全角标点）两列，其余一列。"""
+    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in text)
+
+
+def rule_code_width(lines, masked, path):
+    """代码块里每行不超过 CODE_WIDTH 列，不然印到纸上会被折行。
+
+    超了就改源头：代码换行或缩短注释，输出改脚本的打印格式（长列表用 wrap 排成几行），
+    再把书里的输出换成新格式。不要只在书里手工折行，书和脚本的输出会对不上。
+    """
+    issues, fence = [], None
+    for i, line in enumerate(lines, 1):
+        stripped = line.lstrip()
+        if fence is None:
+            m = re.match(r"(`{3,}|~{3,})", stripped)
+            if m:
+                fence = m.group(1)
+            continue
+        if stripped.startswith(fence):
+            fence = None
+            continue
+        w = display_width(line.rstrip("\n"))
+        if w > CODE_WIDTH:
+            issues.append((i, "代码块宽度", f"这一行 {w} 列，超过 {CODE_WIDTH} 列，纸质书上放不下",
+                           line.rstrip()))
+    return issues
+
+
 RULES = [
     rule_notation,
     rule_no_em_dash,
     rule_math_vs_code,
+    rule_paper_citation,
+    rule_img_width,
+    rule_code_width,
     # rule_md_toycode is appended below, after the toy-code helpers it reuses
 ]
 
 
 # --------------------------------------------------------------------------
-# Toy-code rules -- apply to book/code/**/toy_*.py only.
+# Toy-code rules -- apply to */code/**/toy_*.py only.
 # Signature is (lines, path) -> [(行号, 规则名, 问题描述, 原文), ...]
 # --------------------------------------------------------------------------
 

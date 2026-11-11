@@ -247,13 +247,13 @@ Test Accuracy: 89.93%
 
 我们上面实现的神经网络结构这么简单，是不是早就被前人想到了？你又猜对了：它就是我们在第一章结尾提到的[感知机](https://en.wikipedia.org/wiki/Perceptron)（Perceptron），也是人类历史上第一个具备自动学习能力的人工神经网络。
 
-我们知道，由于时代条件的限制，MCP神经元的思想在问世后很长一段时间里都难以落地。直到1957年，心理学家和人工智能先驱弗兰克・罗森布拉特（[Frank Rosenblatt](https://en.wikipedia.org/wiki/Frank_Rosenblatt)），在IBM 704计算机上模拟实现了感知机。到了1960年，他又进一步造出了专用计算机，名为马克一号（[Mark I](https://en.wikipedia.org/wiki/Mark_I_Perceptron)）感知机。上一小节的Python代码里，我们的神经网络就叫做`Perceptron`，现在你知道原因了吧。
+我们知道，由于时代条件的限制，MCP神经元的思想在问世后很长一段时间里都难以落地。直到1957年，心理学家和人工智能先驱弗兰克·罗森布拉特（[Frank Rosenblatt](https://en.wikipedia.org/wiki/Frank_Rosenblatt)），在IBM 704计算机上模拟实现了感知机。到了1960年，他又进一步造出了专用计算机，名为马克一号（[Mark I](https://en.wikipedia.org/wiki/Mark_I_Perceptron)）感知机。上一小节的Python代码里，我们的神经网络就叫做`Perceptron`，现在你知道原因了吧。
 
 如果你想更深入地了解感知机，可以进一步查阅相关资料。我在整理资料时发现了一个非常有意思的[网站](https://perceptrondemo.com/)，它不仅图文并茂地介绍了感知机的发展历史，还提供了可交互的演示Demo，能把抽象的感知机直观地展示出来，对理解它的工作原理非常有帮助。我推荐你也试试，具体效果可以参考下面的截图：
 
 ![perceptron](../images/ch02/perceptron_demo.png)
 
-感知机问世之后，人工智能领域迎来了第一波发展热潮。人们纷纷对它寄予厚望，相信它即将开启智能机器的新时代，这波热潮足足持续了十年之久。不过在实践中，人们也渐渐发现，感知机的能力似乎并没有想象中那么强大。直到1969年，人工智能先驱马文・明斯基（[Marvin Minsky](https://en.wikipedia.org/wiki/Marvin_Minsky)）和西摩・派珀特（[Seymour Papert](https://en.wikipedia.org/wiki/Seymour_Papert)）出版了那本著名的[《感知机：计算几何学导论》](https://en.wikipedia.org/wiki/Perceptrons_(book))。
+感知机问世之后，人工智能领域迎来了第一波发展热潮。人们纷纷对它寄予厚望，相信它即将开启智能机器的新时代，这波热潮足足持续了十年之久。不过在实践中，人们也渐渐发现，感知机的能力似乎并没有想象中那么强大。直到1969年，人工智能先驱马文·明斯基（[Marvin Minsky](https://en.wikipedia.org/wiki/Marvin_Minsky)）和西摩·派珀特（[Seymour Papert](https://en.wikipedia.org/wiki/Seymour_Papert)）出版了那本著名的[《感知机：计算几何学导论》](https://en.wikipedia.org/wiki/Perceptrons_(book))。
 
 这本书不仅详细剖析了Frank Rosenblatt提出的感知机，还以清晰严谨的方式证明了一个关键结论：感知机的模型能力存在本质局限。更准确地说：它只能解决[线性可分问题](https://en.wikipedia.org/wiki/Linear_separability)。说得再直白一点：比如它连最简单的[异或（XOR）问题](https://en.wikipedia.org/wiki/Exclusive_or)都无法解决。
 
@@ -263,7 +263,7 @@ Test Accuracy: 89.93%
 
 ### 机器学习
 
-不过，《感知机》一书并没有将神经网络一棒子打死。相反，它其实给出了破局的思路。简单来说：没有什么问题，是增加一个**隐藏层**解决不了的；如果有，那就再加一层。只可惜，当时的技术条件依然有限，人们还不知道该如何训练这种多层神经网络，于是再一次陷入困局。直到1986年，**反向传播**算法问世，这个难题才终于被攻克。关于隐藏层，我会在下一章详细讲解；而反向传播算法，暂时当成魔法就好，我会在本书的后半部分为你慢慢介绍。
+不过，神经网络并没有就此被一棒子打死。破局的思路其实并不难想到。简单来说：没有什么问题，是增加一个**隐藏层**解决不了的；如果有，那就再加一层。只可惜，当时人们还不知道该如何训练这种多层神经网络（《感知机》一书对此也持悲观态度），于是再一次陷入困局。直到1986年，**反向传播**算法问世，这个难题才终于被攻克。关于隐藏层，我会在下一章详细讲解；而反向传播算法，暂时当成魔法就好，我会在本书的后半部分为你慢慢介绍。
 
 虽然本章尚未专门介绍相关概念，但这种只需设计好算法架构，让程序通过训练数据自主学习并获得合适参数的方式，就称为**机器学习**（Machine Learning，简称ML）。在这一方法中，通过数据不断调整模型参数的过程被称为**训练**。在MNIST数据集中，每一张手写数字图片都带有对应的标签。这种利用已知标签为程序提供学习依据的机器学习方式，被称为**监督学习**（Supervised Learning）。
 

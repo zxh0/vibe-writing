@@ -1,12 +1,12 @@
 ---
 name: check-prose
-description: This skill should be used when the user asks to "check prose", "check the text", "检查正文", "检查行文", "审查文字", "检查玩具代码", or wants to audit the body text or toy_*.py examples anywhere in this repo (the book and the notes).
-version: 1.1.0
+description: This skill should be used when the user asks to "check prose", "check the text", "检查正文", "检查行文", "审查文字", "检查玩具代码", or wants to audit the body text or toy_*.py examples anywhere in this workspace (every book and the notes).
+version: 1.3.0
 ---
 
 # Check Prose in the Manuscript
 
-检查 `book/` 下的正文（去掉公式、代码块、图片、表格之后的叙述文字）和玩具代码是否符合本书的规范。
+检查 `ann_book/` 下的正文（去掉公式、代码块、图片、表格之后的叙述文字）和玩具代码是否符合本书的规范。
 与 `check-formulas` 互补：那个技能只管 LaTeX 公式的渲染格式，这个技能管中文正文和示例代码。
 
 ## When This Skill Applies
@@ -18,7 +18,7 @@ version: 1.1.0
 
 ## Scope
 
-**整个仓库通用** —— 书（`book/`）和笔记（`notes/`）共用同一套行文规范。
+**整个工作区通用** —— 各本书和笔记（`llm_notes/`）共用同一套行文规范和这一份脚本。
 规则按**文件类型**分派，不看路径，所以直接把仓库根目录传进去就行。
 
 **正文** —— 任何 `*.md`。生成文件 `Book.md` 默认跳过（改正文要改 `chapters/`，改完重跑 `merge.py`）。
@@ -33,25 +33,30 @@ version: 1.1.0
 
 **玩具代码** —— 任何 `toy_*.py`。示例代码分两类（见本书前言）：一类是帮助理解概念的
 “玩具代码”，文件名以 `toy_` 开头；另一类是可实际运行的 PyTorch 示例（`perceptron.py`、
-`char_rnn.py` 等）。**只有 `toy_` 开头的文件受本技能约束**。目前只有 `book/code/`
+`char_rnn.py` 等）。**只有 `toy_` 开头的文件受本技能约束**。目前只有 `ann_book/code/`
 下有这类文件，但判定靠文件名，新增区域无需改代码。`.venv` 等点开头的目录一律跳过。
 
 ### 按区域豁免规则
 
-各区域的例外集中写在仓库根的 `.claude/lint-scope.json`，两个 lint 技能共用：
+各区域的例外集中写在工作区根目录的 `.claude/lint-scope.json`，两个 lint 技能共用：
 
 ```json
 {
   "exclude": ["CLAUDE.md", "**/CLAUDE.md", "**/todo.md", "node_modules/**", "docs/**"],
   "scopes": [
-    {"path": "notes/**", "disable": ["符号记法"]}
+    {"path": "llm_notes/**",    "disable": ["符号记法", "图片宽度", "论文引用"]},
+    {"path": "ann_book/**",     "disable": ["图片宽度"]},
+    {"path": "toyllm_book1/**", "disable": ["符号记法/粗体大写"]},
+    {"path": "toyllm_book2/**", "disable": ["符号记法/粗体大写"]}
   ]
 }
 ```
 
 - `exclude` 里的文件完全不检查（CLAUDE.md 是给 agent 看的说明，里面会引用反例；`node_modules/` 是依赖，`docs/` 是 VitePress 生成的站点，都不是书稿来源）。
 - `scopes` 里每条匹配到的 `disable` 取并集。笔记贴合各自论文的记法（`\boldsymbol`、粗体大写矩阵），
-  与书稿的记号约定不同且是作者刻意保留的，所以对 `notes/**` 关掉 `符号记法`。
+  与书稿的记号约定不同且是作者刻意保留的，所以对 `llm_notes/**` 关掉 `符号记法`；toyllm 两本用 Goodfellow 记法
+  （粗体大写=矩阵），只关子规则 `符号记法/粗体大写`；ann_book 和笔记的配图还在用 `zoom`，暂时关掉 `图片宽度`。
+- 配置按「离文件最近的 `.claude/lint-scope.json`」查找，**不要在某本书里另放一个 `.claude/`**，它会悄悄盖掉根目录的配置。
 - 被豁免的条数会在结尾如实报出（「另有 N 处被 .claude/lint-scope.json 豁免」），不会悄悄吞掉。
 - 加 `--all-rules` 可临时忽略整个配置。
 
@@ -66,22 +71,22 @@ version: 1.1.0
 python3 scripts/check.py .
 
 # 单个章节 / 单个玩具代码文件
-python3 scripts/check.py book/chapters/03_ch01_neuron.md
-python3 scripts/check.py book/code/ch05/toy_rnn.py
+python3 scripts/check.py ann_book/chapters/03_ch01_neuron.md
+python3 scripts/check.py ann_book/code/ch05/toy_rnn.py
 
 # 整本书 / 只看玩具代码
-python3 scripts/check.py book/
-python3 scripts/check.py book/code/
+python3 scripts/check.py ann_book/
+python3 scripts/check.py ann_book/code/
 
 # 忽略区域豁免，全部规则都查
-python3 scripts/check.py --all-rules notes/
+python3 scripts/check.py --all-rules llm_notes/
 
 # 自动修复（覆盖原文件），仅修复标记为可自动修复的规则；先用 --dry-run 看 diff
-python3 scripts/fix.py --dry-run book/
-python3 scripts/fix.py book/
+python3 scripts/fix.py --dry-run ann_book/
+python3 scripts/fix.py ann_book/
 ```
 
-**`fix.py` 同样尊重区域豁免**：对 `notes/**` 不会做符号记法改写。
+**`fix.py` 同样尊重区域豁免**：对 `llm_notes/**` 不会做符号记法改写。
 
 如果需要人工处理，按以下步骤：
 
@@ -170,7 +175,7 @@ BOLDSYM_LATIN = re.compile(r'\\boldsymbol\{\s*([a-zA-Z])\s*\}')
 1. 先跑机械层，清掉粗体大写和 `\vec`
 2. 通读该章公式，列出出现的所有符号，逐个标注它是标量／向量／矩阵
 3. 对照上面三条约定，找出排版与语义不符的符号
-4. 同一符号在全书中语义要一致——跨章改名或改排版时，用 `grep -n '符号' book/chapters/*.md` 全局确认
+4. 同一符号在全书中语义要一致——跨章改名或改排版时，用 `grep -n '符号' ann_book/chapters/*.md` 全局确认
 
 是否可自动修复：部分。`\vec{x}` → `\mathbf{x}`（小写）、`\boldsymbol{x}` → `\mathbf{x}`（拉丁小写）
 可以自动改；粗体大写改成什么（去掉粗体，还是改成粗体小写）取决于该符号是矩阵还是向量，只报告不自动改。
@@ -178,7 +183,7 @@ BOLDSYM_LATIN = re.compile(r'\\boldsymbol\{\s*([a-zA-Z])\s*\}')
 > **注意（当前状态）**：正文已完成迁移，涉及第零、一、二、三、五、七、十章，
 > 机械层与语义层当前均无违规，根目录 `CLAUDE.md` 的 Notation Conventions 已同步。
 > 第四章无需改动（其中 P、K、Y 分别是图像块、卷积核、特征图，本就是矩阵）。
-> **配图尚未同步**：`book/draw/*.drawio` 源文件和导出的 PNG 仍是旧的大写记法
+> **配图尚未同步**：`ann_book/draw/*.drawio` 源文件和导出的 PNG 仍是旧的大写记法
 > （ch05 约 121 处、ch07 约 57 处，另 ch02/ch03/ch04/ch09 约 47 处），待重绘。
 
 ---
@@ -268,9 +273,89 @@ $...$」的正则会把这 13 处全改错，而且改完读起来还挺顺，�
    `参数$w$代表` 自动补成 `参数 $w$ 代表`。
 4. 转完核对**章节代码块与 `toy_*.py` 仍然逐行一致**，确认没有误伤代码块。
 
+### 论文引用（paper-citation）
+
+论文在**全书第一次出现**时写成《标题》（arXiv:编号），后面各章再提到同一篇，只写《标题》，不再重复编号。
+标题用arXiv上的原文，大小写也照抄；编号要先核对过（arXiv的接口 `export.arxiv.org/api/query?id_list=...` 一次能查一批）。
+只说了“某某的论文”、没写标题的，也要补上标题。
+
+**违规示例：**
+```
+（第六章）可以从《Attention Is All You Need》（arXiv:1706.03762）这篇论文开始看起。
+（第三章）是2015年Sennrich等人那篇机器翻译论文带起来的，
+```
+
+**正确示例：**
+```
+（第一章，全书第一次）这个架构出自2017年的经典论文《Attention Is All You Need》（arXiv:1706.03762）。
+（第六章）可以从《Attention Is All You Need》这篇论文开始看起。
+（第三章）是2015年Sennrich等人的机器翻译论文《Neural Machine Translation of Rare Words with Subword Units》（arXiv:1508.07909）带起来的，
+```
+
+检测方法：`scripts/check.py` 的 `rule_paper_citation`。“全书第一次”按 `chapters/` 里的文件名顺序算，认两种命名：`_front`、`_preface`、`ch01`……`afterword`，或者 `00_front`、`01_preface`、`02_ch00_basics`……这样的编号前缀，附录不算，
+所以只查一章时，脚本也会先读它前面的各章。书名号里是英文、并且前后30个字符内有“论文”二字或者已经带了编号的，才当作论文；
+《Build a Large Language Model (From Scratch)》这样的书不受这条约束。报两种问题：
+
+- 全书第一次出现却没带编号
+- 前面已经出现过，这里又带了编号
+
+“没写标题”的那一类脚本查不出来，靠人工：搜一下 `年.*论文`、`提出`，看看有没有只写了作者和年份的。
+没有arXiv编号的老文献（1958年的感知机、1994年Gage的BPE）只写年份和人名，不强求标题。
+要写标题的话，照样用书名号，再把标题加进 `check.py` 的 `NO_ARXIV` 名单，脚本就不会要它的编号。
+加之前先去arXiv上搜一下，确认真的没有。现在名单里只有Broder 1997年那篇《On the Resemblance and Containment of Documents》（toyllm_book1第二章）。
+
+是否可自动修复：否，只报告。编号要查、要核对，不能机械补。
+
+---
+
+### 图片宽度（img-width）
+
+正文里的插图用 `<img src="..." alt="..." width="N" />`，`N` 是这张PNG像素宽度的一半，不用 `style="zoom:50%;"`。
+
+为什么是一半：书里的插图都是两倍像素。Mac的Retina屏截图按物理像素保存，`export_drawio.py` 也按 `SCALE = 2` 导出。
+按像素宽度原样显示，图会大一倍；显示成一半宽，在高分屏上正好清楚。
+
+为什么不用 `zoom`：`zoom` 不是标准CSS，只有Typora等少数地方认；GitHub渲染Markdown时会把 `style` 属性整个删掉。
+`width` 是标准HTML属性，GitHub、Typora、VitePress、浏览器都认。也不要写 `width="50%"`，百分比是相对正文栏宽的，不是相对图片本身。
+
+**违规示例：**
+```
+<img src="../images/ch08/af.png" alt="AF" style="zoom:50%;" />
+<img src="../images/ch08/af.png" alt="AF" width="800" />      （af.png 是 1280 像素宽）
+```
+
+**正确示例：**
+```
+<img src="../images/ch08/af.png" alt="AF" width="640" />
+```
+
+检测方法：`scripts/check.py` 的 `rule_img_width`。逐个找代码块外的 `<img>`，从PNG文件头读出像素宽度，
+报两种问题：用了 `style`；`width` 没写或者不等于像素宽度的一半（图重新导出后尺寸变了，就会报这一条）。
+图片文件不存在时（`images/` 不进 git，换一台机器可能没有），只查 `style`，不查宽度。
+
+是否可自动修复：**是。** `scripts/fix.py` 的 `fix_img_width` 去掉 `style`，把 `width` 设成像素宽度的一半。
+重新导出图片以后跑一次 `python3 scripts/fix.py <书>/chapters/` 即可。
+
+> `ann_book` 和 `llm_notes` 目前还在用 `style="zoom:50%"`，这条规则对它们在 `lint-scope.json` 里豁免了，迁移以后再打开。
+
+---
+
+
+### 代码块宽度（code-width）
+
+书要印成纸质版，代码块里每行不能超过80列，汉字和全角标点算两列。超了的行，印出来会被折断，读者看不清哪里是原本的换行。
+
+- **代码**：在括号里换行，或者把行尾注释挪到上一行、改短。
+- **脚本输出**：改脚本的打印格式，长列表用 `corpus.py` 里的 `wrap` 排成几行，长字符串用 `textwrap.fill` 折行，再把书里的输出换成新格式。
+  不要只在书里手工折行，那样书和脚本跑出来的不一样。折了行的输出，正文里说一句“折行是为了排版加的”。
+
+检测方法：`scripts/check.py` 的 `rule_code_width`，宽度上限是 `CODE_WIDTH`。表格和正文段落不查。
+
+是否可自动修复：**否。**
+
 ### 玩具代码规范（toy-code）
 
-`book/code/chNN/toy_*.py` 里的玩具代码，统一遵守三条：
+`ann_book/code/chNN/toy_*.py` 里的玩具代码，统一遵守三条：
 
 1. **统一使用 numpy 的 array** 表示向量和矩阵，不用 Python 原生列表（`list[float]`、嵌套列表）
 2. **向量**的变量名统一以 `vec` 开头
@@ -363,7 +448,7 @@ vec_y = mat_w @ vec_x
 1. 右侧不是 numpy 直接构造的变量（函数返回值、切片、运算结果），机械层不判定维度，要人工确认
 2. 元素是数组的容器（如 `kernel_list`）该怎么命名，规则没有规定，需要单独约定
 3. 改名要同步所有引用点，包括函数形参、闭包捕获的变量、注释和 print 里的字符串
-4. **章节里的代码块要和 `toy_*.py` 保持一致**：同一段玩具代码在 `book/chapters/*.md` 里
+4. **章节里的代码块要和 `toy_*.py` 保持一致**：同一段玩具代码在 `ann_book/chapters/*.md` 里
    以 ```` ```python ```` 代码块重复出现，改完 `.py` 必须同步改章节，否则书里印的和仓库里的不一样
 
 第 4 点没有做成机械检查，因为章节代码块无法可靠地区分“玩具代码”和 PyTorch 示例，
@@ -381,12 +466,12 @@ vec_y = mat_w @ vec_x
 > - **命名统一为前缀**：`input_mat`→`mat_input` 这类后缀写法全部改为前缀。
 >   涉及 9 个 `.py` 重写、4 个批量重命名、27 个章节代码块，全部实测可运行。
 > - **手写实现已全部改用 numpy 数组**，`toy-exempt` 标记已随之移除，现无代码使用。
-> - **配图尚未同步**：`book/draw/*.drawio` 及导出的 PNG 仍是旧的大写记法，待重绘
+> - **配图尚未同步**：`ann_book/draw/*.drawio` 及导出的 PNG 仍是旧的大写记法，待重绘
 >   （见规则1 的状态说明）。
 
 ### 语义层：章节代码块与 `.py` 必须逐字一致
 
-同一段玩具代码在 `book/chapters/*.md` 和 `book/code/chNN/toy_*.py` 各存一份，
+同一段玩具代码在 `ann_book/chapters/*.md` 和 `ann_book/code/chNN/toy_*.py` 各存一份，
 两边必须完全一致，否则书里印的和仓库里的不是同一份代码。改完一边一定要核对另一边。
 
 核对方法：提取章节代码块，逐行检查是否都能在对应 `.py` 中找到。这一步实测有效——

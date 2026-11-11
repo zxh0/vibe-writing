@@ -1,0 +1,17 @@
+# LLM学习笔记
+
+* [图解DeepSeek-V4(Pro)核心公式](2026-06-25-DSv4.md)
+* [图解DeepSeek-V2 MLA公式](2026-06-27-DSv2MLA.md)
+* [图解Flash Attention核心原理](2026-07-02-FA.md)
+* [图解位置编码](2026-07-05-PE.md)
+* [图解MiniMax Sparse Attention](2026-07-11-MSA.md)
+* [图解DeepSeek训练过程](2026-07-14-DSTrain.md)
+* [图解Kimi K3 Stable LatentMoE](2026-07-30-LatentMoE.md)
+* [图解Kimi Attention Residuals](2026-08-01-AttnRes.md)
+* [图解Kimi Delta Attention](2026-08-08-KDA.md)
+* [图解KDA续（数学知识补充）](2026-08-12-LAMath.md)
+* [图解LongCat Sparse Attention](2026-08-22-LSA.md)
+* [图解N-gram Embedding](2026-08-28-NgE.md)
+* [图解LLM（大白话版）](2026-08-30-LLM.md)
+* [图解LLM并行策略（基础篇）](2026-09-06-Paral.md)
+* [图解Compressed Sparse Attention 2](2026-09-23-CSA2.md)
