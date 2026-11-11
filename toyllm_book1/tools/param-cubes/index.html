@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>参数量立方体</title>
+<style>
+:root{
+  --bg:#f7f7f8; --panel:#ffffff; --border:#e3e5e8; --text:#16181d; --muted:#6b7280;
+  --accent:#2563eb; --accent-soft:#eff4ff; --edge:#ffffff;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15171c; --panel:#1c1f26; --border:#2d3139; --text:#e6e8ec; --muted:#9aa1ad;
+    --accent:#6ea8fe; --accent-soft:#1e2637; --edge:#1c1f26;
+  }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+.wrap{max-width:1180px; margin:0 auto; padding:24px 16px 64px}
+h1{font-size:22px; margin:0 0 4px}
+h2{font-size:16px; margin:0 0 4px}
+.sub{color:var(--muted); margin:0 0 20px}
+.card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:16px}
+.card > .desc{color:var(--muted); font-size:13px; margin:0 0 12px}
+.presets{display:flex; gap:6px; flex-wrap:wrap; align-items:center; font-size:12px; color:var(--muted); margin-bottom:12px}
+button.mini{
+  background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:6px;
+  padding:4px 10px; font:12px/1.4 inherit; cursor:pointer;
+}
+button.mini:hover{border-color:var(--accent); color:var(--accent)}
+button.mini.on{background:var(--accent-soft); color:var(--accent); border-color:var(--accent)}
+#chart{display:block; width:100%; height:auto}
+#chart text{font-size:13px; fill:var(--text); font-variant-numeric:tabular-nums}
+#chart text.p{fill:var(--muted)}
+#chart text.hi{font-weight:700}
+#chart .lead{stroke:var(--muted); stroke-width:1; opacity:.5}
+#chart g.cube{cursor:pointer}
+.info{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:8px}
+.stat{background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:8px 12px}
+.stat .k{font-size:12px; color:var(--muted)}
+.stat .v{font-size:16px; font-weight:600; font-variant-numeric:tabular-nums}
+.stat .v small{font-size:12px; font-weight:400; color:var(--muted)}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chips button.mini small{color:var(--muted); margin-left:4px}
+.chips button.mini.on small{color:inherit; opacity:.75}
+.note{font-size:12px; color:var(--muted); margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>参数量立方体</h1>
+  <p class="sub">一个模型画成一个立方体，<b>体积</b>正比于参数量，所以边长是参数量的立方根。参数量差一千倍，边长只差十倍，大小模型能放进同一张图里。所有立方体共用最靠近你的那个角，小的套在大的里面。</p>
+
+  <div class="card">
+    <div class="presets" id="presets"></div>
+    <svg id="chart" viewBox="0 0 900 600"></svg>
+    <div class="info" id="info"></div>
+    <p class="note">鼠标放到立方体上看它和最小那个比。MoE模型会多出一个虚线立方体，是每个词元实际用到的激活参数。</p>
+  </div>
+
+  <div class="card">
+    <h2>放哪些模型</h2>
+    <p class="desc">按参数量从小到大排，点一下加进图里或拿出来。参数量差不多的模型（7B和8B）放在一起会叠成一团，挑着放。</p>
+    <div class="chips" id="chips"></div>
+    <p class="note">参数量是官方标称值，取整；MoE模型写成「总参数 / 激活参数」。眼睛比的主要是边长而不是体积，所以图上的差距看起来比实际小得多：看倍数要看下面的数字。</p>
+  </div>
+</div>
+
+<script>
+// params / active：十亿（B）。和 tools/embed-dims 里那份数据是同一批模型。
+const DATA = [
+  {name:"Transformer-base", org:"Google",  year:2017, params:0.065},
+  {name:"Transformer-big",  org:"Google",  year:2017, params:0.213},
+  {name:"GPT-1",            org:"OpenAI",  year:2018, params:0.117},
+  {name:"BERT-base",        org:"Google",  year:2018, params:0.110},
+  {name:"BERT-large",       org:"Google",  year:2018, params:0.340},
+  {name:"GPT-2",            org:"OpenAI",  year:2019, params:0.124},
+  {name:"GPT-2 Medium",     org:"OpenAI",  year:2019, params:0.355},
+  {name:"GPT-2 Large",      org:"OpenAI",  year:2019, params:0.774},
+  {name:"GPT-2 XL",         org:"OpenAI",  year:2019, params:1.5},
+  {name:"GPT-3",            org:"OpenAI",  year:2020, params:175},
+  {name:"Llama 2 7B",       org:"Meta",    year:2023, params:7},
+  {name:"Llama 2 13B",      org:"Meta",    year:2023, params:13},
+  {name:"Llama 2 70B",      org:"Meta",    year:2023, params:70},
+  {name:"Mistral 7B",       org:"Mistral", year:2023, params:7.2},
+  {name:"Mixtral 8x7B",     org:"Mistral", year:2023, params:47,  active:13},
+  {name:"Mixtral 8x22B",    org:"Mistral", year:2024, params:141, active:39},
+  {name:"TinyLlama 1.1B",   org:"TinyLlama", year:2024, params:1.1},
+  {name:"Llama 3.1 8B",     org:"Meta",    year:2024, params:8},
+  {name:"Llama 3.1 70B",    org:"Meta",    year:2024, params:70},
+  {name:"Llama 3.1 405B",   org:"Meta",    year:2024, params:405},
+  {name:"Llama 3.2 1B",     org:"Meta",    year:2024, params:1.2},
+  {name:"Llama 3.2 3B",     org:"Meta",    year:2024, params:3.2},
+  {name:"Llama 4 Scout",    org:"Meta",    year:2025, params:109, active:17},
+  {name:"Phi-3-mini",       org:"Microsoft", year:2024, params:3.8},
+  {name:"Phi-4",            org:"Microsoft", year:2024, params:14},
+  {name:"Gemma 2 2B",       org:"Google",  year:2024, params:2.6},
+  {name:"Gemma 2 9B",       org:"Google",  year:2024, params:9},
+  {name:"Gemma 2 27B",      org:"Google",  year:2024, params:27},
+  {name:"Gemma 3 1B",       org:"Google",  year:2025, params:1},
+  {name:"Gemma 3 4B",       org:"Google",  year:2025, params:4},
+  {name:"Gemma 3 12B",      org:"Google",  year:2025, params:12},
+  {name:"Gemma 3 27B",      org:"Google",  year:2025, params:27},
+  {name:"SmolLM2-135M",     org:"Hugging Face", year:2024, params:0.135, hi:true},
+  {name:"SmolLM2-360M",     org:"Hugging Face", year:2024, params:0.36},
+  {name:"SmolLM2-1.7B",     org:"Hugging Face", year:2024, params:1.7},
+  {name:"OLMo 2 7B",        org:"AI2",     year:2024, params:7},
+  {name:"Qwen2.5-0.5B",     org:"Qwen",    year:2024, params:0.5},
+  {name:"Qwen2.5-1.5B",     org:"Qwen",    year:2024, params:1.5},
+  {name:"Qwen2.5-3B",       org:"Qwen",    year:2024, params:3},
+  {name:"Qwen2.5-7B",       org:"Qwen",    year:2024, params:7.6},
+  {name:"Qwen2.5-72B",      org:"Qwen",    year:2024, params:72},
+  {name:"Qwen3-0.6B",       org:"Qwen",    year:2025, params:0.6, hi:true},
+  {name:"Qwen3-1.7B",       org:"Qwen",    year:2025, params:1.7},
+  {name:"Qwen3-4B",         org:"Qwen",    year:2025, params:4},
+  {name:"Qwen3-8B",         org:"Qwen",    year:2025, params:8},
+  {name:"Qwen3-14B",        org:"Qwen",    year:2025, params:14},
+  {name:"Qwen3-32B",        org:"Qwen",    year:2025, params:32},
+  {name:"Qwen3-30B-A3B",    org:"Qwen",    year:2025, params:30,  active:3},
+  {name:"Qwen3-235B-A22B",  org:"Qwen",    year:2025, params:235, active:22},
+  {name:"Qwen3-Next-80B-A3B", org:"Qwen",  year:2025, params:80,  active:3},
+  {name:"DeepSeek-V2-Lite", org:"DeepSeek", year:2024, params:16,  active:2.4},
+  {name:"DeepSeek-V3 / R1", org:"DeepSeek", year:2024, params:671, active:37},
+  {name:"Kimi K2",          org:"Moonshot", year:2025, params:1000, active:32},
+  {name:"GLM-4.5-Air",      org:"智谱",    year:2025, params:106, active:12},
+  {name:"GLM-4.5",          org:"智谱",    year:2025, params:355, active:32},
+  {name:"gpt-oss-20b",      org:"OpenAI",  year:2025, params:21,  active:3.6},
+  {name:"gpt-oss-120b",     org:"OpenAI",  year:2025, params:117, active:5.1},
+  // 2025年下半年到2026年
+  {name:"DeepSeek-V4-Flash",  org:"DeepSeek", year:2026, params:284, active:13},
+  {name:"DeepSeek-V4-Pro",    org:"DeepSeek", year:2026, params:1600, active:49},
+  {name:"GLM-4.7-Flash",      org:"智谱",       year:2026, params:30, active:3},
+  {name:"GLM-5",              org:"智谱",       year:2026, params:744, active:40},
+  {name:"Qwen3.5-0.8B",       org:"Qwen",     year:2026, params:0.8},
+  {name:"Qwen3.5-2B",         org:"Qwen",     year:2026, params:2},
+  {name:"Qwen3.5-9B",         org:"Qwen",     year:2026, params:9},
+  {name:"Qwen3.5-27B",        org:"Qwen",     year:2026, params:27},
+  {name:"Qwen3.5-35B-A3B",    org:"Qwen",     year:2026, params:35, active:3},
+  {name:"Qwen3.5-397B-A17B",  org:"Qwen",     year:2026, params:397, active:17},
+  {name:"Qwen3.8-27B",        org:"Qwen",     year:2026, params:27},
+  {name:"Qwen3.8-2.4T-A95B",  org:"Qwen",     year:2026, params:2400, active:95},
+  {name:"Gemma 4 E2B",        org:"Google",   year:2026, params:5.1},
+  {name:"Gemma 4 E4B",        org:"Google",   year:2026, params:8},
+  {name:"Gemma 4 12B",        org:"Google",   year:2026, params:12},
+  {name:"Gemma 4 26B A4B",    org:"Google",   year:2026, params:25.2, active:3.8},
+  {name:"Gemma 4 31B",        org:"Google",   year:2026, params:31},
+  {name:"Kimi K3",            org:"Moonshot", year:2026, params:2800, active:104},
+  {name:"MiniMax-M2",         org:"MiniMax",  year:2025, params:230, active:10},
+  {name:"MiniMax-M3",         org:"MiniMax",  year:2026, params:428, active:23},
+  {name:"Ministral 3 3B",     org:"Mistral",  year:2025, params:3},
+  {name:"Ministral 3 8B",     org:"Mistral",  year:2025, params:8},
+  {name:"Ministral 3 14B",    org:"Mistral",  year:2025, params:14},
+  {name:"Mistral Small 4",    org:"Mistral",  year:2026, params:119, active:6.5},
+  {name:"Mistral Large 4",    org:"Mistral",  year:2026, params:1000, active:52},
+  {name:"Olmo 3 7B",          org:"AI2",      year:2025, params:7},
+  {name:"Olmo 3 32B",         org:"AI2",      year:2025, params:32},
+  {name:"Nemotron 3 Nano",    org:"NVIDIA",   year:2025, params:30, active:3.5},
+  {name:"Nemotron 3 Super",   org:"NVIDIA",   year:2026, params:120, active:12},
+  {name:"Nemotron 3 Ultra",   org:"NVIDIA",   year:2026, params:550, active:55},
+  {name:"Hy3",                org:"Tencent",  year:2026, params:295, active:21},
+  {name:"MiniCPM5-2B",        org:"OpenBMB",  year:2026, params:2},
+  {name:"LFM3-1.7B",          org:"Liquid AI",year:2026, params:1.7},
+].sort((a, b) => a.params - b.params);
+
+const PRESETS = [
+  {label:"本书的模型和几个大模型", names:["SmolLM2-135M","Qwen3-0.6B","Llama 3.1 8B","Llama 3.1 70B","GPT-3","Llama 3.1 405B","DeepSeek-V4-Pro","Kimi K3"]},
+  {label:"2026年的大模型", names:["Gemma 4 31B","Mistral Small 4","Hy3","Qwen3.5-397B-A17B","MiniMax-M3","Nemotron 3 Ultra","GLM-5","DeepSeek-V4-Pro","Qwen3.8-2.4T-A95B","Kimi K3"]},
+  {label:"GPT系列", names:["GPT-1","GPT-2","GPT-2 Medium","GPT-2 Large","GPT-2 XL","GPT-3","gpt-oss-20b","gpt-oss-120b"]},
+  {label:"Qwen3全系", names:["Qwen3-0.6B","Qwen3-1.7B","Qwen3-4B","Qwen3-8B","Qwen3-14B","Qwen3-32B","Qwen3-235B-A22B"]},
+  {label:"Llama全系", names:["Llama 3.2 1B","Llama 3.2 3B","Llama 2 7B","Llama 2 13B","Llama 2 70B","Llama 3.1 405B"]},
+  {label:"SmolLM2三个", names:["SmolLM2-135M","SmolLM2-360M","SmolLM2-1.7B"]},
+  {label:"MoE", names:["DeepSeek-V2-Lite","Qwen3-30B-A3B","Mixtral 8x7B","Llama 4 Scout","gpt-oss-120b","Qwen3-235B-A22B","GLM-4.5","DeepSeek-V3 / R1","Kimi K2","Kimi K3"]},
+];
+
+let selected = new Set(PRESETS[0].names);
+let hover = null;
+
+// ---- 数字 ----
+function fmtParams(b){
+  if (b >= 1000) return (+(b/1000).toFixed(1)) + "T";
+  if (b >= 1) return (+b.toFixed(1)) + "B";
+  return Math.round(b*1000) + "M";
+}
+const paramsText = m => m.active ? `${fmtParams(m.params)} / ${fmtParams(m.active)}` : fmtParams(m.params);
+function times(r){
+  if (r >= 100) return Math.round(r).toLocaleString("en-US");
+  if (r >= 10) return r.toFixed(0);
+  return (+r.toFixed(1)).toString();
+}
+
+// ---- 等轴投影 ----
+// 立方体占 [-s,0]^3，原点是最靠近你的那个角。y朝上，x往右前，z往左前。
+const CX = 320, CY = 300, SMAX = 255, C = Math.cos(Math.PI / 6);
+const P = (x, y, z) => [CX + (x - z) * C, CY - y + (x + z) / 2];
+const pts = arr => arr.map(p => P(...p).map(v => v.toFixed(1)).join(",")).join(" ");
+function faces(s){
+  return {
+    top:   [[0,0,0],[-s,0,0],[-s,0,-s],[0,0,-s]],
+    right: [[0,0,0],[0,0,-s],[0,-s,-s],[0,-s,0]],
+    left:  [[0,0,0],[0,-s,0],[-s,-s,0],[-s,0,0]],
+  };
+}
+function outline(s){   // 外轮廓六边形
+  return [[0,0,-s],[0,-s,-s],[0,-s,0],[-s,-s,0],[-s,0,0],[-s,0,-s]];
+}
+
+// 由大到小一个色相，大的浅、小的深（暗色模式反过来，大的贴近背景）
+const dark = matchMedia("(prefers-color-scheme: dark)");
+function shade(rank, n){
+  const t = n > 1 ? rank / (n - 1) : 0;          // 0 = 最大，1 = 最小
+  const L = dark.matches ? 26 + t * 40 : 92 - t * 52;
+  const S = 55;
+  return {
+    top:   `hsl(217 ${S}% ${L + (dark.matches ? 6 : 4)}%)`,
+    left:  `hsl(217 ${S}% ${L}%)`,
+    right: `hsl(217 ${S}% ${L - (dark.matches ? 6 : 8)}%)`,
+  };
+}
+
+const svg = document.getElementById("chart");
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent){
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.append(e);
+  return e;
+}
+
+function draw(){
+  svg.innerHTML = "";
+  labelEls.clear();
+  const rows = DATA.filter(m => selected.has(m.name));          // 已按参数量从小到大
+  if (!rows.length){
+    const t = el("text", {x:450, y:300, "text-anchor":"middle", class:"p"}, svg);
+    t.textContent = "下面选几个模型";
+    renderInfo(rows);
+    return;
+  }
+  const maxP = rows[rows.length - 1].params;
+  const side = m => SMAX * Math.cbrt(m.params / maxP);
+  const n = rows.length;
+
+  // 从大到小画，小的盖在大的上面；鼠标落在哪个最小的立方体里，就是它
+  for (let i = n - 1; i >= 0; i--){
+    const m = rows[i], s = side(m), col = shade(n - 1 - i, n);
+    const g = el("g", {class:"cube"}, svg);
+    const f = faces(s);
+    for (const k of ["top", "left", "right"])
+      el("polygon", {points:pts(f[k]), fill:col[k], stroke:"var(--edge)", "stroke-width":Math.min(1.5, s / 12), "stroke-linejoin":"round"}, g);
+    g.addEventListener("mouseenter", () => setHover(m));
+    g.addEventListener("mouseleave", () => setHover(null));
+  }
+
+  overlay = el("g", {"pointer-events":"none"}, svg);
+  scale = {maxP, side};
+
+  // 标签：每个立方体右上角那个顶点引一条线到右边一列，纵向错开
+  const colX = CX + SMAX * C + 36, GAP = 19;
+  const labels = rows.map(m => { const s = side(m); const [ax, ay] = P(0, 0, -s); return {m, ax, ay, y:ay}; })
+    .sort((a, b) => a.y - b.y);
+  for (let i = 1; i < labels.length; i++) labels[i].y = Math.max(labels[i].y, labels[i-1].y + GAP);
+  const over = labels.length ? labels[labels.length - 1].y - 585 : 0;
+  if (over > 0) for (let i = labels.length - 1; i >= 0; i--){
+    labels[i].y -= over;
+    if (i > 0) labels[i-1].y = Math.min(labels[i-1].y, labels[i].y - GAP);
+  }
+  for (const L of labels){
+    el("polyline", {points:`${L.ax},${L.ay} ${colX - 18},${L.y} ${colX - 6},${L.y}`, fill:"none", class:"lead"}, svg);
+    el("circle", {cx:L.ax, cy:L.ay, r:2.5, fill:"var(--muted)"}, svg);
+    const t = el("text", {x:colX, y:L.y + 4.5, class: (L.m.hi ? "hi" : "") }, svg);
+    t.textContent = L.m.name + "  ";
+    const p = el("tspan", {class:"p"}, t);
+    p.textContent = paramsText(L.m);
+    labelEls.set(L.m, t);
+  }
+  setHover(null);
+}
+
+// 悬停只动这一层，不重画立方体，免得 mouseenter / mouseleave 来回触发
+let overlay = null, scale = null;
+const labelEls = new Map();
+function setHover(m){
+  hover = m;
+  for (const [k, t] of labelEls) t.style.fill = k === m ? "var(--accent)" : "";
+  overlay.innerHTML = "";
+  if (m){
+    const s = scale.side(m);
+    el("polygon", {points:pts(outline(s)), fill:"none", stroke:"var(--accent)", "stroke-width":2.5, "stroke-linejoin":"round"}, overlay);
+    if (m.active){
+      const f = faces(SMAX * Math.cbrt(m.active / scale.maxP));
+      for (const k of ["top", "left", "right"])
+        el("polygon", {points:pts(f[k]), fill:"none", stroke:"var(--accent)", "stroke-width":1.5, "stroke-dasharray":"4 3"}, overlay);
+    }
+  }
+  renderInfo(DATA.filter(x => selected.has(x.name)));
+}
+
+// ---- 下面的数字 ----
+function renderInfo(rows){
+  const info = document.getElementById("info");
+  if (!rows.length){ info.innerHTML = ""; return; }
+  const small = rows[0], big = hover || rows[rows.length - 1];
+  const r = big.params / small.params;
+  const stat = (k, v) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`;
+  let html = stat(hover ? "当前" : "最大", `${big.name} <small>${paramsText(big)}</small>`) +
+             stat("最小", `${small.name} <small>${fmtParams(small.params)}</small>`);
+  if (big !== small){
+    html += stat(`能装下几个${small.name}`, `${times(r)} <small>个（体积之比）</small>`) +
+            stat("边长之比", `${times(Math.cbrt(r))} <small>倍（图上看到的）</small>`);
+  }
+  if (big.active)
+    html += stat("每个词元用到", `${fmtParams(big.active)} <small>占 ${(big.active / big.params * 100).toFixed(1)}%</small>`);
+  info.innerHTML = html;
+}
+
+// ---- 选择 ----
+function renderPresets(){
+  const box = document.getElementById("presets");
+  box.innerHTML = "";
+  for (const p of PRESETS){
+    const b = document.createElement("button");
+    const same = p.names.length === selected.size && p.names.every(n => selected.has(n));
+    b.className = "mini" + (same ? " on" : "");
+    b.textContent = p.label;
+    b.onclick = () => { selected = new Set(p.names); update(); };
+    box.append(b);
+  }
+  const clear = document.createElement("button");
+  clear.className = "mini";
+  clear.textContent = "清空";
+  clear.onclick = () => { selected = new Set(); update(); };
+  box.append(clear);
+}
+function renderChips(){
+  const box = document.getElementById("chips");
+  box.innerHTML = "";
+  for (const m of DATA){
+    const b = document.createElement("button");
+    b.className = "mini" + (selected.has(m.name) ? " on" : "");
+    b.innerHTML = `${m.name}<small>${paramsText(m)}</small>`;
+    b.onclick = () => { selected.has(m.name) ? selected.delete(m.name) : selected.add(m.name); update(); };
+    box.append(b);
+  }
+}
+function update(){ hover = null; renderPresets(); renderChips(); draw(); }
+dark.addEventListener("change", draw);
+update();
+</script>
+</body>
+</html>
