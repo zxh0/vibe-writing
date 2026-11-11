@@ -1,0 +1,14 @@
+# 语料、训练记录、模型权重、基准张量：都很大，或者能重新生成，不入库
+data/
+runs/
+models/
+reference/
+
+*.parquet
+*.bin
+*.pt
+*.safetensors
+
+.venv/
+.pytest_cache/
+__pycache__/

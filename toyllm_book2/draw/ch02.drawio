@@ -1,0 +1,76 @@
+<mxfile host="65bd71144e">
+    <diagram id="pipeline" name="pipeline">
+        <mxGraphModel dx="1366" dy="1015" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="3" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=21;" value="Common Crawl" vertex="1">
+                    <mxGeometry height="70" width="110" x="20" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="URL Filter" vertex="1">
+                    <mxGeometry height="60" width="110" x="180" y="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="Text Extraction" vertex="1">
+                    <mxGeometry height="60" width="110" x="320" y="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="Language ID" vertex="1">
+                    <mxGeometry height="60" width="110" x="460" y="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="Heuristic Filters" vertex="1">
+                    <mxGeometry height="60" width="110" x="600" y="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="Dedup" vertex="1">
+                    <mxGeometry height="60" width="110" x="740" y="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="PII Removal" vertex="1">
+                    <mxGeometry height="60" width="110" x="880" y="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;verticalAlign=bottom;spacingBottom=4;" value="FineWeb Pipeline" vertex="1">
+                    <mxGeometry height="130" width="850" x="160" y="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=21;" value="FineWeb" vertex="1">
+                    <mxGeometry height="70" width="110" x="1040" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" edge="1" parent="1" source="3" style="edgeStyle=none;html=1;" target="4" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" edge="1" parent="1" source="4" style="edgeStyle=none;html=1;" target="5" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" edge="1" parent="1" source="5" style="edgeStyle=none;html=1;" target="6" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" edge="1" parent="1" source="6" style="edgeStyle=none;html=1;" target="7" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" edge="1" parent="1" source="7" style="edgeStyle=none;html=1;" target="8" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" edge="1" parent="1" source="8" style="edgeStyle=none;html=1;" target="9" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" edge="1" parent="1" source="9" style="edgeStyle=none;html=1;" target="11" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B3FF66;" value="Edu Classifier" vertex="1">
+                    <mxGeometry height="60" width="110" x="1040" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=21;" value="FineWeb-Edu" vertex="1">
+                    <mxGeometry height="70" width="110" x="880" y="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" edge="1" parent="1" source="11" style="edgeStyle=none;html=1;" target="19" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" edge="1" parent="1" source="19" style="edgeStyle=none;html=1;" target="20" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;" value="Llama-3-70B&lt;br&gt;scores 460K pages" vertex="1">
+                    <mxGeometry height="60" width="130" x="1220" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" edge="1" parent="1" source="23" style="edgeStyle=none;html=1;dashed=1;" target="19" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

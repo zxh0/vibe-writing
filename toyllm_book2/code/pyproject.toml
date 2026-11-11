@@ -1,0 +1,29 @@
+[project]
+name = "toy-llm-train"
+version = "0.1.0"
+description = "Train a toy LLM from scratch in PyTorch, step by step, and run it on the engine from the first book"
+readme = "README.md"
+requires-python = ">=3.12"
+# 作者的Intel Mac上，PyTorch最高只有2.2.2（2.3起没有macOS x86_64的安装包），
+# numpy也只能用1.x。代码只用torch 2.2就有的API，Colab上的新版torch照样能跑。
+# pyarrow只用来读FineWeb-Edu的parquet文件；21起要求numpy 2，所以钉在20。
+# regex是第三章手写BPE预切分要用的：标准库的re不认\p{L}这样的Unicode类别。
+# tokenizers是HuggingFace的分词器库，第三章拿它训练正式用的分词器、给全部语料分词。
+# safetensors读写模型权重的文件格式，第四章起存盘、读SmolLM2都用它。
+dependencies = [
+    "numpy<2",
+    "pyarrow<21",
+    "regex",
+    "safetensors>=0.4",
+    "tokenizers",
+    "torch<2.3",
+]
+
+# transformers只用来核对：第四章拿它算SmolLM2的loss和梯度，和我们的模型比。
+# 只能用4.x：5.x要求torch>=2.5，Intel Mac上装不了。它会把tokenizers降到0.22，
+# 第三章的结果不受影响（验证集重新分词，和val.bin逐字节相同）。
+[dependency-groups]
+dev = [
+    "pytest",
+    "transformers<5",
+]
