@@ -2,6 +2,9 @@
 .venv/
 __pycache__/
 
+# 各本书的全书单文件，由各自的 merge.py 生成，本地看看就好
+Book.md
+
 # VitePress 站点：docs/ 下只有 index.md、各区的落地页和 .vitepress/ 里的配置和主题是手写的，
 # docs/<仓库目录>/、docs/public/ 和 sidebar.json 都是 scripts/build-site.mjs 从
 # llm_notes/ 和各本书生成的产物
