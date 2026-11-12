@@ -236,6 +236,10 @@ class Model:
         是下三角；带着缓存又一次喂好几个时，得把掩码明着传进去。
         它要的掩码是反的：True表示“能看”，第六章的future里True表示“不能看”。
         """
+        # 融合的内核只收四维的(批次, 头, T, 64)。三维的不报错，只是悄悄退回
+        # 最朴素的那一套，T×L的表照样整张建出来。一条序列时补上批次那一维。
+        if q.dim() == 3:
+            return self.attend_sdpa(q[None], k[None], v[None], start)[0]
         T, L = q.shape[-2], k.shape[-2]
         if T == 1 or start == 0:
             return F.scaled_dot_product_attention(q, k, v, is_causal=T > 1)

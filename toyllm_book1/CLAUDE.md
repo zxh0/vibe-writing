@@ -19,7 +19,7 @@ Three standing conventions from the preface that the manuscript must honour:
 | Path | Role |
 |------|------|
 | `chapters/_front.md` | 扉页 — title, English subtitle, version stamp, cover image |
-| `chapters/todo.md` | scratch list of open decisions; **not part of the book**, to be deleted. `merge.py` skips it |
+| `TODO.md` | scratch list of open decisions; **not part of the book**, to be deleted. `merge.py` skips it |
 | `chapters/_preface.md` | 前言 — motivation, target reader, reading conventions, tech choices, TOC. Also absorbed the old `ch00.md` (准备). Sorts before `ch01` thanks to the `_` prefix. |
 | `chapters/chNN_slug.md` | manuscript source, one file per chapter, `chNN` matches 第N章. Fourteen chapters, `ch01`–`ch14`. |
 | `chapters/afterword.md`, `chapters/x_X_slug.md` | 后记 (not written yet) and the appendices (`X` = one lowercase letter: `x_a_matrix` 矩阵公式, `x_b_formulas` 引擎公式汇总, `x_c_papers` 论文列表, `x_d_glossary` 术语表; drafts, todo G19–G22). The `x_` prefix makes the appendices sort after the chapters by filename too; `merge.py` still orders explicitly, because `afterword` sorts before `ch`. `check-prose`'s 论文引用 rule counts the afterword as part of the book order and skips appendices, since a paper list repeats every arXiv number by design |

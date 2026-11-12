@@ -12,7 +12,8 @@
 
 | # | 事情 | 在哪 |
 |---|---|---|
-| G1 | **第十四章的CUDA数字，一共5处**`<!-- TODO CUDA -->`：在Colab或云GPU上依次跑`check_device.py`、`speed.py`、`batch.py --dtype bfloat16 --max-batch 64`、`flash.py --max-t 16384`（`--device cuda`），把表补进正文；峰值显存只有CUDA量得到。环境：Linux+CUDA上torch不受`<2.3`限制，顺便定下A5/A6的环境说明放哪（C23） | `ch14_gpu.md`第107、159、201、251、298行附近 |
+| G1 | **第十四章的CUDA数字，一共5处**`<!-- TODO CUDA -->`：用`code/book/ch14/colab.ipynb`在Colab上一次跑完（2026-11-12写好，未在Colab上实跑过；也可手动依次跑`check_device.py`、`speed.py`、`batch.py --dtype bfloat16 --max-batch 64`、`flash.py --max-t 16384`，`--device cuda`），把表补进正文；峰值显存只有CUDA量得到。环境：Linux+CUDA上torch不受`<2.3`限制，顺便定下A5/A6的环境说明放哪（C23） | `ch14_gpu.md`第107、159、201、251、298行附近 |
+| G1a | **`attend_sdpa`的三维输入悄悄走了最慢的内核（2026-11-12已修）**：`F.scaled_dot_product_attention()`的融合内核只收四维`(B, 头, T, 64)`，一条序列时传的是`(9, T, 64)`，PyTorch不报错，退回math实现，T×T的表照样建出来；CUDA上峰值显存也会随T平方增长，和正文说的正相反。现在补一维批次再调用，CPU上贪婪100个仍和manual相同、logits相对误差1.4e-6。**正文里sdpa的数字都是修之前量的，要重跑替换**：`flash.py`那张CPU表（T=4096时sdpa由534.3ms变成约105ms，“快了大约三成”要改，K7随之有解）、MPS那句241.2/186.3毫秒、`speed.py`和`check_device.py`里的sdpa行 | `ch14_gpu.md`“速度”“FlashAttention”两节 |
 | G2 | **后记**：前言承诺了“然后再去学训练”那条路，还有量化、vLLM、llama.cpp；GPU和批处理已经挪进第十四章，不用再写（C7、F19、A1） | 新文件 |
 | G3 | **致谢**（C8） | `_preface.md` |
 | G19 | **附录A：矩阵相关公式**（2026-10-31，作者定） | `x_a_matrix.md` |

@@ -21,7 +21,11 @@ uv run python book/ch14/batch.py                          # 批处理的吞吐�
 uv run python book/ch14/flash.py                          # 手写注意力 vs F.scaled_dot_product_attention
 ```
 
-在CUDA上：
+在CUDA上，最省事的是[在Colab里打开`colab.ipynb`](https://colab.research.google.com/github/zxh0/vibe-writing/blob/main/toyllm_book1/code/book/ch14/colab.ipynb)，
+选GPU运行时后全部运行：它从vibe-writing仓库克隆这一章的代码、下载权重，把下面四个脚本
+（两个模型、两种精度）跑一遍，输出打包成zip。T4没有原生BF16，速度和批处理改用FP16；T4（sm75）上
+`F.scaled_dot_product_attention()`走的是memory-efficient内核而不是FlashAttention，后者要sm80及以上，
+而且只收FP16/BF16。手动跑的话：
 
 ```bash
 uv run python book/ch14/check_device.py --device cuda
@@ -42,6 +46,7 @@ uv run python book/ch14/flash.py --device cuda --max-t 16384
 | `speed.py` | **这一章新增**。同步、热身之后量prefill和decode |
 | `batch.py` | **这一章新增**。B条序列一起生成：正确性和吞吐量 |
 | `flash.py` | **这一章新增**。只拿注意力那一段，比耗时和峰值显存（峰值只有CUDA量得到） |
+| `colab.ipynb` | 在Colab的GPU上一次跑完上面四个脚本，补正文里的CUDA数字 |
 | `config.py`、`sampler.py`、`detokenizer.py` | 第十三章、第十章那几个，**一字未改** |
 | `check_forward.py`、`baseline.py` | 第十三章那两个，只改了文件头 |
 
