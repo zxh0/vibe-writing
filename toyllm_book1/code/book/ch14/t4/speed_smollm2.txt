@@ -1,0 +1,9 @@
+$ python book/ch14/speed.py --device cuda
+模型 SmolLM2-135M，在128个词元上
+
+  设备    精度        注意力          prefill        每个      decode每个      每秒词元
+  cpu   float32   manual       368.1ms    2.88ms        68.8ms      14.5
+  cuda  float32   manual        33.2ms    0.26ms        29.9ms      33.4
+  cuda  float32   sdpa          25.4ms    0.20ms        25.2ms      39.6
+  cuda  bfloat16  sdpa          42.3ms    0.33ms        36.3ms      27.6
+  cuda  float16   sdpa          28.3ms    0.22ms        27.7ms      36.1

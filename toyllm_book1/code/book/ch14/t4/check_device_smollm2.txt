@@ -1,0 +1,9 @@
+$ python book/ch14/check_device.py --device cuda
+模型 SmolLM2-135M，基准是CPU、float32、manual，贪婪生成100个
+
+  设备    精度        注意力             逐层最大相对误差  argmax          贪婪生成
+  cuda  float32   manual           1.0e-05      相同          全部相同
+  cuda  float32   sdpa             1.0e-05      相同          全部相同
+  cuda  bfloat16  sdpa             1.1e-01      不同       第97个起分叉
+  cuda  float16   sdpa             1.3e-02      相同          全部相同
+  cpu   bfloat16  manual           1.1e-01      不同       第97个起分叉

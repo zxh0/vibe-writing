@@ -1,0 +1,10 @@
+$ python book/ch14/flash.py --device cuda --dtype float16 --max-t 16384
+一层注意力，9个头，每头64维，cuda，float16
+
+       T       分数表       手写 耗时        峰值     sdpa 耗时        峰值
+     512       5MB       0.9ms      19MB       0.2ms       1MB
+    1024      19MB       1.5ms      40MB       0.4ms       2MB
+    2048      75MB       5.6ms     158MB       1.2ms       2MB
+    4096     302MB      26.0ms     625MB       3.2ms       5MB
+    8192    1208MB      77.3ms    2492MB       7.5ms       9MB
+   16384    4832MB     557.2ms    9951MB      27.0ms      19MB

@@ -1,0 +1,9 @@
+$ python book/ch14/check_device.py --device cuda --model Qwen3-0.6B-Base --n 40
+模型 Qwen3-0.6B-Base，基准是CPU、float32、manual，贪婪生成40个
+
+  设备    精度        注意力             逐层最大相对误差  argmax          贪婪生成
+  cuda  float32   manual           3.0e-06      相同          全部相同
+  cuda  float32   sdpa             3.0e-06      相同          全部相同
+  cuda  bfloat16  sdpa             1.4e-01      相同          全部相同
+  cuda  float16   sdpa             2.7e-02      相同          全部相同
+  cpu   bfloat16  manual           1.4e-01      相同          全部相同

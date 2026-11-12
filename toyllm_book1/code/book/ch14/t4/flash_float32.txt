@@ -1,0 +1,12 @@
+$ python book/ch14/flash.py --device cuda --dtype float32 --max-t 16384
+一层注意力，9个头，每头64维，cuda，float32
+
+       T       分数表       手写 耗时        峰值     sdpa 耗时        峰值
+     512       9MB       1.1ms      29MB       0.5ms       1MB
+    1024      38MB       2.8ms      79MB       1.3ms       2MB
+    2048     151MB      11.3ms     311MB       4.2ms       5MB
+    4096     604MB      40.5ms    1234MB       9.6ms       9MB
+    8192    2416MB     159.3ms    4918MB      31.7ms      19MB
+[W1112 14:31:20.647115420 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 9663676416 bytes (free: 4884070400, total: 15637086208).
+[W1112 14:31:20.647579652 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 9663676416 bytes (free: 4884070400, total: 15637086208).
+   16384    9664MB         放不下               127.6ms      38MB

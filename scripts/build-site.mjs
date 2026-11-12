@@ -53,6 +53,7 @@ const BOOKS = [
       'ch11_kvcache.md',
       'ch12_flash_attn.md',
       'ch13_qwen3.md',
+      'ch14_gpu.md',
     ],
     tools: {
       'safetensors-viewer': 'safetensors 参数布局查看器',
