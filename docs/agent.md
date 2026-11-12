@@ -7,6 +7,8 @@
 [toy_agent_book/](https://github.com/zxh0/vibe-writing/tree/main/toy_agent_book) 下。
 :::
 
+![自己动手写智能体](/agent/cover.png)
+
 ## 这本书想做什么
 
 平时用 Coding Agent 很多，大致也知道它是怎么工作的：一个循环，模型说要调什么工具，程序就去调，结果再交回给模型。但「大致知道」和「亲手写过」差得很远。就像 toy 系列的前两本：知道 Transformer 长什么样，不等于能写出一个推理引擎。所以这本书还是同一个办法，自己从零写一个玩具版的 Coding Agent，一点一点来，每一步都看得见、跑得通。

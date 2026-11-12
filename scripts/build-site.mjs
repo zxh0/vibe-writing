@@ -92,6 +92,7 @@ const BOOKS = [
     subtitle: 'Build a Toy Coding Agent from Scratch',
     status: '写作计划',
     blurb: '从零写一个玩具版的 Coding Agent：一个循环，加上工具调用、权限、上下文、检索、MCP、Skills……每加一样都能跑，每章结尾对照真实的 Agent。',
+    cover: 'aigc/front.png',
     published: [],
   },
   {
@@ -118,6 +119,7 @@ const BOOKS = [
     subtitle: 'Design a TPU from First Principles',
     status: '写作计划',
     blurb: '《GPU学习笔记》的另一半：假装我们是一个从零开始的芯片团队，要做一颗专门算神经网络的芯片，一步一步做设计决策，把 TPU 的每个部件都重新发明一遍。',
+    cover: 'aigc/front.png',
     published: [],
   },
 ]

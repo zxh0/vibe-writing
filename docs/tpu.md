@@ -7,6 +7,8 @@
 [tpu_book/](https://github.com/zxh0/vibe-writing/tree/main/tpu_book) 下。
 :::
 
+![从零设计TPU](/tpu/cover.png)
+
 ## 这本书想做什么
 
 整本书假装我们是一个从零开始的芯片团队：手上只有一个目标，**做一颗专门算神经网络的芯片**，然后一步一步做设计决策，直到把 TPU 的每个部件都「重新发明」一遍。
