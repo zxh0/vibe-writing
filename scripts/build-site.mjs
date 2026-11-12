@@ -16,6 +16,7 @@ const publicDir = path.join(docsDir, 'public')
 // 再用 VitePress 的 rewrites 映射到干净的地址（/ann/ch01-neuron）。这样 editLink 拿到的
 // filePath 就是仓库里的源文件路径，「在 GitHub 上纠错」能直接对回去。
 //
+// 表的顺序就是首页卡片和顶栏下拉的顺序。
 // 书是「写完一章发一章」：往 published 里加一行文件名，那一章就上站；
 // 没列进来的章节只在这本书的目录页里露个标题，正文继续待在仓库里。
 
@@ -30,20 +31,6 @@ const NOTES = {
 }
 
 const BOOKS = [
-  {
-    dir: 'ann_book',
-    route: 'ann',
-    title: '人人能懂的人工神经网络',
-    subtitle: 'ANN for the Rest of Us',
-    status: '连载中',
-    blurb: '一本入门书：只用中学数学，从最简单的人工神经元入手，循序渐进搭起完整的知识体系，一直讲到 Transformer 和大语言模型。',
-    cover: 'aigc/ann.png',
-    // 分章文件名是 NN_slug.md，章标题写成 ##（扉页的 # 是书名），单独成页时提一级
-    chapterRe: /^\d+_(.+)\.md$/,
-    skipTitle: '人人能懂的人工神经网络',
-    promote: true,
-    published: ['02_ch00_basics.md', '03_ch01_neuron.md'],
-  },
   {
     dir: 'toyllm_book1',
     route: 'llm-engine',
@@ -121,6 +108,20 @@ const BOOKS = [
     blurb: '《GPU学习笔记》的另一半：假装我们是一个从零开始的芯片团队，要做一颗专门算神经网络的芯片，一步一步做设计决策，把 TPU 的每个部件都重新发明一遍。',
     cover: 'aigc/front.png',
     published: [],
+  },
+  {
+    dir: 'ann_book',
+    route: 'ann',
+    title: '人人能懂的人工神经网络',
+    subtitle: 'ANN for the Rest of Us',
+    status: '连载中',
+    blurb: '一本入门书：只用中学数学，从最简单的人工神经元入手，循序渐进搭起完整的知识体系，一直讲到 Transformer 和大语言模型。',
+    cover: 'aigc/ann.png',
+    // 分章文件名是 NN_slug.md，章标题写成 ##（扉页的 # 是书名），单独成页时提一级
+    chapterRe: /^\d+_(.+)\.md$/,
+    skipTitle: '人人能懂的人工神经网络',
+    promote: true,
+    published: ['02_ch00_basics.md', '03_ch01_neuron.md'],
   },
 ]
 
