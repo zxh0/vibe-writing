@@ -31,7 +31,7 @@ There is no `merge.py` / `Book.md` here yet.
 
 ## Chapter status
 
-`ch01`–`ch04` (概览, 数据, 分词, 模型) are drafted with code in `code/book/ch01`–`ch04`. `ch05`–`ch12` (训练循环, 预训练, SFT, DPO, RL, 蒸馏, LoRA, 规模) are still one-paragraph stubs. `design.md`'s 目录结构 also plans `poc/`, `colab/`, `runs/` and `reference/`; none exist yet.
+`ch01`–`ch05` (概览, 数据, 分词, 模型, 训练循环) are drafted with code in `code/book/ch01`–`ch05`; ch05 runs entirely on the Mac (300-step runs on MPS). `ch06`–`ch12` (预训练, SFT, DPO, RL, 蒸馏, LoRA, 规模) are still one-paragraph stubs. `design.md`'s 目录结构 also plans `poc/`, `colab/`, `runs/` and `reference/`; none exist yet.
 
 ## Conventions specific to this book
 
