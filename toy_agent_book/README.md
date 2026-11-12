@@ -14,7 +14,7 @@ Build a Toy Coding Agent from Scratch
 
 这个系列的第一本《自己动手写LLM推理引擎》讲模型怎么跑，第二本《自己动手训练LLM》讲模型怎么训。这一本讲模型怎么用：给模型配上工具和循环，让它替人干活。三本书合起来，正好是一个模型从“训出来”到“跑起来”再到“干起活来”的全过程。
 
-这本书不要求读过前两本。读过的话，第二章的对话模板和采样参数、第三章流式输出里的prefill和decode、第四章工具调用的token细节、第十二章的prompt caching会读得更有体会。
+这本书不要求读过前两本。读过的话，第二章的对话模板和采样参数、第三章流式输出里的prefill和decode、第四章工具调用的token细节、第十三章的prompt caching会读得更有体会。
 
 ## 写作原则
 
@@ -32,11 +32,11 @@ Build a Toy Coding Agent from Scratch
 
 * **语言：** Python，和前两本一致，uv管理。
 * **模型接口：** 倾向于用OpenAI兼容的Chat Completions协议，同一份代码既能连云端的大模型，也能连本地的Qwen3（llama.cpp、Ollama、vLLM都提供这个接口）。要不要同时支持Anthropic的Messages接口，待定。
-* **模型：** 日常开发和跑题集用云端模型，Agent的效果才有保证；讲工具调用的token细节时，用本地的小模型（Qwen3），因为只有本地模型能看到完整的对话模板和原始输出。作者的机器是2019款Intel MacBook Pro，本地跑大一点的模型会很慢，需要实测。
+* **模型：** 日常开发和跑题集用云端模型，Agent的效果才有保证。云端模型已定为DeepSeek V4 Flash，走DeepSeek API的OpenAI兼容接口（`https://api.deepseek.com`），模型名待用`/models`接口确认。讲工具调用的token细节时，用本地的小模型（Qwen3），因为只有本地模型能看到完整的对话模板和原始输出。作者的机器是2019款Intel MacBook Pro，本地跑大一点的模型会很慢，需要实测。
 * **代码组织：** 沿用第一本的做法，`code/book/chNN/`每章一个自包含的目录，每章在上一章的基础上改。
 
 ## 文档索引
 
 * [research.md](research.md)：同类资料调研，以及本书的定位
-* [outline.md](outline.md)：大纲，分五部分共21章
+* [outline.md](outline.md)：大纲，分五部分共22章
 * [chapters/](chapters/)：各章正文，每章一个文件；目前都还只是框子，只有标题和一两句要点
