@@ -275,11 +275,12 @@ FlashAttention也不是白拿的。为了不存那张大表，它要多做一些
   o = 36.8806
 
 切成两块，每块2个：
-  块[1.0, 3.0]   最大值 -inf → 3.0   修正系数 0.0000   分母 1.1353   分子 21.3534
-  块[2.0, 5.0]   最大值 3.0 → 5.0   修正系数 0.1353   分母 1.2034   分子 44.3835
+  块[1.0, 3.0]  最大值 -inf → 3.0  修正系数 0.0000  分母 1.1353  分子 21.3534
+  块[2.0, 5.0]  最大值 3.0 → 5.0  修正系数 0.1353  分母 1.2034  分子 44.3835
   o = 分子 / 分母 = 36.8806
 
-1000个随机数，块大小7：torch.softmax -0.071287419985   在线 -0.071287419985   相对误差 1.9e-16
+1000个随机数，块大小7：
+  torch.softmax -0.071287419985   在线 -0.071287419985   相对误差 1.9e-16
 ```
 
 第一块进来之前，手里的最大值是负无穷，所以第一块的修正系数是0，反正手里本来也什么都没有。第二块进来，最大值从3变成了5，手里的分母和分子都乘上了 $e^{3-5} \approx 0.1353$ ，再加上第二块自己的那一份，最后得到的36.8806，和一次看完整行算出来的一样。最后一行换成了1000个随机数，每块7个，相对误差只有1.9e-16，这已经是64位浮点数本身的舍入误差了。在线Softmax不是近似，这里看得很清楚。
@@ -312,8 +313,8 @@ def flash_attention(q, k, v, block=BLOCK, stats=None):
                     stats["skipped"] = stats.get("skipped", 0) + 1
                 continue
             ke = min(ks + block, T)
-            s = qi @ k[:, ks:ke].transpose(-1, -2) * scale  # (H, Bq, Bk)，只有一小块
-            if ke > qs:                                # 压在对角线上：块里也有未来
+            s = qi @ k[:, ks:ke].transpose(-1, -2) * scale  # (H, Bq, Bk)
+            if ke > qs:                                # 对角线上的块，有未来
                 rows = torch.arange(qs, qe)[:, None]
                 cols = torch.arange(ks, ke)[None, :]
                 s = s.masked_fill(cols > rows, float("-inf"))
@@ -360,7 +361,8 @@ def flash_attention(q, k, v, block=BLOCK, stats=None):
 
 ```
 二  30层的注意力都换成分块版，逐层最大相对误差 9.5e-07
-    贪婪生成  'Once upon a time, there was a little girl named Lily. She lived in a big house with her family, but'
+    贪婪生成  'Once upon a time, there was a little girl named Lily. She'
+              ' lived in a big house with her family, but'
     和原来的一字不差
 ```
 

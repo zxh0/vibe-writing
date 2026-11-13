@@ -17,7 +17,9 @@
     uv run python book/ch12/flash_attn.py
 """
 
+import re
 import time
+import unicodedata
 
 import torch
 
@@ -25,6 +27,28 @@ from engine import Engine
 from kv_cache import NO_CACHE
 
 BLOCK = 128  # 每块多少行
+
+
+def width(s):
+    """终端上占几列：汉字占2列，其余占1列。"""
+    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in s)
+
+
+def fold_text(head, text, cols=78):
+    """把repr(text)接在head后面印出来，太长就断开，一段一行。
+
+    尽量在空格前断；一个词自己就放不下时，只好从词中间断。
+    """
+    pad = " " * width(head)
+    pieces, cur = [], ""
+    for w in re.findall(r"\s*\S+|\s+$", text):
+        for c in w if width(pad + repr(w)) > cols else [w]:
+            if cur and width(pad + repr(cur + c)) > cols:
+                pieces.append(cur)
+                cur = ""
+            cur += c
+    pieces.append(cur)
+    return "\n".join((pad if k else head) + repr(p) for k, p in enumerate(pieces))
 
 
 def flash_attention(q, k, v, block=BLOCK, stats=None):
@@ -48,8 +72,8 @@ def flash_attention(q, k, v, block=BLOCK, stats=None):
                     stats["skipped"] = stats.get("skipped", 0) + 1
                 continue
             ke = min(ks + block, T)
-            s = qi @ k[:, ks:ke].transpose(-1, -2) * scale  # (H, Bq, Bk)，只有一小块
-            if ke > qs:                                # 压在对角线上：块里也有未来
+            s = qi @ k[:, ks:ke].transpose(-1, -2) * scale  # (H, Bq, Bk)
+            if ke > qs:                                # 对角线上的块，有未来
                 rows = torch.arange(qs, qe)[:, None]
                 cols = torch.arange(ks, ke)[None, :]
                 s = s.masked_fill(cols > rows, float("-inf"))
@@ -126,7 +150,7 @@ def main():
         out = engine.generate(ids, cache=False)        # 不带缓存：每圈整串重算
     worst = max(rel(s, r) for s, r in zip(states, ref_states))
     print(f"\n二  30层的注意力都换成分块版，逐层最大相对误差 {worst:.1e}")
-    print(f"    贪婪生成  {engine.tok.decode(out)!r}")
+    print(fold_text("    贪婪生成  ", engine.tok.decode(out)))
     print(f"    和原来的{'一字不差' if out == ref_out else '不同'}")
 
     # ---- 三：内存 -------------------------------------------------------------

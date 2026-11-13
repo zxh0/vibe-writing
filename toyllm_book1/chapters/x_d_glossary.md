@@ -68,7 +68,7 @@
 | SiLU | Sigmoid Linear Unit | $x \cdot \sigma(x)$ ，也叫Swish | 第八章 |
 | 门控线性单元 | Gated Linear Unit，简称GLU | 一路投影当门，调节另一路 | 第八章 |
 | SwiGLU* | SwiGLU | 门那一路用SiLU的GLU，SmolLM2的FFN | 第八章 |
-| 注意力汇聚点 | Attention Sink | 大量注意力落在序列开头的现象 | 第八章 |
+| Attention Sink | Attention Sink | 大量注意力落在序列开头的现象 | 第八章 |
 | 混合专家 | Mixture of Experts，简称MoE | 每个词元只挑几个小FFN来算 | 第八章 |
 | 专家 | Expert | MoE里的每个小FFN | 第八章 |
 | 路由器 | Router | 给每个词元挑专家 | 第八章 |

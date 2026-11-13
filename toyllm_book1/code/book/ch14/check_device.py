@@ -17,6 +17,7 @@ bf16、fp16差得更多，贪婪生成迟早会分叉，问题只是什么时候
 """
 
 import argparse
+import unicodedata
 
 import torch
 
@@ -24,6 +25,19 @@ from engine import DTYPES, Engine, pick_device
 from weights import MODEL_DIR, MODELS
 
 PROMPT = "Once upon a time"
+
+
+def width(s):
+    """终端上占几列：汉字占2列，其余占1列。str的对齐按字符数算，中文表头会错位。"""
+    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in s)
+
+
+def ljust(s, n):
+    return s + " " * (n - width(s))
+
+
+def rjust(s, n):
+    return " " * (n - width(s)) + s
 
 
 def hidden_states(model, ids):
@@ -66,8 +80,8 @@ def main():
               (device, "bfloat16", "sdpa"), (device, "float16", "sdpa"),
               ("cpu", "bfloat16", "manual")]
     print(f"模型 {args.model}，基准是CPU、float32、manual，贪婪生成{args.n}个\n")
-    print(f"  {'设备':<6}{'精度':<10}{'注意力':<8}{'逐层最大相对误差':>16}{'argmax':>8}"
-          f"{'贪婪生成':>14}")
+    print("  " + ljust("设备", 6) + ljust("精度", 10) + ljust("注意力", 8)
+          + rjust("逐层最大相对误差", 16) + rjust("argmax", 8) + rjust("贪婪生成", 14))
     for dev, dt, attn in combos:
         try:
             eng = Engine(MODELS / args.model, dev, DTYPES[dt], attn)

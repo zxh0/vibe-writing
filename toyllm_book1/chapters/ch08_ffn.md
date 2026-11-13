@@ -309,7 +309,8 @@ ID     [6403, 1980, 253, 655]
 ...
   第24个词元   ID   564   'Ġbut'
 ...
-输出   'Once upon a time, there was a little girl named Lily. She lived in a big house with her family, but'
+输出   'Once upon a time, there was a little girl named Lily. She lived in a'
+       ' big house with her family, but'
 
 20个新词元里有18个互不相同。
 ```
@@ -332,7 +333,7 @@ ID     [6403, 1980, 253, 655]
 
 30层走完之后，4个位置两两之间的余弦，也从第七章的0.992以上降到了0.493到0.787，各个位置不再被抹成一个样。出口处排第一的是逗号，按余弦它也排第一；而第六章那个`ppo`，是靠模长大才挤到第一的。这就是`ppo`消失的原因。
 
-第15层那个0.935也值得一提：最后一个词元把93.5%的注意力给了第一个词元`Once`，这并不是因为这个词有多重要。很多模型里，大量注意力都会落在序列开头，不管那里写的是什么。2023年的论文《Efficient Streaming Language Models with Attention Sinks》（arXiv:2309.17453）管它叫**注意力汇聚点**（Attention Sink）。一种常见的解释是，Softmax要求权重加起来等于1，一个头没什么可看的时候，也得把权重分出去，而第一个词元谁都看得见，就成了堆放权重的地方。
+第15层那个0.935也值得一提：最后一个词元把93.5%的注意力给了第一个词元`Once`，这并不是因为这个词有多重要。很多模型里，大量注意力都会落在序列开头，不管那里写的是什么。2023年的论文《Efficient Streaming Language Models with Attention Sinks》（arXiv:2309.17453）管它叫**Attention Sink**。一种常见的解释是，Softmax要求权重加起来等于1，一个头没什么可看的时候，也得把权重分出去，而第一个词元谁都看得见，就成了堆放权重的地方。
 
 另外，`model.py`打印的模长，第10层后144.387，第30层后635.043，出口处40.688，也和第五章量出来的真模型一致。要是把FFN拿掉，换回第七章的引擎，第30层后会涨到1271.2，大了一倍。
 
@@ -359,8 +360,10 @@ ID     [6403, 1980, 253, 655]
 三  argmax   我们[346, 253, 655, 28]   第一章[346, 253, 655, 28]   相同
 
 四  贪婪解码
-    我们     'Once upon a time, there was a little girl named Lily. She lived in a big house with her family, but'
-    第一章   'Once upon a time, there was a little girl named Lily. She lived in a big house with her family, but'
+    我们     'Once upon a time, there was a little girl named Lily. She lived'
+             ' in a big house with her family, but'
+    第一章   'Once upon a time, there was a little girl named Lily. She lived'
+             ' in a big house with her family, but'
     ID相同，文字相同
 ```
 
@@ -393,7 +396,7 @@ G(\mathbf{x}) &= \mathrm{softmax}(\mathrm{TopK}(\mathbf{x} \times \mathbf{W}_g))
 \end{aligned}
 $$
 
-其中 $n$ 是专家的数量，第二个式子就是路由器。输入先乘上一个很小的矩阵 $\mathbf{W}_g$ ，得到 $n$ 个分数，每个专家一个；然后TopK只保留最高的 $K$ 个，其余的都换成负无穷；最后过一遍Softmax，被换成负无穷的那些，权重正好是0。这一步你应该很眼熟，第六章的因果掩码就是这么干的。而“只保留最高的 $K$ 个”这个思路，到第十章讲top-k采样时还会再见到。
+其中 $n$ 是专家的数量，第二个式子就是路由器。输入先乘上一个很小的矩阵 $\mathbf{W}_g$ ，得到 $n$ 个分数，每个专家一个；然后TopK只保留最高的 $K$ 个，其余的都换成负无穷；最后过一遍Softmax，被换成负无穷的那些，权重正好是0。这一步你应该很眼熟，第六章的因果掩码就是这么干的。而“只保留最高的 $K$ 个”这个思路，到第十章讲top-k采样时还会再见到。各家模型的路由器细节不太一样，比如DeepSeek-V3就是反过来的：先用Sigmoid给每个专家单独打一个分，挑出最高的 $K$ 个，再把这 $K$ 个分数归一化，让它们加起来等于1。不过“打分、只留 $K$ 个、加权求和”这个骨架是一样的。
 
 这样一来，模型的总参数可以很大，但每个词元真正用到的只有一小部分。下面是两个比较有代表性的MoE模型：
 
@@ -420,7 +423,7 @@ $$
 
 SmolLM2的FFN就是SwiGLU，三个矩阵`gate_proj`、`up_proj`、`down_proj`，形状是`(T, 576) → (T, 1536) → (T, 576)`。1536是576的8/3倍，为的是让三个矩阵的参数和原来两个一样多。算下来，每个Decoder块里FFN的参数正好是注意力的3倍，占了全模型的近六成。至于SwiGLU为什么好，连提出它的论文都不解释。
 
-然后我们写了代码。`Config`补了一个字段，`ffn()`从返回全0换成了四行SwiGLU，`block()`里多传了一个参数。单看FFN，它和`transformers`库里的`LlamaMLP`逐位相同；整条流水线也通过了四级验收：参数量、逐层输出、argmax、贪婪解码。前两章留下的`ppo`之谜也有了答案：缺的是FFN。补上之后，三层的注意力权重全部和真模型对上，第15层还冒出了一个注意力汇聚点。引擎现在是：
+然后我们写了代码。`Config`补了一个字段，`ffn()`从返回全0换成了四行SwiGLU，`block()`里多传了一个参数。单看FFN，它和`transformers`库里的`LlamaMLP`逐位相同；整条流水线也通过了四级验收：参数量、逐层输出、argmax、贪婪解码。前两章留下的`ppo`之谜也有了答案：缺的是FFN。补上之后，三层的注意力权重全部和真模型对上，第15层还冒出了一个Attention Sink。引擎现在是：
 
 ```
 ids → embed → [norm → attn → norm → ffn] × 30 → norm → lm_head → logits

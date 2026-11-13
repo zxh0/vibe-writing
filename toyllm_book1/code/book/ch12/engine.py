@@ -113,7 +113,10 @@ def main():
 
     ids = tok.encode(args.text, add_special_tokens=False).ids  # Tokenizer：文字到ID
     cache = engine.new_cache(not args.no_cache, len(ids) + args.max_new_tokens)
-    print(f"输入     {args.text!r}   {ids}")
+    line = f"输入     {args.text!r}   {ids}"
+    if len(line) > 78:                       # 太长就把ID挪到下一行
+        line = f"输入     {args.text!r}\n         {ids}"
+    print(line)
     print(f"采样器   {sampler!r}")
     print(f"缓存     {cache!r}")
     print(f"最多     {args.max_new_tokens}个新词元，抽到EOS（ID {engine.eos}）就停\n")

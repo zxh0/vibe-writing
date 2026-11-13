@@ -23,12 +23,36 @@
     uv run python book/ch11/check_forward.py
 """
 
+import re
 import torch
+import unicodedata
 
 from engine import Engine
 from weights import MODEL_DIR
 
 BASELINE = MODEL_DIR.parent.parent / "reference" / "baseline.pt"
+
+
+def width(s):
+    """终端上占几列：汉字占2列，其余占1列。"""
+    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in s)
+
+
+def fold_text(head, text, cols=78):
+    """把repr(text)接在head后面印出来，太长就断开，一段一行。
+
+    尽量在空格前断；一个词自己就放不下时，只好从词中间断。
+    """
+    pad = " " * width(head)
+    pieces, cur = [], ""
+    for w in re.findall(r"\s*\S+|\s+$", text):
+        for c in w if width(pad + repr(w)) > cols else [w]:
+            if cur and width(pad + repr(cur + c)) > cols:
+                pieces.append(cur)
+                cur = ""
+            cur += c
+    pieces.append(cur)
+    return "\n".join((pad if k else head) + repr(p) for k, p in enumerate(pieces))
 
 
 def hidden_states(model, ids):
@@ -80,8 +104,8 @@ def main():
     theirs = ref["greedy"][0].tolist()
     text = engine.tok.decode(out)
     print(f"\n四  贪婪解码")
-    print(f"    我们     {text!r}")
-    print(f"    第一章   {ref['greedy_text']!r}")
+    print(fold_text("    我们     ", text))
+    print(fold_text("    第一章   ", ref["greedy_text"]))
     print(f"    ID{'相同' if out == theirs else '不同'}，"
           f"文字{'相同' if text == ref['greedy_text'] else '不同'}")
 

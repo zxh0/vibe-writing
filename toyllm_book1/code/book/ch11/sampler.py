@@ -69,7 +69,7 @@ def apply_top_p(logits, p):
         return logits
     sorted_logits, order = torch.sort(logits)          # 升序
     cumulative = sorted_logits.softmax(-1).cumsum(-1)  # 从最小的累加上去
-    remove = cumulative <= 1 - p                       # 这一段加起来不到1 - p，砍
+    remove = cumulative <= 1 - p                       # 加起来不到1 - p，砍
     remove[..., -1] = False                            # 最大的那个永远留着
     remove = remove.scatter(-1, order, remove)         # 换回词表里的位置
     return logits.masked_fill(remove, FILTER_VALUE)

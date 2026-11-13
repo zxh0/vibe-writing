@@ -190,14 +190,21 @@ $$
 既然每一层只是往主干上加一点东西，那么去掉其中一层，主干还在，后面的层照样能接着往下算。`residual_stream.py`接下来做的就是这件事：每次跳过一层，其余29层照常，转20圈，看看生成的话和完整模型差多少。下面是一部分结果：
 
 ```
-3. 完整模型   'Once upon a time, there was a little girl named Lily. She lived in a big house with her family, but'
+3. 完整模型   'Once upon a time, there was a little girl named Lily. She'
+              ' lived in a big house with her family, but'
    跳过某一层之后，20个新词元里和完整模型相同的个数：
-   跳过第 0层    0/20   ' En\xa0\xa0 Good\xa0 They Puebl ises\n\nakersToToToEach0'
-   跳过第 5层    4/20   ', there was a wise old owl named Ollivac. Ollivac loved to teach'
-   跳过第11层    0/20   ')\n)\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
-   跳过第14层   15/20   ', there was a little girl named Lily. She lived in a big city called New York, and'
-   跳过第17层   18/20   ', there was a little girl named Lily. She lived in a cozy house with her family, surrounded'
-   跳过第28层    0/20   "...') {: '# '# '# '# '# '# '# '# '# '# '# '# '# '# '# '# '# '#"
+   跳过第 0层    0/20   ' En\xa0\xa0 Good\xa0 They Puebl ises'
+                        '\n\nakersToToToEach0'
+   跳过第 5层    4/20   ', there was a wise old owl named Ollivac. Ollivac'
+                        ' loved to teach'
+   跳过第11层    0/20   ')\n)\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
+                        '\xa0\xa0\xa0\xa0\xa0'
+   跳过第14层   15/20   ', there was a little girl named Lily. She lived in a'
+                        ' big city called New York, and'
+   跳过第17层   18/20   ', there was a little girl named Lily. She lived in a'
+                        ' cozy house with her family, surrounded'
+   跳过第28层    0/20   "...') {: '# '# '# '# '# '# '# '# '# '# '# '# '# '#"
+                        " '# '# '# '#"
 ```
 
 结果可能有点出乎意料：30层里，跳过大部分层，模型照样能说出通顺的英文，只是故事换了。跳过第17层，20个词元里有18个和完整模型一样，只是“big house”变成了“cozy house”；跳过第14层，小女孩Lily还在，只是搬去了纽约。只有少数几层是一跳就坏，比如第0层、第11层和第28层，一跳过就成了乱码。
@@ -207,7 +214,9 @@ $$
 最后，脚本还把残差连接整个去掉试了一下，也就是把`x = x + attn(...)`改成`x = attn(...)`，FFN也一样：
 
 ```
-   去掉残差     'Once upon a timeomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomenclomencl'
+   去掉残差     'Once upon a timeomenclomenclomenclomenclomenclomenclomenclom'
+                'enclomenclomenclomenclomenclomenclomenclomenclomenclomenclom'
+                'enclomenclomencl'
 ```
 
 又回到了第六章那种复读的样子，只是这次复读的是`omencl`。这也是上一节末尾那句话的证明：SmolLM2的权重是在有残差连接的情况下训练出来的，少了它，推理就是胡话。
@@ -318,10 +327,10 @@ $$
 那么，怎么让一个训练出来的矩阵变成双随机矩阵呢？mHC用的是一个很老的算法，叫做**Sinkhorn-Knopp算法**。先对矩阵里每个数取指数，全部变成正数；然后每一行除以这一行的和，再每一列除以这一列的和，交替进行。来回做几次，行和、列和就都接近1了。`sinkhorn.py`对一个随机的 $4 \times 4$ 矩阵做了一遍：
 
 ```
-    0次   行和 [2.0666 5.1840 4.4429 8.4108]   列和 [5.1686 6.0439 5.9814 2.9104]
-    1次   行和 [1.0402 0.9580 1.0405 0.9614]   列和 [1.0000 1.0000 1.0000 1.0000]
-    3次   行和 [1.0018 0.9974 1.0018 0.9989]   列和 [1.0000 1.0000 1.0000 1.0000]
-   20次   行和 [1.0000 1.0000 1.0000 1.0000]   列和 [1.0000 1.0000 1.0000 1.0000]
+    0次   行和 [2.0666 5.1840 4.4429 8.4108]  列和 [5.1686 6.0439 5.9814 2.9104]
+    1次   行和 [1.0402 0.9580 1.0405 0.9614]  列和 [1.0000 1.0000 1.0000 1.0000]
+    3次   行和 [1.0018 0.9974 1.0018 0.9989]  列和 [1.0000 1.0000 1.0000 1.0000]
+   20次   行和 [1.0000 1.0000 1.0000 1.0000]  列和 [1.0000 1.0000 1.0000 1.0000]
 ```
 
 每一次都是最后除列和，所以列和总是正好等于1，行和则一次比一次更接近1，做到20次，已经看不出差别了。DeepSeek-V4的技术报告里，主干扩成了4条，Sinkhorn-Knopp做20次。

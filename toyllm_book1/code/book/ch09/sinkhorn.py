@@ -44,7 +44,7 @@ def sinkhorn(b, steps):
 def sums(m):
     rows = " ".join(f"{float(v):.4f}" for v in m.sum(dim=1))
     cols = " ".join(f"{float(v):.4f}" for v in m.sum(dim=0))
-    return f"行和 [{rows}]   列和 [{cols}]"
+    return f"行和 [{rows}]  列和 [{cols}]"
 
 
 def main():

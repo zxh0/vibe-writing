@@ -9,7 +9,7 @@ A **toy LLM inference engine written from scratch in Python + PyTorch**, built u
 This directory is a single uv project holding **two code trees** that share one venv, one `models/`, and one `reference/`:
 
 - **`poc/`** — the original proof of concept. Working, tested, complete through sampling. **Frozen reference, not the book's code**: it is the correctness oracle and the notebook of hard-won facts recorded below. Do not extend it.
-- **`book/`** — the code that ships with the book, written from scratch to the author's own structure: **one directory per chapter** (`ch01/` … `ch12/`), each copied from the previous one and extended, each runnable on its own. New work goes here.
+- **`book/`** — the code that ships with the book, written from scratch to the author's own structure: **one directory per chapter** (`ch01/` … `ch14/`), each copied from the previous one and extended, each runnable on its own. New work goes here.
 
 Everything below about the environment, SmolLM2's verified config values, and the tokenizer / RoPE / KV-cache gotchas applies to both.
 
@@ -24,7 +24,7 @@ This machine is an **Intel (x86_64) Mac**, and that dictates several pins:
 - **`torch` is pinned to `<2.3` (resolves to 2.2.2).** PyTorch stopped publishing macOS x86_64 wheels with 2.3 — verified: 2.3.0/2.4.1/2.5.1/2.7.0/2.14.0 all offer `macosx_*_arm64` only. This is a *platform* limit, not a CUDA one: macOS wheels have never contained CUDA, so `--index-url .../whl/cpu` changes nothing here. Do not "upgrade" this pin; nothing newer can be installed on this machine.
 - **`transformers` must stay `<5`** (resolves to 4.57.6). transformers 5.x requires torch>=2.5 and, when it doesn't find it, *silently disables its PyTorch backend* and then dies with `NameError: name 'nn' is not defined` deep inside. The `llama_ref` fixture in `poc/tests/conftest.py` skips on any exception for exactly this reason. Pinning `<5` also forces `tokenizers` down to 0.22.2 and `huggingface-hub` to 0.36.2 — harmless, since both are dev-only.
 - **`numpy` is pinned to `<2`** (resolves to 1.26.4) because torch 2.2.2 was built against the numpy 1.x ABI.
-- **No CUDA.** `torch.backends.mps.is_available()` does return `True` here, and MPS results are numerically correct, but it is *not* faster than CPU at toy sizes (measured: 512×512 matmul ×20 → MPS 0.031s vs CPU 0.013s). **Default to CPU**; only reach for MPS with a benchmark in hand.
+- **No CUDA.** `torch.backends.mps.is_available()` does return `True` here, and MPS results are numerically correct, but it is *not* faster than CPU at toy sizes (measured: 512×512 matmul ×20 → MPS 0.031s vs CPU 0.013s). **Default to CPU**; only reach for MPS with a benchmark in hand. CUDA runs happen on Colab's free T4 via `book/ch14/colab.ipynb` (sm75: no native bf16, no FlashAttention kernel; it uses Colab's own newer torch, since the `<2.3` pin is only this Mac's limit); raw output goes to `book/ch14/t4/`.
 - `torch.get_num_threads()` is 6.
 
 **Bypass Claude Code's proxy for any large download.** Claude Code sets `HTTPS_PROXY=http://127.0.0.1:9000`, an allowlisting proxy that rejects huggingface.co outright (`Proxy CONNECT aborted`) and throttles even allowed hosts badly — an 11 MB wheel took over ten minutes through it and seconds without. Unsetting it works from inside the sandbox; no need to disable the sandbox. This applies to `uv` too:
@@ -67,7 +67,7 @@ Always go through `uv run` — the system `python3` is 3.9 and has no torch.
 | `models/` | downloaded weights — **shared by both trees**, gitignored, never commit (`.gitkeep` only) |
 | `reference/` | reference tensors from `poc/steps/00_reference.py` — **shared**, gitignored, regenerable |
 | `pyproject.toml`, `uv.lock`, `.venv/` | one uv project for everything; `pythonpath = ["poc"]`, `testpaths = ["poc/tests"]` |
-| `book/` | the book's code, one directory per chapter (`ch01/` … `ch12/`) |
+| `book/` | the book's code, one directory per chapter (`ch01/` … `ch14/`) |
 | `poc/toyllm/` | PoC engine package — the reusable, cumulative implementation |
 | `poc/steps/` | one runnable script per PoC milestone (`NN_topic.py`), each printing something observable |
 | `poc/steps/00_reference.py` | the 3-line `transformers` version — the oracle; writes `../reference/*.pt` |
@@ -126,7 +126,7 @@ Watch out for: `rope_theta` is 100000 (SmolLM2-1.7B uses 130000); every `.weight
 
 ## Roadmap
 
-Planned order; adjust as the work goes, but keep the invariant that **every step ends in something runnable**.
+The PoC's build order, kept as a record now that `poc/` is frozen. The invariant still holds for `book/`: **every step ends in something runnable**.
 
 1. ~~Weight loading + structure~~ **done** — `poc/toyllm/config.py`, `poc/toyllm/weights.py`, `poc/steps/01_load_and_inspect.py`
 2. ~~Tokenizer~~ **done** — `poc/toyllm/tokenizer.py`, `poc/steps/02_tokenizer.py`; hand-written byte-level BPE, verified token-identical to `tokenizers`
@@ -138,7 +138,7 @@ Planned order; adjust as the work goes, but keep the invariant that **every step
 5. ~~Full forward + validation + greedy decode~~ **done** — `poc/toyllm/model.py`, `poc/steps/07_forward.py`; all 31 layers within 8.2e-7 relative, logits argmax identical, greedy output byte-identical to `transformers`
 6. ~~KV cache~~ **done** — `KVCache` / `NoCache` in `poc/toyllm/layers.py`, `poc/steps/08_kv_cache.py`; prefill/decode split, output token-identical to the uncached path.
 7. ~~Sampling~~ **done** — `poc/toyllm/sampling.py`, `poc/steps/09_sampling.py`; filters bit-identical to HF's logits warpers, draw verified statistically
-8. Batching and beyond — whatever is interesting once it works
+8. Batching and beyond — never done in the PoC; batching, devices, half precision and `F.scaled_dot_product_attention` live in `book/ch14/`
 
 ### Verifying sampling
 

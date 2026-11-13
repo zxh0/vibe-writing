@@ -15,7 +15,9 @@
     uv run python book/ch08/engine.py "你想试的任意一段话"
 """
 
+import re
 import sys
+import unicodedata
 
 from tokenizers import Tokenizer
 
@@ -58,6 +60,42 @@ class Engine:
         return int(logits.argmax())
 
 
+def width(s):
+    """终端上占几列：汉字占2列，其余占1列。"""
+    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in s)
+
+
+def fold(head, items, cols=78):
+    """把列表接在head后面印出来，太长就在逗号后折行，续行对齐到第一个元素。"""
+    pad = " " * (width(head) + 1)
+    lines, cur = [], head + "["
+    for k, x in enumerate(items):
+        piece = repr(x) + ("]" if k == len(items) - 1 else ",")
+        if k == 0 or width(cur) + 1 + width(piece) <= cols:
+            cur += ("" if k == 0 else " ") + piece
+        else:
+            lines.append(cur)
+            cur = pad + piece
+    return "\n".join(lines + [cur if items else cur + "]"])
+
+
+def fold_text(head, text, cols=78):
+    """把repr(text)接在head后面印出来，太长就断开，一段一行。
+
+    尽量在空格前断；一个词自己就放不下时，只好从词中间断。
+    """
+    pad = " " * width(head)
+    pieces, cur = [], ""
+    for w in re.findall(r"\s*\S+|\s+$", text):
+        for c in w if width(pad + repr(w)) > cols else [w]:
+            if cur and width(pad + repr(cur + c)) > cols:
+                pieces.append(cur)
+                cur = ""
+            cur += c
+    pieces.append(cur)
+    return "\n".join((pad if k else head) + repr(p) for k, p in enumerate(pieces))
+
+
 def main():
     engine = Engine()
     tok = engine.tok
@@ -67,8 +105,8 @@ def main():
     ids = list(enc.ids)
 
     print(f"输入   {text!r}")
-    print(f"词元   {enc.tokens}")
-    print(f"ID     {ids}")
+    print(fold("词元   ", enc.tokens))
+    print(fold("ID     ", ids))
 
     # ---- 转起来 -------------------------------------------------------------
     print(f"\n转{ROUNDS}圈，每圈把新词元追加到序列末尾，然后整串重算一遍：")
@@ -83,9 +121,9 @@ def main():
         print(f"  第{k:>2}个词元   ID {i:>5}   {tok.id_to_token(i)!r}")
 
     # ---- 出口：真的反查 ------------------------------------------------------
-    print(f"\nID     {out}")
-    print(f"词元   {[tok.id_to_token(i) for i in out]}")
-    print(f"输出   {tok.decode(out)!r}")
+    print("\n" + fold("ID     ", out))
+    print(fold("词元   ", [tok.id_to_token(i) for i in out]))
+    print(fold_text("输出   ", tok.decode(out)))
 
     # 第六、七章一直在复读`ppo`，这一章不复读了。
     new = out[len(ids):]

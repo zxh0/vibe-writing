@@ -309,7 +309,7 @@ def apply_top_p(logits, p):
         return logits
     sorted_logits, order = torch.sort(logits)          # 升序
     cumulative = sorted_logits.softmax(-1).cumsum(-1)  # 从最小的累加上去
-    remove = cumulative <= 1 - p                       # 这一段加起来不到1 - p，砍
+    remove = cumulative <= 1 - p                       # 加起来不到1 - p，砍
     remove[..., -1] = False                            # 最大的那个永远留着
     remove = remove.scatter(-1, order, remove)         # 换回词表里的位置
     return logits.masked_fill(remove, FILTER_VALUE)
@@ -507,7 +507,8 @@ named Max and Lily. They loved exploring
 你可能注意到了，最后一行说的是“到了上限停下”，而不是“抽到EOS”。这是因为SmolLM2是一个基座模型，它学的是续写文档，而一篇讲故事的文档，往往很长，20个词元远远不到该结束的时候。我们换一个开头，“Copyright 2024. All rights reserved.”，这句话通常出现在网页或者文档的最末尾：
 
 ```
-输入     'Copyright 2024. All rights reserved.'   [14129, 216, 34, 32, 34, 36, 30, 2018, 2387, 10261, 30]
+输入     'Copyright 2024. All rights reserved.'
+         [14129, 216, 34, 32, 34, 36, 30, 2018, 2387, 10261, 30]
 采样器   GreedySampler()
 最多     20个新词元，抽到EOS（ID 0）就停
 

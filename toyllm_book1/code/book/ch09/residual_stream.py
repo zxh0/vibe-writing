@@ -18,6 +18,7 @@
     uv run python book/ch09/residual_stream.py "你想试的任意一段话"
 """
 
+import re
 import sys
 import unicodedata
 
@@ -28,6 +29,23 @@ from model import Model
 from weights import MODEL_DIR
 
 ROUNDS = 20
+
+
+def fold_text(head, text, cols=78):
+    """把repr(text)接在head后面印出来，太长就断开，一段一行。
+
+    尽量在空格前断；一个词自己就放不下时，只好从词中间断。
+    """
+    pad = " " * width(head)
+    pieces, cur = [], ""
+    for w in re.findall(r"\s*\S+|\s+$", text):
+        for c in w if width(pad + repr(w)) > cols else [w]:
+            if cur and width(pad + repr(cur + c)) > cols:
+                pieces.append(cur)
+                cur = ""
+            cur += c
+    pieces.append(cur)
+    return "\n".join((pad if k else head) + repr(p) for k, p in enumerate(pieces))
 
 
 def width(s):
@@ -86,15 +104,15 @@ def main():
     # ---- 3：去掉一层 --------------------------------------------------------
     full = generate(model, ids)
     n = len(ids)
-    print(f"\n3. 完整模型   {tok.decode(full)!r}")
+    print("\n" + fold_text("3. 完整模型   ", tok.decode(full)))
     print("   跳过某一层之后，20个新词元里和完整模型相同的个数：")
     for i in range(model.weights.n_layers):
         out = generate(model, ids, skip=i)
         same = sum(a == b for a, b in zip(out[n:], full[n:]))
-        print(f"   跳过第{i:2d}层   {same:2d}/20   {tok.decode(out[n:])!r}")
+        print(fold_text(f"   跳过第{i:2d}层   {same:2d}/20   ", tok.decode(out[n:])))
 
     out = generate(model, ids, residual=False)
-    print(f"\n   去掉残差     {tok.decode(out)!r}")
+    print("\n" + fold_text("   去掉残差     ", tok.decode(out)))
 
 
 if __name__ == "__main__":

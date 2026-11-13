@@ -179,7 +179,8 @@ text = tok.decode(out[0])
 这五行分别是：加载分词器、加载模型、把文字变成词元ID、生成、再把ID变回文字。其中`MODEL_DIR`是模型文件所在的目录，`PROMPT`是输入的文字。如果输入的是`"Once upon a time"`，跑完这五行，`text`里就是下面这句话：
 
 ```
-Once upon a time, there was a little girl named Lily. She lived in a big house with her family, but
+Once upon a time, there was a little girl named Lily. She lived in a big house
+with her family, but
 ```
 
 这五行里，前三行是准备，第五行是收尾，真正干活的是第四行。别看`generate`只是一次函数调用，它内部其实是个循环，一共转了20圈：把整个序列送进30个Decoder块算一遍，从最后一个位置挑出一个词元，追加到序列末尾，然后接着算下一圈。第一圈的输入是4个词元，第20圈就变成23个了，加起来一共算了270个，可我们真正想要的只有20个。这个浪费我们放到第十一章再说。

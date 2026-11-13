@@ -2,13 +2,15 @@
 
 ![cover](../aigc/ch14.png)
 
-在第十三章，我们换上了Qwen3-0.6B，顺着全书的顺序把前十二章回顾了一遍，引擎也第一次和我们用中文对话了。不过从第一章到第十三章，我们的引擎一直跑在CPU上。前言说过，这是故意的：从GPU入手会比较难，从CPU入手就比较简单，然后再去学GPU。现在，是时候去稍微学点GPU了。
+在第十三章，我们换上了Qwen3-0.6B，顺着全书的顺序把前十二章回顾了一遍，引擎也第一次和我们用中文对话了。不过从第一章到第十三章，我们的引擎一直跑在CPU上。前言说过，这是故意的：从GPU入手会比较难，从CPU入手就比较简单，然后再去学GPU。现在，是时候去了解一下GPU了。
 
 这一章是本书的最后一章。我们不在总览图上增加任何方框，也不改变任何一步计算，只是把同一个引擎搬到GPU上去，然后把第十一章和第十二章那些“在GPU上才看得出来”的话，一条一条地验证一遍：decode为什么是内存带宽密集型的，批处理为什么能提高吞吐量，FlashAttention为什么在GPU上才快，以及第二章说的“GPU上全程BF16才是常态”。
 
 关于GPU本身，足够写一整本书，这一章不打算把它讲透，只是抛砖引玉，把前面欠下的几句话还上。更多和GPU打交道的事，比如混合精度、显存够不够用、吞吐量怎么往上提，留给下一本书，暂名《自己动手训练LLM》。在那本书里，我们要用一块免费的GPU，从零训练一个自己的小模型，再用这本书写的引擎把它跑起来。
 
-先要坦白一件事：我那台老旧的Intel芯片MacBook，没有NVIDIA的显卡，跑不了CUDA。它只有苹果的MPS（Metal Performance Shaders），也就是PyTorch在苹果电脑上调用GPU的那套接口。所以这一章的代码，我在CPU和MPS上都跑通了，结果也都核对过。NVIDIA显卡上的数字，我统一用Google Colab免费提供的那块T4来跑，书里说到CUDA，指的都是它。选它有两个原因：谁都能免费用上，你可以亲手复现每一个数；下一本书的训练也全在它上面做。T4是2018年的显卡，比数据中心里的A100老了一代，后面会看到，这一点在半精度和FlashAttention两件事上会显出差别。这一章的每个脚本都不挑显卡，你手边要是有别的NVIDIA显卡，也可以原封不动地跑一下。
+先要坦白一件事：我那台老旧的Intel芯片MacBook，没有NVIDIA的显卡，跑不了CUDA。它只有苹果的MPS（Metal Performance Shaders），也就是PyTorch在苹果电脑上调用GPU的那套接口。所以这一章的代码，我在CPU和MPS上都跑通了，结果也都核对过。NVIDIA显卡上的数字，我统一用Google Colab免费提供的那块T4来跑，书里说到CUDA，指的都是它。
+
+选T4有两个原因：谁都能免费用上，你可以亲手复现每一个数；下一本书的训练也全在它上面做。不过T4是2018年的显卡，比数据中心里的A100老了一代，后面会看到，这一点在半精度和FlashAttention两件事上会显出差别。这一章的每个脚本都不挑显卡，你手边要是有别的NVIDIA显卡，也可以原封不动地跑一下。
 
 我会先简单说说GPU为什么快，然后把引擎搬上GPU，看看要改哪些地方，先用FP32核对一遍。接着讲在GPU上量时间要注意什么，再换成半精度，看看核对的判据要怎么变。最后是两个只有在GPU上才真正显出威力的东西：批处理和FlashAttention。
 
@@ -37,13 +39,14 @@
                  attn_impl="manual"):
         self.device, self.dtype = torch.device(device), dtype
         self.config = Config(model_dir)    # 规格说明，读自`config.json`
-        self.weights = Weights(model_dir, dtype, device)  # 权重数据，放到device上
-        self.cos, self.sin = self.rope_table()  # 各(最长位置数, head_dim)，各层共用
+        self.weights = Weights(model_dir, dtype, device)  # 权重，放到device上
+        self.cos, self.sin = self.rope_table()  # (位置数, head_dim)，各层共用
         # 注意力的最后一段用哪一套，和第十、十一章一样，构造时定一次。
-        self.attend = {"manual": self.attend_manual, "sdpa": self.attend_sdpa}[attn_impl]
+        impls = {"manual": self.attend_manual, "sdpa": self.attend_sdpa}
+        self.attend = impls[attn_impl]
 ```
 
-三个参数里，`device`是放在哪：`"cpu"`、`"mps"`（苹果的GPU）或者`"cuda"`（NVIDIA的GPU）。`dtype`是用什么精度算，后面讲半精度时再细说。`attn_impl`是注意力最后那一段用哪一套实现，讲FlashAttention时再说。三个参数的默认值，正好就是前十三章的样子：CPU、FP32、我们手写的注意力。所以不传参数时，`ch14/`里的引擎和第十三章逐位相同，我核对过，两边算出来的分数一个比特都不差。
+三个参数里，`device`是放在哪：`"cpu"`、`"mps"`（苹果的GPU）或者`"cuda"`（NVIDIA的GPU）。`dtype`是用什么精度算，后面讲半精度时再细说。`attn_impl`是注意力最后那一段用哪一套实现，有两种取值：`"manual"`是第六章起我们手写的那一套；`"sdpa"`是交给PyTorch自带的`F.scaled_dot_product_attention()`，名字取自第六章那个缩放点积注意力的英文Scaled Dot-Product Attention的首字母。PyTorch会在这个函数里按设备和精度挑一个融合好的内核来算，FlashAttention就是其中之一，讲FlashAttention时再细说。三个参数的默认值，正好就是前十三章的样子：CPU、FP32、我们手写的注意力。所以不传参数时，`ch14/`里的引擎和第十三章逐位相同，我核对过，两边算出来的分数一个比特都不差。
 
 然后，凡是要参与计算的张量，都要放到这个设备上。我把这一章所有这类改动列了出来：
 
@@ -94,7 +97,7 @@ def pick_device(name="auto"):
 ```
 模型 SmolLM2-135M，基准是CPU、float32、manual，贪婪生成100个
 
-  设备    精度        注意力             逐层最大相对误差  argmax          贪婪生成
+  设备  精度      注意力  逐层最大相对误差  argmax      贪婪生成
   cuda  float32   manual           1.0e-05      相同          全部相同
   cuda  float32   sdpa             1.0e-05      相同          全部相同
   cuda  bfloat16  sdpa             1.1e-01      不同       第97个起分叉
@@ -112,7 +115,7 @@ def pick_device(name="auto"):
 
 ## 量时间要小心
 
-在GPU上量时间，有两件事和CPU不一样。
+在GPU上量时间，有两件事和CPU不一样。这一节很短，但不讲清楚，后面所有的数字都不可信。
 
 第一，**GPU是异步执行的**。Python那一行代码返回了，并不代表GPU已经算完了，它可能只是把这个计算任务排进了GPU的队列，然后就立刻返回了，真正的计算还在后台进行。所以，在读计时器之前，要先让CPU等一等，等GPU把队列里的活都干完。这一章的`speed.py`里有一个小函数，专门干这件事：
 
@@ -129,8 +132,6 @@ def sync(device):
 
 第二，**第一次调用会特别慢**。GPU第一次执行某种计算时，要做一堆准备工作：加载计算核心、分配显存、选择具体用哪种算法，等等。所以要先热身几次，再开始计时。第十一章那个“带缓存的第一个词元反而更慢”，也有一部分是这个原因。
 
-这一节很短，但不讲清楚，后面所有的数字都不可信。
-
 
 
 ## 速度
@@ -140,7 +141,7 @@ def sync(device):
 ```
 模型 SmolLM2-135M，在128个词元上
 
-  设备    精度        注意力          prefill        每个      decode每个      每秒词元
+  设备  精度      注意力       prefill      每个    decode每个  每秒词元
   cpu   float32   manual       118.4ms    0.93ms        38.2ms      26.2
   mps   float32   manual       225.5ms    1.76ms       216.2ms       4.6
   mps   float32   sdpa         225.3ms    1.76ms       194.7ms       5.1
@@ -159,7 +160,7 @@ def sync(device):
 ```
 模型 SmolLM2-135M，在128个词元上
 
-  设备    精度        注意力          prefill        每个      decode每个      每秒词元
+  设备  精度      注意力       prefill      每个    decode每个  每秒词元
   cpu   float32   manual       368.1ms    2.88ms        68.8ms      14.5
   cuda  float32   manual        33.2ms    0.26ms        29.9ms      33.4
   cuda  float32   sdpa          25.4ms    0.20ms        25.2ms      39.6
@@ -227,15 +228,16 @@ def sync(device):
 ```
 
 ```python
-        q = q.view(*lead, T, n_heads, head_dim).transpose(-3, -2)    # (9, T, 64)
-        k = k.view(*lead, T, n_kv_heads, head_dim).transpose(-3, -2) # (3, T, 64)
-        v = v.view(*lead, T, n_kv_heads, head_dim).transpose(-3, -2) # (3, T, 64)
+        # 拆完q是(9, T, 64)，k、v是(3, T, 64)。
+        q = q.view(*lead, T, n_heads, head_dim).transpose(-3, -2)
+        k = k.view(*lead, T, n_kv_heads, head_dim).transpose(-3, -2)
+        v = v.view(*lead, T, n_kv_heads, head_dim).transpose(-3, -2)
 ```
 
 这里的`lead`是批次那几维，一条序列时它是空的，`*lead`展开之后什么都没有，和第六章的写法一模一样；B条序列时它是`(B,)`。GQA复制K、V时的`dim=0`改成了`dim=-3`，拼头时的`transpose(0, 1)`也改成了`transpose(-3, -2)`。KV缓存预先分配的空间，前面也多了一维批次：
 
 ```python
-        shape = (*batch, n_kv_heads, max_len, head_dim)                # (3, max_len, 64)
+        shape = (*batch, n_kv_heads, max_len, head_dim)  # (3, max_len, 64)
 ```
 
 这里还有一个难点，我们先避开了：B条序列往往长短不一，要补齐（padding）成一样长，还要配上相应的掩码，让补出来的那些位置不被注意到。这一章的`batch.py`为了不碰这件事，让B条序列用同一个开头，各自按不同的随机种子采样，所以它们永远一样长。
@@ -282,7 +284,7 @@ def sync(device):
 
 ## FlashAttention
 
-最后，我们兑现第十二章。
+最后，我们兑现第十二章。那一章留下了两笔账没有结清。一笔是内存：FlashAttention不把那张 $T \times T$ 的分数表完整地写出来，T=8192时，一层就能省下2.4GB，可这个数是算出来的，显存的峰值要在CUDA上才量得到。另一笔是速度：FlashAttention本来就是针对GPU显存层级做的优化，它到底能快多少，要到GPU上才看得出来，第十二章末尾也说过，要拿PyTorch自带的`F.scaled_dot_product_attention()`来比一比。这一节就来还这两笔账：先给引擎加一个开关，让注意力的最后一段可以交给`F.scaled_dot_product_attention()`，然后在CPU、MPS和T4上，分别量它和手写的那一套要花多少时间、占多少内存。
 
 第十二章用纯PyTorch写过一个分块版，它算得对、省内存，在CPU上块大小合适时还更快，但那终究是Python循环拼出来的。真正的FlashAttention是一个融合好的GPU内核，PyTorch自带的`F.scaled_dot_product_attention()`，在支持的GPU上就会自动选用它。第六章我们用它核对过注意力，第八章说过`transformers`库默认走的也是它。这一章，我们让引擎自己也能用它。
 
@@ -303,7 +305,8 @@ def sync(device):
         T, L = q.shape[-2], k.shape[-2]
         if T == 1 or start == 0:
             return F.scaled_dot_product_attention(q, k, v, is_causal=T > 1)
-        future = torch.ones(T, L, dtype=torch.bool, device=q.device).triu(start + 1)
+        future = torch.ones(T, L, dtype=torch.bool, device=q.device)
+        future = future.triu(start + 1)
         return F.scaled_dot_product_attention(q, k, v, attn_mask=~future)
 ```
 

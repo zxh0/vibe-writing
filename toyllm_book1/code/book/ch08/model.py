@@ -161,7 +161,7 @@ class Model:
         k = self.rope(k) # (3, T, 64)
 
         # GQA：每个kv头连续复制3份，排成[0,0,0,1,1,1,2,2,2]，对齐9个q头。
-        # 写成k.repeat(3, 1, 1)会排成[0,1,2,0,1,2,0,1,2]，形状一样，不报错，全错。
+        # 写成k.repeat(3, 1, 1)会排成[0,1,2,0,1,2,0,1,2]，不报错，全错。
         group = n_heads // n_kv_heads         # 3
         k = k.repeat_interleave(group, dim=0) # (3, T, 64) → (9, T, 64)
         v = v.repeat_interleave(group, dim=0) # (3, T, 64) → (9, T, 64)

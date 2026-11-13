@@ -26,7 +26,7 @@
 | 2017 | 《Searching for Activation Functions》（arXiv:1710.05941） | Swish，也就是SiLU | 第八章 |
 | 2016 | 《Language Modeling with Gated Convolutional Networks》（arXiv:1612.08083） | GLU | 第八章 |
 | 2020 | 《GLU Variants Improve Transformer》（arXiv:2002.05202） | SwiGLU | 第八章 |
-| 2023 | 《Efficient Streaming Language Models with Attention Sinks》（arXiv:2309.17453） | 注意力汇聚点；第十一章用它压缩KV缓存 | 第八章、第十一章 |
+| 2023 | 《Efficient Streaming Language Models with Attention Sinks》（arXiv:2309.17453） | Attention Sink；第十一章用它压缩KV缓存 | 第八章、第十一章 |
 | 2024 | 《Mixtral of Experts》（arXiv:2401.04088） | MoE的路由公式 | 第八章 |
 | 2015 | 《Deep Residual Learning for Image Recognition》（arXiv:1512.03385） | ResNet，残差连接 | 第九章 |
 | 2016 | 《Residual Networks Behave Like Ensembles of Relatively Shallow Networks》（arXiv:1605.06431） | 残差网络像许多浅网络的集合 | 第九章 |

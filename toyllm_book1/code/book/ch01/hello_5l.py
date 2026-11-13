@@ -7,6 +7,7 @@
     uv run python book/ch01/hello_5l.py
 """
 
+import textwrap
 from pathlib import Path
 
 import transformers
@@ -25,4 +26,4 @@ out = model.generate(**ids, max_new_tokens=20, do_sample=False)
 text = tok.decode(out[0])
 # ──────────────────────────────────────────────────────────────────────────
 
-print(text)
+print(textwrap.fill(text, 78))  # 折行只为印在书上，text本身是一整句

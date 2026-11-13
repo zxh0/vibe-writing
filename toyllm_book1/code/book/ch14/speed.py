@@ -17,6 +17,7 @@ decode每次喂1个。每种设备、精度、注意力实现各量一次。
 
 import argparse
 import time
+import unicodedata
 
 import torch
 
@@ -26,6 +27,19 @@ from weights import MODEL_DIR, MODELS
 
 T = 128        # prefill多长
 ROUNDS = 20    # decode量几次取平均
+
+
+def width(s):
+    """终端上占几列：汉字占2列，其余占1列。str的对齐按字符数算，中文表头会错位。"""
+    return sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in s)
+
+
+def ljust(s, n):
+    return s + " " * (n - width(s))
+
+
+def rjust(s, n):
+    return " " * (n - width(s)) + s
 
 
 def sync(device):
@@ -77,8 +91,9 @@ def main():
               (device, "float16", "sdpa")]
 
     print(f"模型 {args.model}，在{T}个词元上\n")
-    print(f"  {'设备':<6}{'精度':<10}{'注意力':<8}{'prefill':>12}{'每个':>10}"
-          f"{'decode每个':>14}{'每秒词元':>10}")
+    print("  " + ljust("设备", 6) + ljust("精度", 10) + ljust("注意力", 8)
+          + rjust("prefill", 12) + rjust("每个", 10) + rjust("decode每个", 14)
+          + rjust("每秒词元", 10))
     for dev, dt, attn in dict.fromkeys(combos):        # 去掉重复的（device就是cpu时）
         try:
             model = Engine(MODELS / args.model, dev, DTYPES[dt], attn).model

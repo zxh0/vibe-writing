@@ -38,10 +38,11 @@ class Model:
                  attn_impl="manual"):
         self.device, self.dtype = torch.device(device), dtype
         self.config = Config(model_dir)    # 规格说明，读自`config.json`
-        self.weights = Weights(model_dir, dtype, device)  # 权重数据，放到device上
-        self.cos, self.sin = self.rope_table()  # 各(最长位置数, head_dim)，各层共用
+        self.weights = Weights(model_dir, dtype, device)  # 权重，放到device上
+        self.cos, self.sin = self.rope_table()  # (位置数, head_dim)，各层共用
         # 注意力的最后一段用哪一套，和第十、十一章一样，构造时定一次。
-        self.attend = {"manual": self.attend_manual, "sdpa": self.attend_sdpa}[attn_impl]
+        impls = {"manual": self.attend_manual, "sdpa": self.attend_sdpa}
+        self.attend = impls[attn_impl]
         # QK-Norm：有就是RMSNorm，没有就原样返回。在这里定一次，attn里不再问。
         self.qk_norm = self.rms_norm if self.config.qk_norm else self.no_norm
         has = "q_norm" in self.weights.layers[0]
@@ -177,9 +178,10 @@ class Model:
 
         # 拆头：先把最后一维切成(头数, 64)，再把头挪到最前面。
         # 维度都从后往前数，前面有没有批次那一维都一样。
-        q = q.view(*lead, T, n_heads, head_dim).transpose(-3, -2)    # (9, T, 64)
-        k = k.view(*lead, T, n_kv_heads, head_dim).transpose(-3, -2) # (3, T, 64)
-        v = v.view(*lead, T, n_kv_heads, head_dim).transpose(-3, -2) # (3, T, 64)
+        # 拆完q是(9, T, 64)，k、v是(3, T, 64)。
+        q = q.view(*lead, T, n_heads, head_dim).transpose(-3, -2)
+        k = k.view(*lead, T, n_kv_heads, head_dim).transpose(-3, -2)
+        v = v.view(*lead, T, n_kv_heads, head_dim).transpose(-3, -2)
 
         # QK-Norm：q和k每个头各自过一次RMSNorm，只看最后那64（或128）维。
         # SmolLM2没有这一步，`qk_norm`就是`no_norm`，原样返回。
@@ -223,7 +225,8 @@ class Model:
         # 因果掩码：第a行在第start+a个位置，它右边（b > start+a）是未来。
         # T为1时那唯一一行能看见全部历史，掩码全是False，干脆不建。
         if T > 1:
-            future = torch.ones(T, L, dtype=torch.bool, device=q.device).triu(start + 1)
+            future = torch.ones(T, L, dtype=torch.bool, device=q.device)
+            future = future.triu(start + 1)
             scores = scores.masked_fill(future, float("-inf"))
 
         probs = torch.softmax(scores, dim=-1) # (9, T, L)，每行和为1
@@ -243,7 +246,8 @@ class Model:
         T, L = q.shape[-2], k.shape[-2]
         if T == 1 or start == 0:
             return F.scaled_dot_product_attention(q, k, v, is_causal=T > 1)
-        future = torch.ones(T, L, dtype=torch.bool, device=q.device).triu(start + 1)
+        future = torch.ones(T, L, dtype=torch.bool, device=q.device)
+        future = future.triu(start + 1)
         return F.scaled_dot_product_attention(q, k, v, attn_mask=~future)
 
     def ffn(self, x, layer):

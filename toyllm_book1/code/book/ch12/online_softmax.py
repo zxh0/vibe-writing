@@ -34,8 +34,8 @@ def online(x, v, block, show=False):
         l = l * fix + sum(math.exp(t - m_new) for t in xs)
         y = y * fix + sum(math.exp(t - m_new) * u for t, u in zip(xs, vs))
         if show:
-            print(f"  块{xs}   最大值 {m} → {m_new}   修正系数 {fix:.4f}"
-                  f"   分母 {l:.4f}   分子 {y:.4f}")
+            print(f"  块{xs}  最大值 {m} → {m_new}  修正系数 {fix:.4f}"
+                  f"  分母 {l:.4f}  分子 {y:.4f}")
         m = m_new
     return y / l
 
@@ -59,7 +59,8 @@ def main():
     ref = float(torch.softmax(torch.tensor(xs, dtype=torch.float64), 0)
                 @ torch.tensor(vs, dtype=torch.float64))
     got = online(xs, vs, block=7)
-    print(f"1000个随机数，块大小7：torch.softmax {ref:.12f}   在线 {got:.12f}"
+    print("1000个随机数，块大小7：")
+    print(f"  torch.softmax {ref:.12f}   在线 {got:.12f}"
           f"   相对误差 {abs(got - ref) / abs(ref):.1e}")
 
 

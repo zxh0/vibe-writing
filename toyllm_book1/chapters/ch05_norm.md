@@ -337,9 +337,12 @@ ID     [6403, 1980, 253, 655]
   第13个词元   ID 42128   'ediatr'
   第14个词元   ID 47575   'Ġlinestyle'
 
-ID     [6403, 1980, 253, 655, 1461, 14083, 12690, 41346, 46446, 31290, 411, 45021, 42128, 47575]
-词元   ['Once', 'Ġupon', 'Ġa', 'Ġtime', 'Ġvarious', 'engu', 'requency', '?](', 'erma', 'hoea', 'Ġby', 'ieft', 'ediatr', 'Ġlinestyle']
-输出   'Once upon a time variousengurequency?](ermahoea byieftediatr linestyle'
+ID     [6403, 1980, 253, 655, 1461, 14083, 12690, 41346, 46446, 31290, 411,
+        45021, 42128, 47575]
+词元   ['Once', 'Ġupon', 'Ġa', 'Ġtime', 'Ġvarious', 'engu', 'requency', '?](',
+        'erma', 'hoea', 'Ġby', 'ieft', 'ediatr', 'Ġlinestyle']
+输出   'Once upon a time variousengurequency?](ermahoea byieftediatr'
+       ' linestyle'
 ```
 
 很遗憾，看起来又回到了第三章那种胡言乱语的状态。这是因为两个空位里填的还是随机数，30层往主干上灌进去的全是噪声，送到出口的向量早已面目全非，挑出来的词自然也是乱的。而且随机数没有固定种子，你每跑一次，得到的胡话都不一样。

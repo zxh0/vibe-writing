@@ -60,7 +60,8 @@ BPE的全称是Byte Pair Encoding，本来是个数据压缩算法，1994年由P
 
 ```
 原文    'To be, or not to be, that is the question:'
-词元    ['To', 'Ġbe', ',', 'Ġor', 'Ġnot', 'Ġto', 'Ġbe', ',', 'Ġthat', 'Ġis', 'Ġthe', 'Ġquestion', ':']
+词元    ['To', 'Ġbe', ',', 'Ġor', 'Ġnot', 'Ġto', 'Ġbe', ',', 'Ġthat', 'Ġis',
+         'Ġthe', 'Ġquestion', ':']
 ID      [2068, 325, 28, 355, 441, 288, 325, 28, 338, 314, 260, 1962, 42]
 共 42 个字符，13 个词元
 ```
@@ -499,7 +500,8 @@ ID      [18645, 250, 48392, 138, 16357, 241, 8083, 249]
 
 ```
 原文    'There are 49152 tokens in the vocabulary.'
-词元    ['There', 'Ġare', 'Ġ', '4', '9', '1', '5', '2', 'Ġtokens', 'Ġin', 'Ġthe', 'Ġvocabulary', '.']
+词元    ['There', 'Ġare', 'Ġ', '4', '9', '1', '5', '2', 'Ġtokens', 'Ġin',
+         'Ġthe', 'Ġvocabulary', '.']
 ID      [2122, 359, 216, 36, 41, 33, 37, 34, 17837, 281, 260, 8374, 30]
 共 41 个字符，13 个词元
 ```
@@ -574,7 +576,10 @@ out = tok.decode(ids)                              # Detokenizer：ID回到文�
 
 ```python
 def fake_llm(tok, ids, n):
-    """每轮吐一个随机ID，追加到序列末尾，转n圈。真正的引擎在这里跑30个Decoder块。"""
+    """每轮吐一个随机ID，追加到序列末尾，转n圈。
+
+    真正的引擎在这里跑30个Decoder块。
+    """
     rng = random.Random(SEED)
     for _ in range(n):
         ids.append(rng.randrange(tok.get_vocab_size()))
@@ -600,9 +605,12 @@ ID     [6403, 1980, 253, 655]
   第13个词元   ID 33059   'Ġlighthouse'
   第14个词元   ID 15809   'Ġdop'
 
-ID     [6403, 1980, 253, 655, 43417, 2815, 44729, 25066, 10431, 42180, 7113, 24217, 33059, 15809]
-词元   ['Once', 'Ġupon', 'Ġa', 'Ġtime', 'survey', 'Ġenjoy', 'oices', 'Entry', 'Ġharness', 'veh', 'OL', 'Document', 'Ġlighthouse', 'Ġdop']
-文字   'Once upon a timesurvey enjoyoicesEntry harnessvehOLDocument lighthouse dop'
+ID     [6403, 1980, 253, 655, 43417, 2815, 44729, 25066, 10431, 42180, 7113,
+        24217, 33059, 15809]
+词元   ['Once', 'Ġupon', 'Ġa', 'Ġtime', 'survey', 'Ġenjoy', 'oices', 'Entry',
+        'Ġharness', 'veh', 'OL', 'Document', 'Ġlighthouse', 'Ġdop']
+文字   'Once upon a timesurvey enjoyoicesEntry harnessvehOLDocument'
+       ' lighthouse dop'
 ```
 
 可以看到，基本上生成的文字就是胡言乱语。这也很正常，因为根本就没有推理过程，词元就是随机生成的。我们后面要做的事情，就是把中间这个假的推理过程，一步一步实现出来。
