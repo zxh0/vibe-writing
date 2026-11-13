@@ -110,7 +110,7 @@
 | 在线Softmax    | Online Softmax                                  | 分块计算Softmax、边走边修正的办法                         | 第十二章           |
 | FlashAttention | FlashAttention                                  | 分块计算注意力，不把完整的分数表存下来                    | 第十二章           |
 | QK归一化       | QK-Norm                                         | RoPE之前，Q和K的每个头各过一次RMSNorm                     | 第十三章           |
-| 思考模式       | Thinking Mode                                   | Qwen3对话版回答之前，先在`<think>`里写下推理过程          | 第十三章           |
+| 思考模式       | Thinking Mode                                   | Qwen3对话版回答之前，先在`<think>`里写下思考过程          | 第十三章           |
 | CUDA           | CUDA                                            | NVIDIA显卡的计算平台；本书说到CUDA，指的都是Colab的T4     | 第十四章           |
 | 并行度         | Parallelism                                     | 能同时做多少次计算，GPU比CPU多出几个数量级                | 第十四章           |
 | 内存带宽       | Memory Bandwidth                                | 每秒能从内存或显存读多少字节                              | 第十四章           |

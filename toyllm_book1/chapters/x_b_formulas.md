@@ -18,6 +18,8 @@
 | $\epsilon$         | RMSNorm里防止除零的小数，`rms_norm_eps`       |        1e-05 |      1e-06 |
 | $b$                | RoPE的底数，`rope_theta`                      |       100000 |    1000000 |
 
+下面写的形状，都是一条序列的情况。第十四章让张量前面多了一维批次，比如主干从 $(T, 576)$ 变成 $(B, T, 576)$ ，B条序列一起算；这时只要在每个形状的最前面加上B，公式一个都不用改，因为每一步要么只看最后一维，要么只看最后两维。
+
 
 
 ## 一、入口：词嵌入（第四章）
@@ -32,7 +34,7 @@ $$
 
 ## 二、归一化：RMSNorm（第五章）
 
-归一化对每个词元的 $d$ 个数单独做，和别的词元无关，形状不变，还是 $(T, 576)$ 。 $\boldsymbol{\gamma}$ 是训练出来的 $d$ 维权重，每个Decoder块两个，出口一个，一共 $2 n_\mathrm{layer} + 1 = 61$ 个。注意 $\epsilon$ 在根号**里面**：
+归一化对每个词元的 $d$ 个数单独做，和别的词元无关，形状不变，还是 $(T, 576)$ 。 $\boldsymbol{\gamma}$ 是训练出来的 $d$ 维权重，每个Decoder块两个，出口一个，一共 $2 n_\mathrm{layer} + 1 = 61$ 个。用FP16、BF16算时，要先升到FP32把均方根算完，再降回原来的精度，否则几百个数的平方加起来，不是溢出就是丢精度（第十四章）。注意 $\epsilon$ 在根号**里面**：
 
 $$
 \mathrm{RMSNorm}(\mathbf{x}) = \boldsymbol{\gamma} \odot \frac{\mathbf{x}}{\sqrt{\frac{1}{d}\sum_{i=1}^{d} x_i^2 + \epsilon}}
@@ -231,7 +233,7 @@ $$
 \mathbf{o} = \mathrm{softmax}\left(\frac{\mathbf{q} \times \mathbf{K}_\mathrm{cache}^\top}{\sqrt{d_k}}\right) \mathbf{V}_\mathrm{cache}
 $$
 
-缓存占的内存，和词元数成正比。按FP32算，SmolLM2每个词元46,080字节，8192个位置是377,487,360字节：
+缓存占的内存，和词元数成正比。按FP32算，SmolLM2每个词元46,080字节，8192个位置是377,487,360字节。换成FP16或BF16就减半；批处理时B条序列各有一份，再乘上B（第十四章）：
 
 $$
 \text{缓存字节数} = 2 \times n_\mathrm{kv} \times d_k \times n_\mathrm{layer} \times \text{每个数的字节数} \times \text{词元数}
