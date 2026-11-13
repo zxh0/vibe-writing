@@ -54,6 +54,10 @@ const BOOKS = [
       'ch12_flash_attn.md',
       'ch13_qwen3.md',
       'ch14_gpu.md',
+      'x_a_matrix.md',
+      'x_b_formulas.md',
+      'x_c_papers.md',
+      'x_d_glossary.md',
     ],
     tools: {
       'safetensors-viewer': 'safetensors 参数布局查看器',
