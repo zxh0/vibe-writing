@@ -1,6 +1,6 @@
 # 自己动手写深度学习框架
 
-Build a Toy PyTorch from Scratch
+Build a Toy PyTorch (from Scratch)
 
 > 写作计划，书名待定。工作草稿，随讨论随时改。
 

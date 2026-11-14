@@ -1,6 +1,6 @@
 # 自己动手写智能体
 
-Build a Toy Coding Agent from Scratch
+Build a Toy Coding Agent (from Scratch)
 
 > 写作计划，书名待定。工作草稿，随讨论随时改。
 
