@@ -25,7 +25,7 @@
 
 ## 目录
 
-前言之后是十四章，分成三段，最后还有附录。已经发布的章节可以点开读：
+前言之后是十四章，分成三段，最后是后记和附录。已经发布的章节可以点开读：
 
 <BookToc book="llm-engine" :from="0" :to="1" />
 
@@ -41,9 +41,11 @@
 
 <BookToc book="llm-engine" :from="13" :to="15" />
 
+<BookToc book="llm-engine" :from="15" :to="16" />
+
 **附录**
 
-<BookToc book="llm-engine" :from="15" />
+<BookToc book="llm-engine" :from="16" />
 
 ## 随书代码
 

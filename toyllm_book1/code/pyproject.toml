@@ -17,10 +17,12 @@ dependencies = [
     "wcwidth>=0.8.3",
 ]
 
-# Oracles and test tooling only. `tokenizers` and `transformers` exist purely so
-# tests can diff our implementation against the reference — never imported from
-# `toyllm/`. transformers must stay on the 4.x line: 5.x requires torch>=2.5,
-# which has no macOS x86_64 wheels (see CLAUDE.md).
+# The reference side. In `poc/` only the tests import these; `book/` imports
+# `tokenizers` to tokenize (the book delegates that chore) and `transformers` to
+# check each chapter against it. uv installs the `dev` group by default, so
+# `uv run` gets them. Never imported from `poc/toyllm/`. transformers must stay
+# on the 4.x line: 5.x requires torch>=2.5, which has no macOS x86_64 wheels
+# (see CLAUDE.md).
 [dependency-groups]
 dev = [
     "pytest>=9.1.1",

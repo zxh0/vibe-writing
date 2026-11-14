@@ -191,7 +191,7 @@ code/
 | 十三 | 换一个模型：用Qwen3-0.6B把全书回顾一遍，第一次和它对话 |
 | 十四 | GPU：把第十一、十二章说的那些，在GPU上量出来           |
 
-后记会聊聊量化、vLLM和llama.cpp，以及前面承诺过的“然后再去学训练”那条路。四个附录分别是矩阵相关的公式、引擎用到的全部公式、正文提到的论文和术语表，方便随时查阅。
+后记会聊聊量化、llama.cpp和vLLM，以及前面承诺过的“然后再去学训练”那条路。四个附录分别是矩阵相关的公式、引擎用到的全部公式、正文提到的论文和术语表，方便随时查阅。
 
 
 
@@ -215,6 +215,24 @@ code/
 - **不需要懂微积分和反向传播。** 全书用不到。
 
 当然，也有一些读者不太适合这本书。如果你想学的是怎么训练或者微调一个模型，这本书帮不上太多忙；如果你要的是一个能上生产的推理服务，那应该直接去看vLLM、llama.cpp这些项目。不过，就算你已经很熟悉这些，用这本书把推理的每一步重新走一遍，或许也会有新的收获。
+
+
+
+### 准备环境
+
+随书代码用uv管理环境。uv是一个Python的包管理工具，你只需要装好它，Python 3.12、PyTorch和其他依赖，它都会在第一次运行时自动装好，不用自己一个个去装。在macOS和Linux上，准备工作一共就下面几步：
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh     # 安装uv
+git clone https://github.com/zxh0/vibe-writing.git  # 获取随书代码
+cd vibe-writing/toyllm_book1/code
+./download_model.sh                                 # 下载模型文件，约272MB
+uv run python book/ch01/hello_5l.py                 # 跑通第一章那五行
+```
+
+最后一行第一次运行时会慢一些，因为uv要先建好虚拟环境、装好依赖。等它打印出第一章那句“Once upon a time, there was a little girl named Lily”，环境就准备好了。下载脚本做了什么、下载的都是些什么文件，第二章会细说；连不上Hugging Face或者遇到代理问题，可以看`code/README.md`。
+
+这里要特别提醒一点：**请用`uv run`来运行随书代码，不要自己用pip装依赖。** 所有依赖的版本，都锁在`code/uv.lock`这个文件里，比如PyTorch是2.2.2，`transformers`是4.57.6。用`uv run`，装出来的环境和我的一模一样，书上的数字你也能原样跑出来；换了版本，尤其是`transformers`的版本，有些数字就可能对不上，核对也就失去了意义。
 
 
 

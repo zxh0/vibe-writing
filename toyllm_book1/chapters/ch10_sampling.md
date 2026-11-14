@@ -122,7 +122,7 @@ of France. It is the capital of France. It is located in the
 
 ### 温度
 
-**温度**（Temperature）是最常用的一个旋钮，做法也最简单：在过Softmax之前，把每个分数都除以同一个数 $T$ 。和前面的Softmax公式对比一下，只是每个 $z$ 都换成了 $z / T$ ：
+**温度**（Temperature）是最常用的一个旋钮，做法也最简单：在过Softmax之前，把每个分数都除以同一个数 $T$ 。这一节的 $T$ 是温度，和前面表示序列长度的T不是一回事，只是大家习惯这么写。和前面的Softmax公式对比一下，只是每个 $z$ 都换成了 $z / T$ ：
 
 $$
 p_i = \frac{e^{z_i / T}}{\sum_{j=1}^{n} e^{z_j / T}}
