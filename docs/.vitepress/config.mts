@@ -11,11 +11,11 @@ const bookList = Object.values(books)
 
 // 生成的页面文件沿用仓库里的路径（docs/ann_book/chapters/03_ch01_neuron.md），
 // 这个正则认出它们，editLink 和 lastUpdated 都靠它对回仓库里的源文件。
-const SOURCE_RE = /^(llm_notes|[a-z_]+_book)\/(chapters\/|\d{4}-\d{2}-\d{2}-)/
+const SOURCE_RE = /^(llm_notes|[a-z_]+_book\d*)\/(chapters\/|\d{4}-\d{2}-\d{2}-)/
 
 export default defineConfig({
   title: '学 AI，从零开始',
-  description: '一个「图解 LLM」笔记系列，和几本还在写的书：人工神经网络、LLM 推理引擎、训练 LLM、智能体、GPU、TPU。',
+  description: '一个「图解 LLM」笔记系列，和几本还在写的书：人工神经网络、LLM 推理引擎、训练 LLM、智能体、深度学习框架、GPU、TPU。',
   lang: 'zh-CN',
   base: '/vibe-writing/',
   cleanUrls: true,
@@ -105,7 +105,7 @@ export default defineConfig({
       // 不能引用 sidebar.json 或上面的变量。
       pattern: ({ filePath }) => {
         const repo = 'https://github.com/zxh0/vibe-writing'
-        if (/^(llm_notes|[a-z_]+_book)\/(chapters\/|\d{4}-\d{2}-\d{2}-)/.test(filePath))
+        if (/^(llm_notes|[a-z_]+_book\d*)\/(chapters\/|\d{4}-\d{2}-\d{2}-)/.test(filePath))
           return `${repo}/edit/main/${filePath}`
         if (!filePath.includes('/')) return `${repo}/edit/main/docs/${filePath}`
         return `${repo}/issues`

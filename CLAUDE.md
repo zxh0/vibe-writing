@@ -9,10 +9,11 @@ A Chinese-language vibe-writing workspace: several books in progress, side by si
 | Path | What | Status | Its own CLAUDE.md |
 |------|------|--------|-------------------|
 | `llm_notes/` | standalone 图解 articles, `YYYY-MM-DD-Slug.md` | ongoing | — |
-| `ann_book/` | 《人人能懂的人工神经网络》 — neural networks for general readers, told as history from the 1940s neuron to Transformers | drafting | ✓ |
 | `toyllm_book1/` | 《自己动手写LLM推理引擎》 — hand-write an inference engine for SmolLM2-135M on CPU | drafting, the most mature | ✓ (plus `code/CLAUDE.md`) |
 | `toyllm_book2/` | 《自己动手训练LLM》 — sister book: train a small model from scratch, then run it on book 1's engine | drafting, ch01–ch04 | ✓ |
-| `toy_agent_book/` | 自己动手写智能体 — build a toy coding agent from scratch | plan, chapters are frames | ✓ |
+| `toyllm_book3/` | 《自己动手写智能体》 — third toyllm book: build a toy coding agent from scratch | plan, chapters are frames | ✓ |
+| `toyllm_book4/` | 《自己动手写深度学习框架》 — fourth toyllm book: write a toy PyTorch (PyToych) on NumPy, checked against real torch, ending with a model book 1's engine can run | plan, chapters are frames | ✓ |
+| `ann_book/` | 《人人能懂的人工神经网络》 — neural networks for general readers, told as history from the 1940s neuron to Transformers | drafting | ✓ |
 | `gpu_book/` | GPU 学习笔记 — one question: how to make a huge matmul fast | drafting, ch01–ch08 | ✓ |
 | `tpu_book/` | 从零设计 TPU — the pair of `gpu_book`: design a chip for matmul from first principles | plan, chapters are outlines | ✓ |
 
@@ -34,7 +35,7 @@ npm run dev              # prepare:site + vitepress dev
 npm run build            # prepare:site + vitepress build -> docs/.vitepress/dist
 ```
 
-`scripts/build-site.mjs` is the only content pipeline; its `NOTES` and `BOOKS` tables are the single place that maps a repo directory to a route (`ann_book` → `/ann`, `toyllm_book1` → `/llm-engine`, `toyllm_book2` → `/llm-train`, `toy_agent_book` → `/agent`, `gpu_book` → `/gpu`, `tpu_book` → `/tpu`), with each book's title, status, blurb, cover and `published` list. Hand-written site files are `docs/index.md` (homepage), one landing page per area (`docs/notes.md`, `docs/ann.md`, `docs/llm-engine.md`, …) and `docs/.vitepress/` (config, theme, the `AreaCards`/`BookToc`/`NoteList`/`ToolCards` components). Everything else under `docs/` (`docs/<repo dir>/`, `docs/public/`, `sidebar.json`) is regenerated on every run and gitignored.
+`scripts/build-site.mjs` is the only content pipeline; its `NOTES` and `BOOKS` tables are the single place that maps a repo directory to a route (`ann_book` → `/ann`, `toyllm_book1` → `/llm-engine`, `toyllm_book2` → `/llm-train`, `toyllm_book3` → `/agent`, `toyllm_book4` → `/framework`, `gpu_book` → `/gpu`, `tpu_book` → `/tpu`), with each book's title, status, blurb, cover and `published` list. Hand-written site files are `docs/index.md` (homepage), one landing page per area (`docs/notes.md`, `docs/ann.md`, `docs/llm-engine.md`, …) and `docs/.vitepress/` (config, theme, the `AreaCards`/`BookToc`/`NoteList`/`ToolCards` components). Everything else under `docs/` (`docs/<repo dir>/`, `docs/public/`, `sidebar.json`) is regenerated on every run and gitignored.
 
 - **Notes publish automatically**: every `llm_notes/YYYY-MM-DD-Slug.md` gets a page; the sidebar runs oldest-first, the list page newest-first.
 - **Book chapters go up one at a time**: `published` in a book's `BOOKS` entry lists the chapter files that get a page; the rest only show as grey titles on the book's landing page. Publishing a chapter means adding its filename there. Chapter files are `chNN_*.md` plus `afterword.md`, `appendix.md`, `x_?_*.md` (`_front.md`, `_preface.md`, `todo.md` never publish); `ann_book` is the exception with `NN_slug.md` names and `##` chapter titles that get promoted one level.
@@ -59,7 +60,7 @@ The default, used by `ann_book` and every book that does not say otherwise:
 
 Bold is reserved for vectors, so bold uppercase (`\mathbf{W}`) and arrow vectors (`\vec{x}`) are both wrong. Enforced by the `check-prose` rule 符号记法统一.
 
-Exceptions: `toyllm_book1`, `toyllm_book2` and `gpu_book` follow Goodfellow (bold lowercase = vector, **bold uppercase = matrix**, plain = scalar), and `llm_notes` follows each paper's own notation. Both are scopes in `.claude/lint-scope.json`, see below.
+Exceptions: `toyllm_book1`, `toyllm_book2`, `toyllm_book4` and `gpu_book` follow Goodfellow (bold lowercase = vector, **bold uppercase = matrix**, plain = scalar), and `llm_notes` follows each paper's own notation. Both are scopes in `.claude/lint-scope.json`, see below.
 
 ## Content Language
 
@@ -105,7 +106,7 @@ Where a book's style really differs, the difference is a scope in `.claude/lint-
 |-------|----------|-----|
 | `llm_notes/**` | 符号记法, 图片宽度, 论文引用 | hand-written: each paper's own notation, images still use `zoom`, citation style is a book convention |
 | `ann_book/**` | 图片宽度 | images still use `zoom`; drop once migrated |
-| `toyllm_book1/**`, `toyllm_book2/**`, `gpu_book/**` | 符号记法/粗体大写 | Goodfellow notation, matrices are bold uppercase |
+| `toyllm_book1/**`, `toyllm_book2/**`, `toyllm_book4/**`, `gpu_book/**` | 符号记法/粗体大写 | Goodfellow notation, matrices are bold uppercase |
 
 `exclude` (`CLAUDE.md`, `**/todo.md`, …) lists files not checked at all; a file inherits the union of every matching scope's `disable` list. Exempted counts are always reported (“另有 N 处被 .claude/lint-scope.json 豁免”), never silently dropped. `--all-rules` puts the scope exemptions back for one run; `exclude` still applies.
 

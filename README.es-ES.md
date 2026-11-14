@@ -6,7 +6,8 @@ Notas y libros. Lectura en línea (con búsqueda de texto completo y renderizado
 * [Redes Neuronales Artificiales que Todo el Mundo Puede Entender](ann_book/)（WIP, [en línea](https://zxh0.github.io/vibe-writing/ann)）
 * [Escribe tu propio motor de inferencia de LLM](toyllm_book1/)（WIP, [en línea](https://zxh0.github.io/vibe-writing/llm-engine)）
 * [Entrena tu propio LLM](toyllm_book2/)（WIP, ideas y primer borrador, [en línea](https://zxh0.github.io/vibe-writing/llm-train)）
-* [Escribe tu propio agente](toy_agent_book/)（plan de escritura, [en línea](https://zxh0.github.io/vibe-writing/agent)）
+* [Escribe tu propio agente](toyllm_book3/)（plan de escritura, [en línea](https://zxh0.github.io/vibe-writing/agent)）
+* [Escribe tu propio framework de deep learning](toyllm_book4/)（plan de escritura, [en línea](https://zxh0.github.io/vibe-writing/framework)）
 * [Notas de estudio de GPU](gpu_book/)（WIP, ideas y primer borrador, [en línea](https://zxh0.github.io/vibe-writing/gpu)）
 * [Diseñar una TPU desde cero](tpu_book/)（plan de escritura, [en línea](https://zxh0.github.io/vibe-writing/tpu)）
 

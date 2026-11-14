@@ -24,6 +24,11 @@
       "why": "同 toyllm_book1，Goodfellow 记法"
     },
     {
+      "path": "toyllm_book4/**",
+      "disable": ["符号记法/粗体大写"],
+      "why": "同 toyllm_book1，Goodfellow 记法；和第一、二本是一套"
+    },
+    {
       "path": "gpu_book/**",
       "disable": ["符号记法/粗体大写"],
       "why": "第一章明确声明粗体大写表示矩阵（ch01「本书沿用常见的记法」），和 toyllm 两本一致"

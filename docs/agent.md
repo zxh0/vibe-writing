@@ -4,7 +4,7 @@
 
 ::: warning 写作计划
 书名待定，目前还是写作计划，各章只有框架，没有发布的章节。大纲在仓库的
-[toy_agent_book/](https://github.com/zxh0/vibe-writing/tree/main/toy_agent_book) 下。
+[toyllm_book3/](https://github.com/zxh0/vibe-writing/tree/main/toyllm_book3) 下。
 :::
 
 ![自己动手写智能体](/agent/cover.png)
