@@ -19,6 +19,10 @@ const publicDir = path.join(docsDir, 'public')
 // 表的顺序就是首页卡片和顶栏下拉的顺序。
 // 书是「写完一章发一章」：往 published 里加一行文件名，那一章就上站；
 // 没列进来的章节只在这本书的目录页里露个标题，正文继续待在仓库里。
+//
+// 英文书名（subtitle）以扉页为准：不写 subtitle 的书，取 chapters/_front.md 里书名下面
+// 第一行 > 引用（跳过「版本：」那行）。首页卡片和各书落地页的 <BookSubtitle /> 都读它，
+// 改书名只改扉页一处。扉页没有英文书名的（gpu、tpu、ann）才在这里直接写。
 
 const NOTES = {
   dir: 'llm_notes',
@@ -35,7 +39,6 @@ const BOOKS = [
     dir: 'toyllm_book1',
     route: 'llm-engine',
     title: '自己动手写LLM推理引擎',
-    subtitle: 'Build a Toy LLM Inference Engine (from Scratch)',
     status: '连载中',
     blurb: '用 Python 和 PyTorch 从零手写一个能跑的 LLM 推理引擎，目标模型 SmolLM2-135M，跑在笔记本 CPU 上。慢，但每一个数字都能和 HuggingFace 对上。',
     cover: 'aigc/front.png',
@@ -71,7 +74,6 @@ const BOOKS = [
     dir: 'toyllm_book2',
     route: 'llm-train',
     title: '自己动手训练LLM',
-    subtitle: 'Train a Toy LLM (from Scratch)',
     status: '构思和初稿',
     blurb: '《自己动手写LLM推理引擎》的姊妹篇：从零训练一个自己的小模型，最后再用第一本的引擎把它跑起来。两本书首尾相接。',
     cover: 'aigc/front.png',
@@ -81,7 +83,6 @@ const BOOKS = [
     dir: 'toyllm_book3',
     route: 'agent',
     title: '自己动手写智能体',
-    subtitle: 'Build a Toy Coding Agent (from Scratch)',
     status: '写作计划',
     blurb: '从零写一个玩具版的 Coding Agent：一个循环，加上工具调用、权限、上下文、检索、MCP、Skills……每加一样都能跑，每章结尾对照真实的 Agent。',
     cover: 'aigc/front.png',
@@ -91,7 +92,6 @@ const BOOKS = [
     dir: 'toyllm_book4',
     route: 'framework',
     title: '自己动手写深度学习框架',
-    subtitle: 'Build a Toy PyTorch (from Scratch)',
     status: '写作计划',
     blurb: '只用 NumPy 从零写一个玩具版的 PyTorch：张量、自动求导、模块、优化器、数据加载，处处和真的 PyTorch 对答案，最后训出的模型交给第一本的引擎去跑。',
     published: [],
@@ -301,8 +301,18 @@ function buildNotes() {
 
 // ---- 书 ----
 
+/** 扉页 _front.md 里书名下面的第一行 > 引用，就是这本书的英文书名。 */
+function subtitleFromFront(book) {
+  const front = path.join(root, book.dir, 'chapters', '_front.md')
+  if (!fs.existsSync(front)) throw new Error(`${book.dir} 没写 subtitle，也没有 chapters/_front.md`)
+  const m = fs.readFileSync(front, 'utf8').match(/^> (?!版本)(.+)$/m)
+  if (!m) throw new Error(`${book.dir}/chapters/_front.md 里没有 > 英文书名那一行`)
+  return m[1].trim()
+}
+
 function buildBook(book) {
   const bookDir = path.join(root, book.dir)
+  book = { ...book, subtitle: book.subtitle ?? subtitleFromFront(book) }
   const chaptersDir = path.join(bookDir, 'chapters')
   const outDir = path.join(docsDir, book.dir)
   fs.rmSync(outDir, { recursive: true, force: true })

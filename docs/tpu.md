@@ -1,6 +1,6 @@
 # 从零设计TPU
 
-> Design a TPU from First Principles
+<BookSubtitle book="tpu" />
 
 ::: warning 写作计划
 目前还是写作计划，各章只有大纲，没有发布的章节。大纲在仓库的

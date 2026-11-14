@@ -1,6 +1,6 @@
 # 自己动手写深度学习框架
 
-> Build a Toy PyTorch (from Scratch)
+<BookSubtitle book="framework" />
 
 ::: warning 写作计划
 书名待定，目前还是写作计划，各章只有框架，没有发布的章节。大纲在仓库的

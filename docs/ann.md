@@ -1,6 +1,6 @@
 # 人人能懂的人工神经网络
 
-> ANN for the Rest of Us
+<BookSubtitle book="ann" />
 
 ::: warning 施工中（WIP）
 本书还在草稿阶段，改得差不多的章节会陆续放到这个站点上，目录里能点开的就是已经发布的。还没发布的章节可以直接读仓库里的

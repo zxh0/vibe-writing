@@ -1,6 +1,6 @@
 # 自己动手训练LLM
 
-> Train a Toy LLM (from Scratch)
+<BookSubtitle book="llm-train" />
 
 ::: warning 构思和初稿
 书名待定，还在构思和写初稿，目前没有发布的章节。草稿在仓库的

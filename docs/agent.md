@@ -1,6 +1,6 @@
 # 自己动手写智能体
 
-> Build a Toy Coding Agent (from Scratch)
+<BookSubtitle book="agent" />
 
 ::: warning 写作计划
 书名待定，目前还是写作计划，各章只有框架，没有发布的章节。大纲在仓库的

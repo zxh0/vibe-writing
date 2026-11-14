@@ -1,6 +1,6 @@
 # 自己动手写LLM推理引擎
 
-> Build a Toy LLM Inference Engine (from Scratch)
+<BookSubtitle book="llm-engine" />
 
 ::: warning 施工中（WIP）
 书名待定，正文还在写。写完一章发一章，目录里能点开的就是已经发布的。还没发布的章节可以直接读仓库里的
