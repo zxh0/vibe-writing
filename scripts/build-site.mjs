@@ -43,6 +43,7 @@ const BOOKS = [
     blurb: '用 Python 和 PyTorch 从零手写一个能跑的 LLM 推理引擎，目标模型 SmolLM2-135M，跑在笔记本 CPU 上。慢，但每一个数字都能和 HuggingFace 对上。',
     cover: 'aigc/front.png',
     published: [
+      '_preface.md',
       'ch01_overview.md',
       'ch02_weights.md',
       'ch03_tokenizer.md',
@@ -141,11 +142,12 @@ const BOOKS = [
 
 // 笔记文件名约定：YYYY-MM-DD-Slug.md
 const NOTE_RE = /^(\d{4}-\d{2}-\d{2})-(.+)\.md$/
-// 除 ann_book 外各本书的分章文件：chNN_slug.md，外加后记和附录；
-// _front.md / _preface.md / todo.md 不匹配，自然被挡在外面。
-const CHAPTER_RE = /^(ch\d+_.+|afterword|appendix|x_[a-z]_.+)\.md$/
-// 分章文件的排序：正文章节、后记、附录；组内按文件名
-const groupOf = (name) => (/^ch\d+_/.test(name) ? 0 : name.startsWith('afterword') ? 1 : 2)
+// 除 ann_book 外各本书的分章文件：前言、chNN_slug.md，外加后记和附录；
+// _front.md / todo.md 不匹配，自然被挡在外面。前言和章节一样，列进 published 才上站。
+const CHAPTER_RE = /^(_preface|ch\d+_.+|afterword|appendix|x_[a-z]_.+)\.md$/
+// 分章文件的排序：前言、正文章节、后记、附录；组内按文件名
+const groupOf = (name) =>
+  name === '_preface.md' ? -1 : /^ch\d+_/.test(name) ? 0 : name.startsWith('afterword') ? 1 : 2
 
 // ---- 工具函数 ----
 
@@ -336,7 +338,7 @@ function buildBook(book) {
       continue
     }
 
-    const slug = name.replace(chapterRe, '$1').replace(/_/g, '-')
+    const slug = name.replace(chapterRe, '$1').replace(/^_/, '').replace(/_/g, '-')
     const cleaned = cleanup(raw, [
       ['../images/', `/${book.route}/images/`],
       ['../aigc/', `/${book.route}/aigc/`],

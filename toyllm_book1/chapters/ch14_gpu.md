@@ -50,14 +50,14 @@
 
 然后，凡是要参与计算的张量，都要放到这个设备上。我把这一章所有这类改动列了出来：
 
-| 张量 | 在哪 | 怎么改 |
-| --- | --- | --- |
-| 权重 | `weights.py` | 读的时候`.to(device=device, dtype=dtype)` |
-| 词元ID | `model.py` | 新增`to_ids()`，换成设备上的整数张量 |
-| RoPE的cos/sin表 | `model.py` | 在CPU上用FP32算好，再搬过去 |
-| 因果掩码 | `model.py` | `torch.ones()`时指定`device` |
-| KV缓存 | `kv_cache.py` | 预先分配的空间建在设备上 |
-| 分数 | `engine.py` | 搬回CPU，再交给采样器 |
+| 张量            | 在哪          | 怎么改                                    |
+| --------------- | ------------- | ----------------------------------------- |
+| 权重            | `weights.py`  | 读的时候`.to(device=device, dtype=dtype)` |
+| 词元ID          | `model.py`    | 新增`to_ids()`，换成设备上的整数张量      |
+| RoPE的cos/sin表 | `model.py`    | 在CPU上用FP32算好，再搬过去               |
+| 因果掩码        | `model.py`    | `torch.ones()`时指定`device`              |
+| KV缓存          | `kv_cache.py` | 预先分配的空间建在设备上                  |
+| 分数            | `engine.py`   | 搬回CPU，再交给采样器                     |
 
 最后一行值得多说一句。采样器里用到了第十章那个自带的随机数生成器，它在CPU上。要么把它也搬到GPU上，要么把分数搬回CPU。我们选了后者：
 

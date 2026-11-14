@@ -25,23 +25,25 @@
 
 ## 目录
 
-十四章，分成三段，最后还有附录。已经发布的章节可以点开读：
+前言之后是十四章，分成三段，最后还有附录。已经发布的章节可以点开读：
+
+<BookToc book="llm-engine" :from="0" :to="1" />
 
 **跑通**：沿数据流从左走到右，每章造一个部件。
 
-<BookToc book="llm-engine" :from="0" :to="10" />
+<BookToc book="llm-engine" :from="1" :to="11" />
 
 **跑快**：不改变数据流，改变执行方式。
 
-<BookToc book="llm-engine" :from="10" :to="12" />
+<BookToc book="llm-engine" :from="11" :to="13" />
 
 **走出去**：同一个引擎，换一个模型，换一种硬件。
 
-<BookToc book="llm-engine" :from="12" :to="14" />
+<BookToc book="llm-engine" :from="13" :to="15" />
 
 **附录**
 
-<BookToc book="llm-engine" :from="14" />
+<BookToc book="llm-engine" :from="15" />
 
 ## 随书代码
 

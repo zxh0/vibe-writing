@@ -377,15 +377,15 @@ $$
 
 我们把这一章所有的改动，以及`assumptions.py`那几个实验，汇总成一张表：
 
-| 改动 | 为什么 | 不改会怎样 |
-| --- | --- | --- |
-| `Weights`：每层的张量分成必有和可有 | Qwen3每层多了`q_norm`、`k_norm` | 读不到这两个张量 |
-| `Weights`：遇到`lm_head`先核对再跳过 | Qwen3的对话版多存了一份和词嵌入相同的`lm_head` | 对Qwen3没影响；换一个不共享权重的模型，出口会悄悄用错矩阵 |
-| `Config`：`head_dim`优先读文件 | Qwen3的`head_dim`不等于`hidden_size`除以头数 | 当场报错 |
-| `Model`：QK-Norm | Qwen3在RoPE之前先归一化Q和K | 第1个词元起出错，不报错 |
-| `Config`：`rope_interleaved`没写就是`false` | Qwen3的配置里没有这个字段 | 当场报错 |
-| `Config`、`Engine`：EOS是一个集合 | Qwen3的对话版有两个EOS | 只认`config.json`里那一个，抽到另一个停不下来 |
-| `download_model.sh`：仓库可选、文件可缺 | 两个仓库的文件不完全一样 | 下载失败 |
+| 改动                                        | 为什么                                         | 不改会怎样                                                |
+| ------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| `Weights`：每层的张量分成必有和可有         | Qwen3每层多了`q_norm`、`k_norm`                | 读不到这两个张量                                          |
+| `Weights`：遇到`lm_head`先核对再跳过        | Qwen3的对话版多存了一份和词嵌入相同的`lm_head` | 对Qwen3没影响；换一个不共享权重的模型，出口会悄悄用错矩阵 |
+| `Config`：`head_dim`优先读文件              | Qwen3的`head_dim`不等于`hidden_size`除以头数   | 当场报错                                                  |
+| `Model`：QK-Norm                            | Qwen3在RoPE之前先归一化Q和K                    | 第1个词元起出错，不报错                                   |
+| `Config`：`rope_interleaved`没写就是`false` | Qwen3的配置里没有这个字段                      | 当场报错                                                  |
+| `Config`、`Engine`：EOS是一个集合           | Qwen3的对话版有两个EOS                         | 只认`config.json`里那一个，抽到另一个停不下来             |
+| `download_model.sh`：仓库可选、文件可缺     | 两个仓库的文件不完全一样                       | 下载失败                                                  |
 
 至于`rope_theta`、`rms_norm_eps`、层数、头数、维度这些，前面几章本来就是从配置里读的，一行没改，换了模型照样对。这也是这一章想说明的一件事：只要坚持“能从文件里读的，就不要写死”，换一个模型，要改的地方就只剩真正的架构差异。
 
