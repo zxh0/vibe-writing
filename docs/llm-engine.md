@@ -2,9 +2,9 @@
 
 <BookSubtitle book="llm-engine" />
 
-::: warning 施工中（WIP）
-书名待定，正文还在写。写完一章发一章，目录里能点开的就是已经发布的。还没发布的章节可以直接读仓库里的
-[toyllm_book1/chapters/](https://github.com/zxh0/vibe-writing/tree/main/toyllm_book1/chapters)，不过那些还是草稿，可能有很多逻辑混乱、甚至胡言乱语的地方。
+::: tip 全书已完成，修订中
+十四章正文、前言、后记和附录都已写完，全部可以在线阅读。剩下的是细节上的调整和打磨，难免还有疏漏和不准确之处，欢迎[提交 Issue](https://github.com/zxh0/vibe-writing/issues) 指正。源文件在仓库的
+[toyllm_book1/chapters/](https://github.com/zxh0/vibe-writing/tree/main/toyllm_book1/chapters) 下。
 :::
 
 ![自己动手写LLM推理引擎](/llm-engine/cover.png)

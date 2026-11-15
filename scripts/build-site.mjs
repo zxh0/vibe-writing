@@ -39,7 +39,7 @@ const BOOKS = [
     dir: 'toyllm_book1',
     route: 'llm-engine',
     title: '自己动手写LLM推理引擎',
-    status: '连载中',
+    status: '已完成，修订中',
     blurb: '用 Python 和 PyTorch 从零手写一个能跑的 LLM 推理引擎，目标模型 SmolLM2-135M，跑在笔记本 CPU 上。慢，但每一个数字都能和 HuggingFace 对上。',
     cover: 'aigc/front.png',
     published: [

@@ -4,7 +4,7 @@
 
 * [LLM学习笔记](llm_notes)（共15篇，[在线版](https://zxh0.github.io/vibe-writing/notes)）
 * [人人能懂的人工神经网络](ann_book/)（WIP，[在线版](https://zxh0.github.io/vibe-writing/ann)）
-* [自己动手写LLM推理引擎](toyllm_book1/)（WIP，[在线版](https://zxh0.github.io/vibe-writing/llm-engine)）
+* [自己动手写LLM推理引擎](toyllm_book1/)（已完成，修订中，[在线版](https://zxh0.github.io/vibe-writing/llm-engine)）
 * [自己动手训练LLM](toyllm_book2/)（WIP，[在线版](https://zxh0.github.io/vibe-writing/llm-train)）
 * [自己动手写智能体](toyllm_book3/)（写作计划，[在线版](https://zxh0.github.io/vibe-writing/agent)）
 * [自己动手写深度学习框架](toyllm_book4/)（写作计划，[在线版](https://zxh0.github.io/vibe-writing/framework)）
