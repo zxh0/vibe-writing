@@ -76,10 +76,16 @@ const BOOKS = [
     dir: 'toyllm_book2',
     route: 'llm-train',
     title: '自己动手训练LLM',
-    status: '构思和初稿',
+    status: '连载中',
     blurb: '《自己动手写LLM推理引擎》的姊妹篇：从零训练一个自己的小模型，最后再用第一本的引擎把它跑起来。两本书首尾相接。',
     cover: 'aigc/front.png',
-    published: [],
+    published: [
+      'ch01_overview.md',
+      'ch02_data.md',
+      'ch03_tokenizer.md',
+      'ch04_model.md',
+      'ch05_train_loop.md',
+    ],
   },
   {
     dir: 'toyllm_book3',
