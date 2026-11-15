@@ -7,6 +7,8 @@
 [toyllm_book4/](https://github.com/zxh0/vibe-writing/tree/main/toyllm_book4) 下。
 :::
 
+![自己动手写深度学习框架](/framework/cover.png)
+
 ## 这本书想做什么
 
 天天写 `loss.backward()` 和 `optimizer.step()`，大致也知道背后是反向传播：链式法则，从输出往回一层一层乘。但「大致知道」和「亲手写过」差得很远。广播过的张量，梯度怎么缩回原来的形状？`x.T` 为什么不复制数据，它的梯度又从哪来？`with torch.no_grad()` 到底省了什么？所以这本书还是 toyllm 系列的老办法：只用 NumPy，从零写一个玩具版的 PyTorch，叫 pytoych，一点一点来，每一步都看得见、跑得通。

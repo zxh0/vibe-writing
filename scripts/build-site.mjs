@@ -102,6 +102,7 @@ const BOOKS = [
     title: '自己动手写深度学习框架',
     status: '写作计划',
     blurb: '只用 NumPy 从零写一个玩具版的 PyTorch：张量、自动求导、模块、优化器、数据加载，处处和真的 PyTorch 对答案，最后训出的模型交给第一本的引擎去跑。',
+    cover: 'aigc/front.png',
     published: [],
   },
   {
