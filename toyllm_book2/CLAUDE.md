@@ -27,11 +27,11 @@ See also the workspace `../CLAUDE.md`: prose rules, notation, and the shared lin
 | `code/data/`, `code/models/` | corpora and weights, not in git; `code/download_model.sh` fetches SmolLM2-135M, used as the reference answer |
 | `draw/chNN.drawio`, `images/chNN/` | diagram sources and exported PNGs; `python3 export_drawio.py chNN` exports one chapter and shrinks the PNGs |
 
-There is no `merge.py` / `Book.md` here yet.
+`merge.py` (a copy of book 1's) concatenates `chapters/` into `Book.md`, which is gitignored; never edit `Book.md` by hand.
 
 ## Chapter status
 
-`ch01`–`ch05` (概览, 数据, 分词, 模型, 训练循环) are drafted with code in `code/book/ch01`–`ch05`; ch05 runs entirely on the Mac (300-step runs on MPS). `ch06`–`ch12` (预训练, SFT, DPO, RL, 蒸馏, LoRA, 规模) are still one-paragraph stubs. `design.md`'s 目录结构 also plans `poc/`, `colab/`, `runs/` and `reference/`; none exist yet.
+`ch01`–`ch05` (概览, 数据, 分词, 模型, 训练循环) are drafted with code in `code/book/ch01`–`ch05`; ch05 runs entirely on the Mac (300-step runs on MPS). `ch06` (预训练) has its code but its prose is still the outline: `code/book/ch06/train.py` adds fp16 + `GradScaler`, throughput in tok/s and 6N TFLOPS, periodic samples, a complete checkpoint (scaler, data RNG, elapsed time; written atomically, log truncated on resume) and `--data`/`--runs`/`--export`; `bench.py` measures throughput; `check_resume.py` compares two logs (a killed-and-resumed CPU run is bit-identical to an uninterrupted one); `colab.ipynb` mounts Drive, sparse-clones the public mirror https://github.com/zxh0/vibe-writing (so ch06 must be synced there first), copies the token files from Drive to local disk and calls those scripts. The prose waits for the T4 numbers. `ch07`–`ch12` (SFT, DPO, RL, 蒸馏, LoRA, 规模) are still one-paragraph stubs. `design.md`'s 目录结构 also plans `poc/`, `colab/`, `runs/` and `reference/`; none exist yet.
 
 ## Conventions specific to this book
 

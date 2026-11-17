@@ -8,6 +8,8 @@
     4. 反复随机截取片段，预测下一个字符，按预测的好坏调整参数
     5. 每隔一段时间看一眼验证集上的loss，再让模型生成一小段
 
+每一步的loss记到runs/ch01/log.jsonl，plot_loss.py拿它画loss曲线。
+
 所有细节都留到后面各章：数据（第二章）、分词（第三章）、模型（第四章）、
 训练循环（第五章）。这里只求短，能跑，看得到loss在降。
 
@@ -15,9 +17,11 @@
     cd code
     uv run python book/ch01/char_gpt.py
     uv run python book/ch01/char_gpt.py --steps 200      # 先试跑一下
+    uv run book/ch01/plot_loss.py                        # 画loss曲线
 """
 
 import argparse
+import json
 import math
 import time
 import urllib.request
@@ -28,7 +32,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 # code/book/ch01/char_gpt.py → 上三层就是 code/
-DATA = Path(__file__).resolve().parent.parent.parent / "data"
+CODE = Path(__file__).resolve().parent.parent.parent
+DATA = CODE / "data"
+LOG = CODE / "runs" / "ch01" / "log.jsonl"
 URL = "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt"
 
 # 模型和训练的超参数。小到能在笔记本电脑的CPU上几分钟训完。
@@ -146,11 +152,17 @@ def main():
     print(f"参数量     {n_params:,}")
     print()
 
+    LOG.parent.mkdir(parents=True, exist_ok=True)
+    log = open(LOG, "w")
+
     def report(step):
         prompt = torch.tensor([[stoi["\n"]]])
         sample = decode(model.generate(prompt, 200, gen)[0].tolist())
-        print(f"--- 第{step}步  训练loss {eval_loss(model, train, gen):.3f}"
-              f"  验证loss {eval_loss(model, val, gen):.3f}"
+        train_loss, val_loss = eval_loss(model, train, gen), eval_loss(model, val, gen)
+        log.write(json.dumps({"step": step, "train_eval": train_loss,
+                              "val_loss": val_loss}) + "\n")
+        print(f"--- 第{step}步  训练loss {train_loss:.3f}"
+              f"  验证loss {val_loss:.3f}"
               f"  用时{time.perf_counter() - start:.0f}秒")
         print(sample.strip())
         print()
@@ -165,6 +177,9 @@ def main():
         opt.zero_grad()
         loss.backward()
         opt.step()
+        # 这一批的loss，只记下来画图用，不打印。.item()不碰随机数，
+        # 记不记，训练和上面的输出都一模一样。
+        log.write(json.dumps({"step": step, "loss": loss.item()}) + "\n")
         if step % args.every == 0 or step == args.steps:
             report(step)
 
