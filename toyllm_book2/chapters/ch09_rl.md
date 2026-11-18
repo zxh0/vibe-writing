@@ -1,5 +1,7 @@
 # 强化学习（Reinforcement Learning）
 
+![cover](../aigc/ch09.png)
+
 不给标准答案，只告诉模型对还是错，让它自己摸索。
 
 ## 从模仿到试错

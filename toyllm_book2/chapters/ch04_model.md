@@ -14,7 +14,7 @@
 
 ## 从第一本带过来什么
 
-先把第一本里已经讲过的部件点一遍名。它们的数学一点都不改，这一章只是换一种写法，具体细节可以翻回第一本对应的章节去看。（TODO：是否要提一下整体架构：decoder-only Transformer）
+先说整体。第一本第一章讲过，SmolLM2是一个Decoder-only的Transformer：2017年最早的Transformer有编码器和解码器两半，后来的GPT只留下了解码器这一半，每个位置只能看见它自己和前面的词元，正好用来预测下一个词元。我们的模型也是这样。下面把它的部件点一遍名，这些部件第一本都讲过，数学一点都不改，这一章只是换一种写法，具体细节可以翻回第一本对应的章节去看。
 
 * **词嵌入**（第一本第四章）：一张表，每个词元占一行。词元编号进来，按编号取出那一行，就是这个词元的向量。
 * **RMSNorm**（第一本第五章）：每个词元的向量，除以它自己的均方根，再乘一个可学习的权重。和LayerNorm相比，少了减均值和偏置两步。
@@ -23,7 +23,11 @@
 * **SwiGLU**（第一本第八章）：前馈网络。两路并行升维，其中一路过SiLU激活函数当开关，两路逐元素相乘，再降回原来的维度。
 * **残差连接**（第一本第九章）：注意力和前馈网络的输出，都不直接替换输入，而是加回到输入上。
 
-这几样东西拼起来，就是Llama架构的一层：先RMSNorm，再注意力，加回残差；再RMSNorm，再前馈网络，加回残差。若干层叠起来，最后再过一次RMSNorm，乘上输出层的矩阵，就得到了每个位置上，词表里每个词元的分数，也就是logits。
+这几样东西拼起来，就是Llama架构的一层：先RMSNorm，再注意力，加回残差；再RMSNorm，再前馈网络，加回残差。若干层叠起来，最后再过一次RMSNorm，乘上输出层的矩阵，就得到了每个位置上，词表里每个词元的分数，也就是logits。画成图是这样的，从左往右读：
+
+<img src="../images/ch04/arch.png" alt="arch" width="1321" />
+
+虚线框里是一层，一共叠8层。上面绕过去的两条线就是残差连接：每个子层的输入先过RMSNorm再去计算，算完的结果加回到没有归一化的输入上。下面的虚线表示，输出层`lm_head`和词嵌入共用同一个矩阵，后面算参数量时会看到，这样能省下四百多万个参数。
 
 还有一点也和第一本一样：我们用的是half-split的RoPE，第 $i$ 维和第 $i+32$ 维配成一对，而不是相邻的两维配成一对。这是`transformers`的写法，也是SmolLM2的`config.json`里`rope_interleaved`为`false`的意思。第一本说过，两种配对都能用，用错了也不报错，只有和`transformers`对答案才分得出来。
 
@@ -86,7 +90,7 @@
 
 训练不一样。训练要不断地改权重，这就需要两样东西：一是每个权重都要有梯度，二是优化器要能找到所有的权重。PyTorch为此准备了`nn.Parameter`和`nn.Module`。一个张量包成`nn.Parameter`，PyTorch就知道它是要学习的，反向传播时会替它算梯度；`nn.Parameter`挂在`nn.Module`上，`model.parameters()`就能把它们全部列出来，交给优化器。我们直接用现成的`nn.Linear`和`nn.Embedding`，它们里面已经包好了`nn.Parameter`。
 
-我们的模型由几个`nn.Module`嵌套而成：`LLM`里面有一个`Backbone`和一个`lm_head`，`Backbone`里有词嵌入、8个`DecoderLayer`和最后的RMSNorm，每个`DecoderLayer`里又有注意力、前馈网络和两个RMSNorm。这些模块的属性名，我们故意起得和`transformers`里的一模一样。`nn.Module`会按嵌套关系，自动给每个参数起一个带路径的名字，于是我们的参数名就和HuggingFace的完全相同：
+我们的模型由几个`nn.Module`嵌套而成。最外层的类叫`LLM`，代表整个模型，并不特指哪一个现成的模型。它里面有一个`Backbone`和一个`lm_head`，`Backbone`里有词嵌入、8个`DecoderLayer`和最后的RMSNorm，每个`DecoderLayer`里又有注意力、前馈网络和两个RMSNorm。这些模块的属性名，我们故意起得和`transformers`里的一模一样。`nn.Module`会按嵌套关系，自动给每个参数起一个带路径的名字，于是我们的参数名就和HuggingFace的完全相同：
 
 ```
 model.embed_tokens.weight
@@ -132,7 +136,7 @@ $$
 
 ### 本书的初始化
 
-我们照GPT-2的做法来初始化，`LLM`的`reset_parameters`方法是这样写的：
+我们照GPT-2的做法来初始化，整个模型的`LLM`类里，`reset_parameters`方法是这样写的：
 
 ```python
         std = self.config.initializer_range

@@ -1,5 +1,7 @@
 # 蒸馏（Distillation）
 
+![cover](../aigc/ch10.png)
+
 让大模型当老师，把它会的东西教给小模型。
 
 ## 为什么要蒸馏
