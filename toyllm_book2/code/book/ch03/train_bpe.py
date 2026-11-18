@@ -19,8 +19,8 @@
 
 运行：
     cd code
-    uv run python book/ch03/bpe_train.py                  # 默认在1万篇文档上训8192的词表
-    uv run python book/ch03/bpe_train.py --docs 1000      # 先试一试
+    uv run python book/ch03/train_bpe.py                  # 默认在1万篇文档上训8192的词表
+    uv run python book/ch03/train_bpe.py --docs 1000      # 先试一试
 """
 
 import argparse

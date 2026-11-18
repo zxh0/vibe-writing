@@ -259,7 +259,7 @@ P0先做，它决定模型尺寸。P2、P3在Mac上就能做，可以和P0、P1�
 |---|---|
 | 一 | `char_gpt.py`：一个文件的字符级模型，几分钟训Tiny Shakespeare |
 | 二 | `download.py`、`clean.py`、`dedup.py`、`split.py` |
-| 三 | `bpe_train.py`（手写）、`train_tokenizer.py`（`tokenizers`）、`compare.py`、`encode.py` |
+| 三 | `train_bpe.py`（手写）、`train_tokenizer.py`（`tokenizers`）、`compare.py`、`encode.py` |
 | 四 | `config.py`、`model.py`、`init_loss.py`、`check_smollm2.py`、`export.py`、`check_export.py`；`code/download_model.sh`下载SmolLM2-135M |
 | 五 | `adamw.py`、`schedule.py`、`check_accum.py`、`overfit.py`、`train.py`（含最简单的checkpoint）、`plot_loss.py`；只在Mac上跑300步的对照实验 |
 | 六 | `train.py`补上fp16、定期生成，checkpoint补齐`GradScaler`和随机数状态，做到断了接着训和不断的曲线一致 |

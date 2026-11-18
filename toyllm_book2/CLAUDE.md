@@ -12,7 +12,7 @@ Read the working docs before anything substantial. They are drafts that change w
 |------|---------------|
 | `idea.md` | positioning, why this book, the route (第一部分 跑通 / 第二部分 后训练), dataset candidates, prior art |
 | `design.md` | the code design: hardware constraints (Colab T4, the author's Intel Mac), the one model config, datasets, `code/` layout, modules, the interface to book 1, the validation table, PoC questions, per-chapter code plan, and its 待定 list |
-| `chapters/todo.md` | open manuscript decisions; **not part of the book**, the linters skip it |
+| `TODO.md` | open manuscript decisions; **not part of the book**, the linters skip it |
 | `ref.md` | links |
 
 See also the workspace `../CLAUDE.md`: prose rules, notation, and the shared lint skills apply here.

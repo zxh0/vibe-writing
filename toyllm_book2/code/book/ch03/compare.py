@@ -3,11 +3,11 @@
 两边在同一批文档上、用同样的词表大小训练，然后逐条比较合并规则，再比较词表。
 合并规则一条不差、顺序也一样，编码结果就一定一样：BPE编码只看这张表。
 
-先跑一遍`bpe_train.py`，它会把手写版的结果存到`data/tokenizer/hand/`。
+先跑一遍`train_bpe.py`，它会把手写版的结果存到`data/tokenizer/hand/`。
 
 运行：
     cd code
-    uv run python book/ch03/bpe_train.py
+    uv run python book/ch03/train_bpe.py
     uv run python book/ch03/compare.py
 """
 
@@ -20,7 +20,7 @@ from train_tokenizer import build
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--docs", type=int, default=10_000, help="要和bpe_train.py用的一样")
+    ap.add_argument("--docs", type=int, default=10_000, help="要和train_bpe.py用的一样")
     ap.add_argument("--vocab", type=int, default=8192)
     args = ap.parse_args()
 

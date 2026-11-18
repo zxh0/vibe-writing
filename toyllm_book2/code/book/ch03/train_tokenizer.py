@@ -1,6 +1,6 @@
 """第三章 · 用tokenizers库训练正式用的分词器
 
-和手写的`bpe_train.py`做的是同一件事，只是用HuggingFace的Rust实现，快得多，
+和手写的`train_bpe.py`做的是同一件事，只是用HuggingFace的Rust实现，快得多，
 可以在更多的文档上训。预切分、特殊词元、字节字符表都和手写版、和SmolLM2一样：
 
     pre_tokenizer   Digits(individual_digits) → ByteLevel(use_regex)
@@ -20,7 +20,7 @@ import time
 
 from tokenizers import Tokenizer, decoders, models, pre_tokenizers, trainers
 
-from bpe_train import SPECIALS
+from train_bpe import SPECIALS
 from corpus import TOKENIZER_DIR, iter_docs, wrap
 
 
