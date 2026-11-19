@@ -115,7 +115,10 @@ def save_checkpoint(path, model, opt, scaler, gen, step, elapsed, args):
         "elapsed": elapsed,
         "data_rng": gen.get_state(),
         "cpu_rng": torch.get_rng_state(),
-        "args": vars(args),
+        # 路径存成字符串：checkpoint里只放基本类型，新版torch默认的
+        # weights_only=True也能读。
+        "args": {k: str(v) if isinstance(v, Path) else v
+                 for k, v in vars(args).items()},
     }
     if torch.cuda.is_available():
         ckpt["cuda_rng"] = torch.cuda.get_rng_state_all()
@@ -125,7 +128,10 @@ def save_checkpoint(path, model, opt, scaler, gen, step, elapsed, args):
 
 
 def load_checkpoint(path, model, opt, scaler, gen, args):
-    ckpt = torch.load(path, map_location=args.device)
+    # 先全部读到CPU上：随机数状态只能是CPU上的张量，模型和优化器的状态，
+    # load_state_dict会自己搬到参数所在的设备。文件是我们自己存的，
+    # weights_only=False没有风险，旧的checkpoint里还存着Path，也读得进来。
+    ckpt = torch.load(path, map_location="cpu", weights_only=False)
     model.load_state_dict(ckpt["model"])
     opt.load_state_dict(ckpt["optimizer"])
     scaler.load_state_dict(ckpt["scaler"])
