@@ -6,9 +6,9 @@
        T4没有bf16，fp16的范围又窄，要用GradScaler做损失缩放。
     2. 吞吐量：每隔几步打印一次每秒多少个词元，按6N折算成每秒多少次浮点运算。
     3. 定期生成：每隔一段，用几句固定的开头续写，看模型学到了什么。
-    4. 真正的断点续训：checkpoint里还存了GradScaler、取数据的随机数状态和
-       已经用掉的时间，每隔一段存一次。接着训时，日志里比checkpoint新的
-       记录先删掉，再从checkpoint那一步重新训，曲线和没断过一样。
+    4. 真正的断点续训：checkpoint里还存了GradScaler、取数据的随机数状态、
+       已经用掉的时间和到这一步为止的全部日志，每隔一段存一次。接着训时，
+       日志从checkpoint里取，从checkpoint那一步重新训，曲线和没断过一样。
     5. 数据和记录的位置可以指定：在Colab上，记录写到Google Drive，
        会话断了也不丢。
 
@@ -104,9 +104,29 @@ def sample(model, tok, device, seed, n=40):
     return out
 
 
-def save_checkpoint(path, model, opt, scaler, gen, step, elapsed, args):
+def write_log(path, records):
+    """把日志整个重写一遍。和checkpoint一样，先写临时文件再改名，
+    读到的log.jsonl总是完整的。"""
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n"
+                           for r in records))
+    os.replace(tmp, path)
+
+
+def read_log(path, step):
+    """旧的checkpoint里没有日志，只好从log.jsonl里读，比checkpoint新的不要。"""
+    if not path.exists():
+        return []
+    records = [json.loads(line) for line in path.read_text().splitlines() if line]
+    return [r for r in records if r["step"] <= step]
+
+
+def save_checkpoint(path, model, opt, scaler, gen, step, elapsed, records, args):
     """接着训需要的全部东西。先写到临时文件，写完再改名：
-    写到一半会话断了，原来那个checkpoint还是好的。"""
+    写到一半会话断了，原来那个checkpoint还是好的。
+
+    日志也存在里面。log.jsonl是一直在改的文件，在Colab挂载的Drive上，
+    会话一断，它不一定保得住；checkpoint保住了，到这一步为止的日志就在。"""
     ckpt = {
         "model": model.state_dict(),
         "optimizer": opt.state_dict(),
@@ -115,6 +135,7 @@ def save_checkpoint(path, model, opt, scaler, gen, step, elapsed, args):
         "elapsed": elapsed,
         "data_rng": gen.get_state(),
         "cpu_rng": torch.get_rng_state(),
+        "log": records,
         # 路径存成字符串：checkpoint里只放基本类型，新版torch默认的
         # weights_only=True也能读。
         "args": {k: str(v) if isinstance(v, Path) else v
@@ -145,17 +166,7 @@ def load_checkpoint(path, model, opt, scaler, gen, args):
     for k in same:
         if ckpt["args"].get(k) != getattr(args, k):
             print(f"注意：{k}原来是{ckpt['args'].get(k)}，现在是{getattr(args, k)}")
-    return ckpt["step"], ckpt["elapsed"]
-
-
-def truncate_log(path, step):
-    """会话断开时，日志可能已经写过了最后一个checkpoint。这些步要重新训，
-    先把它们删掉，日志里每一步就只有一行。"""
-    if not path.exists():
-        return
-    keep = [line for line in path.read_text().splitlines()
-            if line and json.loads(line)["step"] <= step]
-    path.write_text("".join(line + "\n" for line in keep))
+    return ckpt["step"], ckpt["elapsed"], ckpt.get("log")
 
 
 def parse_args():
@@ -223,16 +234,18 @@ def main():
     gen = torch.Generator().manual_seed(args.seed)
     fwd = torch.compile(model) if args.compile else model
 
-    start, elapsed = 0, 0.0
+    # 日志先记在内存里：每隔log_every步整个写一遍log.jsonl，方便随时看；
+    # 存checkpoint时也存一份，接着训时从checkpoint里取。
+    start, elapsed, records = 0, 0.0, []
     if args.resume and ckpt_path.exists():
-        start, elapsed = load_checkpoint(ckpt_path, model, opt, scaler, gen, args)
-        truncate_log(log_path, start)
+        start, elapsed, records = load_checkpoint(ckpt_path, model, opt, scaler,
+                                                  gen, args)
+        if records is None:
+            records = read_log(log_path, start)
         print(f"从第{start}步接着训，之前已经训了{elapsed / 60:.1f}分钟")
-    log = open(log_path, "a" if start > 0 else "w")
 
     def write(rec):
-        log.write(json.dumps(rec, ensure_ascii=False) + "\n")
-        log.flush()
+        records.append(rec)
 
     n_params = sum(p.numel() for p in model.parameters())
     tokens_per_step = args.batch * args.seq * args.accum
@@ -312,6 +325,8 @@ def main():
             for text in rec["samples"]:
                 print(textwrap.indent(textwrap.fill(repr(text), 74), "    "))
         write(rec)
+        if done % args.log_every == 0:
+            write_log(log_path, records)
         if not math.isfinite(loss):
             print("loss不是有限的数了，训练发散，停下")
             break
@@ -319,8 +334,10 @@ def main():
             print(f"在第{done}步模拟断开：直接退出，不存盘")
             return
         if done % args.ckpt_every == 0 or done == args.steps:
-            save_checkpoint(ckpt_path, model, opt, scaler, gen, done, elapsed, args)
+            save_checkpoint(ckpt_path, model, opt, scaler, gen, done, elapsed,
+                            records, args)
 
+    write_log(log_path, records)
     print(f"训练用时{elapsed / 60:.1f}分钟（不含验证、生成和存盘），"
           f"这一次运行里梯度溢出、跳过了{skipped}步")
     if args.device == "cuda":
