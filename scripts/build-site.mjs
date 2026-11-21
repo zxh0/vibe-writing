@@ -85,6 +85,7 @@ const BOOKS = [
       'ch03_tokenizer.md',
       'ch04_model.md',
       'ch05_train_loop.md',
+      'ch06_pretrain.md',
     ],
   },
   {

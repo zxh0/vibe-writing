@@ -121,7 +121,8 @@ def read_log(path, step):
     return [r for r in records if r["step"] <= step]
 
 
-def save_checkpoint(path, model, opt, scaler, gen, step, elapsed, records, args):
+def save_checkpoint(path, model, opt, scaler, gen, step, elapsed, records,
+                    args):
     """接着训需要的全部东西。先写到临时文件，写完再改名：
     写到一半会话断了，原来那个checkpoint还是好的。
 
@@ -311,6 +312,9 @@ def main():
             speed = window_tokens / window_time
             window_time, window_tokens = 0.0, 0
             rec["tok_per_s"] = speed
+            if args.device == "cuda":
+                # 显存峰值，GiB。训完时也会打印，但那只在笔记本的输出里
+                rec["mem_gib"] = torch.cuda.max_memory_allocated() / 2**30
             print(f"第{done:>5}步  loss {loss:.3f}  梯度范数 {norm:5.2f}  "
                   f"学习率 {lr:.1e}  每秒{speed:,.0f}个词元  "
                   f"约{6 * n_params * speed / 1e12:.1f} TFLOPS", flush=True)
