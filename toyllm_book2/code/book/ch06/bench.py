@@ -7,7 +7,9 @@
     batch：    每次前向几条序列
     compile：  要不要用torch.compile（只在Colab的新版torch上测）
 
-每种设置先空跑几步热身，再计时。显存不够的设置记为OOM，接着测下一种。
+每种设置先空跑几步热身，再计时。热身也计一次时：用compile时，编译就发生在
+热身的第一步里，热身用的秒数，减去不用compile时的热身秒数，大致就是编译
+用了多久。显存不够的设置记为OOM，接着测下一种。
 最后按6N（每个词元每个参数6次浮点运算）折算成TFLOPS。
 
 运行：
@@ -36,7 +38,7 @@ def make_scaler(enabled):
 
 
 def measure(B, T, dtype, compile_, device, steps, warmup):
-    """返回每秒词元数和显存峰值（GiB）。"""
+    """返回每秒词元数、显存峰值（GiB）和热身用的秒数。"""
     torch.manual_seed(0)
     model = LLM(Config()).to(device)
     opt = torch.optim.AdamW(param_groups(model, 0.1), lr=1e-4, betas=(0.9, 0.95),
@@ -60,10 +62,12 @@ def measure(B, T, dtype, compile_, device, steps, warmup):
         scaler.step(opt)
         scaler.update()
 
+    t0 = time.perf_counter()
     for _ in range(warmup):
         step()
     if device == "cuda":
         torch.cuda.synchronize()
+    warm = time.perf_counter() - t0
     t0 = time.perf_counter()
     for _ in range(steps):
         step()
@@ -71,7 +75,7 @@ def measure(B, T, dtype, compile_, device, steps, warmup):
         torch.cuda.synchronize()
     speed = steps * B * T / (time.perf_counter() - t0)
     mem = torch.cuda.max_memory_allocated() / 2**30 if device == "cuda" else 0.0
-    return speed, mem
+    return speed, mem, warm
 
 
 def rjust(text, width):
@@ -101,11 +105,11 @@ def main():
         print(torch.cuda.get_device_name(), f"torch {torch.__version__}")
     print(f"参数{n_params:,}个，每条序列{args.seq}个词元\n")
     print("精度  " + rjust("compile", 8) + rjust("B", 5) + rjust("每秒词元", 12)
-          + rjust("TFLOPS", 9) + rjust("显存GiB", 10))
+          + rjust("TFLOPS", 9) + rjust("显存GiB", 10) + rjust("热身秒", 9))
     for dtype, compile_ in settings:
         for B in args.batch:
             try:
-                speed, mem = measure(B, args.seq, dtype, compile_, args.device,
+                speed, mem, warm = measure(B, args.seq, dtype, compile_, args.device,
                                      args.steps, args.warmup)
             except torch.cuda.OutOfMemoryError:
                 print(f"{dtype:<6}{str(compile_):>8}{B:>5}{'OOM':>12}")
@@ -113,7 +117,7 @@ def main():
                 continue
             tflops = 6 * n_params * speed / 1e12
             print(f"{dtype:<6}{str(compile_):>8}{B:>5}{speed:>12,.0f}"
-                  f"{tflops:>9.1f}{mem:>10.2f}", flush=True)
+                  f"{tflops:>9.1f}{mem:>10.2f}{warm:>9.1f}", flush=True)
 
 
 if __name__ == "__main__":
