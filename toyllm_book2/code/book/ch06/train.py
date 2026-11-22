@@ -203,6 +203,8 @@ def parse_args():
                     help="有checkpoint就接着训，没有就从头开始")
     ap.add_argument("--kill-at", type=int, default=None,
                     help="训到第几步直接退出，不存盘，模拟会话断开")
+    ap.add_argument("--untie", action="store_true",
+                    help="输出层不和词嵌入共用矩阵（对照实验用）")
     ap.add_argument("--export", action="store_true",
                     help="训完存成模型目录：<runs>/<name>/model/")
     args = ap.parse_args()
@@ -223,8 +225,11 @@ def main():
     val = np.memmap(args.data / "tokens" / "val.bin", dtype=np.uint16, mode="r")
     tok = Tokenizer.from_file(str(args.data / "tokenizer" / "tokenizer.json"))
 
+    # 词表大小以分词器为准，对照实验会换成4096、16384的词表。
+    cfg = Config(vocab_size=tok.get_vocab_size(),
+                 tie_word_embeddings=not args.untie)
     torch.manual_seed(args.seed)
-    model = LLM(Config()).to(args.device)
+    model = LLM(cfg).to(args.device)
     fused = args.device == "cuda"
     opt = torch.optim.AdamW(param_groups(model, args.weight_decay), lr=args.lr,
                             betas=(0.9, 0.95), eps=1e-8, fused=fused)
