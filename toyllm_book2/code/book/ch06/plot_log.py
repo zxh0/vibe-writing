@@ -6,6 +6,8 @@
 
 读runs/pretrain/log.jsonl（从Colab上下载下来），画本章的三张图，
 存到书的images/ch06/下：loss、梯度范数和学习率、吞吐量。
+对照实验的日志（runs/exp-*/log.jsonl）也在的话，再画两张：
+fp16溢出时放大倍数和loss怎么变，以及权重共享和不共享的loss曲线。
 
 运行：
     cd code
@@ -13,6 +15,7 @@
 """
 
 import json
+import math
 from pathlib import Path
 
 import matplotlib
@@ -21,7 +24,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 CODE = Path(__file__).resolve().parent.parent.parent
-LOG = CODE / "runs" / "pretrain" / "log.jsonl"
+RUNS = CODE / "runs"
+LOG = RUNS / "pretrain" / "log.jsonl"
 IMAGES = CODE.parent / "images" / "ch06"
 
 plt.rcParams["font.sans-serif"] = ["Arial Unicode MS", "PingFang SC",
@@ -96,11 +100,57 @@ def plot_speed(recs):
     save(fig, "speed")
 
 
+def plot_overflow(recs):
+    """放大倍数从2的40次方开始：上面是放大倍数（以2为底的指数），
+    跳过的步标成红点；下面是loss。"""
+    recs = [r for r in recs if "loss" in r]
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(6, 5), sharex=True)
+    xs, ys = series(recs, "scale")
+    ax1.plot(xs, [math.log2(y) for y in ys], ".-", color="C0")
+    skip = [r for r in recs if r.get("skipped")]
+    ax1.plot([r["step"] for r in skip], [math.log2(r["scale"]) for r in skip],
+             "o", color="C3", label="梯度溢出，跳过")
+    ax1.axhline(16, color="gray", linestyle="--", linewidth=1)
+    ax1.set_ylabel("放大倍数（2的几次方）")
+    ax1.legend()
+    ax1.grid(alpha=0.3)
+    ax2.plot(*series(recs, "loss"), color="C0")
+    ax2.set_ylabel("训练loss")
+    ax2.set_xlabel("步数")
+    ax2.grid(alpha=0.3)
+    save(fig, "overflow")
+
+
+def plot_untie(base, untie):
+    fig, ax = plt.subplots(figsize=(6, 3.8))
+    for recs, label, color in [(base, "共享", "C0"), (untie, "不共享", "C1")]:
+        xs, ys = series(recs, "loss")
+        ax.plot(xs, smooth(ys), color=color, label=f"{label}，训练loss（20步平均）")
+        ax.plot(*series(recs, "val_loss"), "o", color=color, ms=5,
+                label=f"{label}，验证loss")
+    ax.set_ylim(4, 6.5)
+    ax.set_xlabel("步数")
+    ax.set_ylabel("loss")
+    ax.set_title("输出层和词嵌入：共享和不共享")
+    ax.legend()
+    ax.grid(alpha=0.3)
+    save(fig, "untie")
+
+
+def read(path):
+    return [json.loads(line) for line in path.open()]
+
+
 def main():
-    recs = [json.loads(line) for line in LOG.open()]
+    recs = read(LOG)
     plot_loss(recs)
     plot_grad(recs)
     plot_speed(recs)
+    if (RUNS / "exp-overflow" / "log.jsonl").exists():
+        plot_overflow(read(RUNS / "exp-overflow" / "log.jsonl"))
+    if (RUNS / "exp-untie" / "log.jsonl").exists():
+        plot_untie(read(RUNS / "exp-base" / "log.jsonl"),
+                   read(RUNS / "exp-untie" / "log.jsonl"))
 
 
 if __name__ == "__main__":
