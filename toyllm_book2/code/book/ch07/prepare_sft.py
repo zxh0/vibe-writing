@@ -136,8 +136,10 @@ def prepare(split, files, chat, seed, out):
     print(f"{split}：{n_conv:,}段对话，用时{time.perf_counter() - t0:.0f}秒")
     for s in ("完整", "截短", "扔掉"):
         print(f"  {s}  {status[s]:>9,}段  {status[s] / n_conv:6.1%}")
-    print(f"  装成{len(rows):,}行，共{rows.size:,}个位置：对话占{n_tok / rows.size:.1%}，"
-          f"算loss的占{masks.sum() / rows.size:.1%}，补齐的占{1 - n_tok / rows.size:.1%}")
+    n_pos = rows.size
+    print(f"  装成{len(rows):,}行，共{n_pos:,}个位置")
+    print(f"  对话占{n_tok / n_pos:.1%}，算loss的占{masks.sum() / n_pos:.1%}，"
+          f"补齐的占{1 - n_tok / n_pos:.1%}")
 
 
 def main():

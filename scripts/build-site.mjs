@@ -86,6 +86,7 @@ const BOOKS = [
       'ch04_model.md',
       'ch05_train_loop.md',
       'ch06_pretrain.md',
+      'ch07_sft.md',
     ],
   },
   {

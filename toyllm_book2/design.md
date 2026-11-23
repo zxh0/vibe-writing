@@ -207,7 +207,7 @@ PoC里的包`toytrain/`，也是随书代码最终会长成的样子。
 | `model.safetensors` | HF命名，每层9个张量；有`lm_head`就必须和词嵌入相同 |
 | `tokenizer.json` | `tokenizers`能读；必须是字节级BPE，`StreamDecoder`按GPT-2的字节映射解码 |
 
-一个要注意的地方：第一本第十三章的`chat.py`在不加`--think`时，会替Qwen3塞一段空的`<think></think>`。我们的模型没见过这两个token，直接用会出问题。要么第七章的SFT数据也带上这个格式，要么在第一本加一个开关。待定。
+一个要注意的地方：第一本第十三章的`chat.py`在不加`--think`时，会替Qwen3塞一段空的`<think></think>`。我们的模型没见过这两个token。已定（2026-11-23）：第一本不改，第七章用`--think --greedy`调用（`--think`让它不塞空的思考块，`--greedy`是因为我们的`generation_config.json`没有推荐的采样参数）；实测和第七章的`chat.py`贪婪解码一字不差。
 
 ## 验证
 
