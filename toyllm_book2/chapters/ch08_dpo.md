@@ -1,4 +1,4 @@
-# 偏好对齐（DPO）
+# 偏好对齐（Preference Alignment）
 
 ![cover](../aigc/ch08.png)
 

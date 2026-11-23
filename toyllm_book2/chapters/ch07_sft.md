@@ -1,4 +1,4 @@
-# 监督微调（SFT）
+# 监督微调（Supervised Fine-Tuning）
 
 ![cover](../aigc/ch07.png)
 
