@@ -17,6 +17,9 @@
 | 2022 | 《Training language models to follow instructions with human feedback》（arXiv:2203.02155） | InstructGPT，RLHF的三步：SFT、奖励模型、PPO | 第八章 |
 | 2017 | 《Proximal Policy Optimization Algorithms》（arXiv:1707.06347） | PPO | 第八章 |
 | 2023 | 《Direct Preference Optimization: Your Language Model is Secretly a Reward Model》（arXiv:2305.18290） | DPO：绕过奖励模型，直接在成对的回答上训练 | 第八章 |
+| 2025 | 《DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning》（arXiv:2501.12948） | 用可验证的奖励做强化学习，练出思考模型；先冷启动再强化学习 | 第九章 |
+| 2024 | 《DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models》（arXiv:2402.03300） | GRPO，以及它用的KL估计 | 第九章 |
+| 2025 | 《Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?》（arXiv:2504.13837） | 强化学习让pass@1涨，可 $k$ 很大时，pass@k反而不如强化学习之前 | 第九章 |
 
 ## 其他资料
 

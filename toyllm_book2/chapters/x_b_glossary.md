@@ -14,7 +14,7 @@
 | 偏好对齐 | Preference Alignment | 给模型看成对的回答，让它往好的那边靠 | 第一章、第八章 |
 | 基于人类反馈的强化学习 | Reinforcement Learning from Human Feedback，简称RLHF | 先训奖励模型，再用强化学习让模型追高分 | 第一章、第八章 |
 | 直接偏好优化 | Direct Preference Optimization，简称DPO | 绕过奖励模型，直接在成对的回答上训练 | 第一章、第八章 |
-| 强化学习 | Reinforcement Learning | 不给标准答案，只在模型答完之后告诉它好不好 | 第一章、第八章 |
+| 强化学习 | Reinforcement Learning | 不给标准答案，只在模型答完之后告诉它好不好 | 第一章、第八章、第九章 |
 | 蒸馏 | Distillation | 让大模型当老师，把它会的东西教给小模型 | 第一章 |
 | LoRA | Low-Rank Adaptation | 冻住原来的权重，只训练旁边加上的一小部分参数 | 第一章 |
 | Chinchilla法则 | Chinchilla Scaling Law | 算力固定时，训练的词元数取参数量的20倍左右最划算 | 第一章、第六章 |
@@ -87,14 +87,19 @@
 | 掩码 | Mask | 每个词元一个0或1，1表示它是助手说的，要算进loss | 第七章 |
 | 灾难性遗忘 | Catastrophic Forgetting | 在新数据上训练，旧任务上的表现变差 | 第七章 |
 | 离线策略 | Off-policy | 训练用的回答不是正在训练的模型自己写的 | 第八章 |
-| 在线策略 | On-policy | 让模型自己写回答，再看写得好不好 | 第八章 |
+| 在线策略 | On-policy | 让模型自己写回答，再看写得好不好 | 第八章、第九章 |
 | 奖励模型 | Reward Model | 给一个问题和一个回答打分 | 第八章 |
 | Bradley-Terry模型 | Bradley-Terry Model | 两个回答的分数差经过sigmoid，就是好回答胜出的概率 | 第八章 |
 | PPO | Proximal Policy Optimization | RLHF里更新模型最常用的强化学习算法 | 第八章 |
 | 策略 | Policy | 强化学习里对模型的叫法，给出每个回答的概率 | 第八章 |
 | 奖励黑客 | Reward Hacking | 模型钻奖励模型的漏洞，分数很高，人看了并不满意 | 第八章 |
-| 参考模型 | Reference Model | 出发时的模型，冻住不动，用来约束模型别走太远 | 第八章 |
+| 参考模型 | Reference Model | 出发时的模型，冻住不动，用来约束模型别走太远 | 第八章、第九章 |
 | 价值模型 | Value Model | 估计一个回答写到一半时，最后能得多少分 | 第八章 |
 | 隐式奖励 | Implicit Reward | $\beta$ 乘以策略模型和参考模型概率之比的对数 | 第八章 |
 | 差距 | Margin | 好回答的隐式奖励减去坏回答的隐式奖励 | 第八章 |
 | 长度偏差 | Length Bias | 偏好数据里好回答往往更长，模型学着把回答越写越长 | 第八章 |
+| 可验证的奖励 | Verifiable Reward | 答案能用程序判对错，不需要奖励模型 | 第九章 |
+| pass@k | pass@k | 每道题采样 $k$ 个回答，至少一个做对的题占多少 | 第九章 |
+| 冷启动 | Cold Start | 强化学习之前的一次短SFT，让模型至少偶尔做对 | 第九章 |
+| GRPO | Group Relative Policy Optimization | 每道题写一组回答，用组内平均当基准，不需要价值模型 | 第九章 |
+| 优势 | Advantage | 一个回答比同组平均好多少，减去组内平均再除以组内标准差 | 第九章 |

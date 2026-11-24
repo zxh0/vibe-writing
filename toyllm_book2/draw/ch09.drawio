@@ -1,0 +1,32 @@
+<mxfile host="65bd71144e">
+    <diagram id="grpo-flow" name="grpo-flow">
+        <mxGraphModel dx="1366" dy="1015" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+<mxCell id="grp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;verticalAlign=bottom;spacingBottom=4;dashed=1;" value="Group (G = 4)" vertex="1"><mxGeometry x="320" y="35" width="340" height="265" as="geometry"/></mxCell>
+<mxCell id="q" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=16;" value="What is 23 + 45?" vertex="1"><mxGeometry x="20" y="122" width="130" height="60" as="geometry"/></mxCell>
+<mxCell id="pol" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="Policy" vertex="1"><mxGeometry x="190" y="127" width="100" height="50" as="geometry"/></mxCell>
+<mxCell id="a0" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="23 + 45 = 68" vertex="1"><mxGeometry x="340" y="50" width="130" height="40" as="geometry"/></mxCell>
+<mxCell id="t0" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="r = 1&amp;nbsp; &amp;nbsp;A = +0.87" vertex="1"><mxGeometry x="485" y="50" width="160" height="40" as="geometry"/></mxCell>
+<mxCell id="ea0" edge="1" parent="1" source="pol" target="a0" style="edgeStyle=none;html=1;" value=""><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="a1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="23 + 45 = 58" vertex="1"><mxGeometry x="340" y="105" width="130" height="40" as="geometry"/></mxCell>
+<mxCell id="t1" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="r = 0&amp;nbsp; &amp;nbsp;A = −0.87" vertex="1"><mxGeometry x="485" y="105" width="160" height="40" as="geometry"/></mxCell>
+<mxCell id="ea1" edge="1" parent="1" source="pol" target="a1" style="edgeStyle=none;html=1;" value=""><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="a2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="23 + 45 = 78" vertex="1"><mxGeometry x="340" y="160" width="130" height="40" as="geometry"/></mxCell>
+<mxCell id="t2" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="r = 0&amp;nbsp; &amp;nbsp;A = −0.87" vertex="1"><mxGeometry x="485" y="160" width="160" height="40" as="geometry"/></mxCell>
+<mxCell id="ea2" edge="1" parent="1" source="pol" target="a2" style="edgeStyle=none;html=1;" value=""><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="a3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="23 + 45 = 68" vertex="1"><mxGeometry x="340" y="215" width="130" height="40" as="geometry"/></mxCell>
+<mxCell id="t3" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="r = 1&amp;nbsp; &amp;nbsp;A = +0.87" vertex="1"><mxGeometry x="485" y="215" width="160" height="40" as="geometry"/></mxCell>
+<mxCell id="ea3" edge="1" parent="1" source="pol" target="a3" style="edgeStyle=none;html=1;" value=""><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="f" parent="1" style="text;html=1;align=center;verticalAlign=middle;" value="A = (r − mean) / std" vertex="1"><mxGeometry x="360" y="5" width="260" height="26" as="geometry"/></mxCell>
+<mxCell id="loss" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;" value="−A · ln π + β · KL" vertex="1"><mxGeometry x="710" y="127" width="150" height="50" as="geometry"/></mxCell>
+<mxCell id="ref" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6E6E6;" value="Reference" vertex="1"><mxGeometry x="735" y="240" width="100" height="50" as="geometry"/></mxCell>
+<mxCell id="e1" edge="1" parent="1" source="q" target="pol" style="edgeStyle=none;html=1;" value=""><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e2" edge="1" parent="1" source="grp" target="loss" style="edgeStyle=none;html=1;" value=""><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e3" edge="1" parent="1" source="ref" target="loss" style="edgeStyle=none;html=1;" value="KL"><mxGeometry relative="1" as="geometry"/></mxCell>
+<mxCell id="e4" edge="1" parent="1" source="loss" target="pol" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" value="update"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="785" y="-15"/><mxPoint x="240" y="-15"/></Array></mxGeometry></mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
