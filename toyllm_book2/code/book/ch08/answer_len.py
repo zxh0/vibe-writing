@@ -1,7 +1,7 @@
 """第八章 · DPO之后，回答变长了吗
 
 偏好数据里，好回答比坏回答长的占了57%。DPO会不会顺便学会“写长一点”？
-取验证集里的前几十个问题，每个模型用贪婪解码各答一遍，比三样：
+取验证集里的前几十个问题，每个模型各答一遍（默认贪婪解码），比三样：
 
     平均长度    回答有多少个词元，没停下的就是上限
     自己停下    在上限之前写出<|im_end|>的比例
@@ -13,6 +13,8 @@
 运行（在CPU上，几个模型各要几分钟）：
     cd code
     uv run python book/ch08/answer_len.py runs/sft/model runs/dpo/model
+    uv run python book/ch08/answer_len.py runs/sft/model runs/dpo/model \\
+        --temperature 0.8 --top-k 50
 """
 
 import argparse
@@ -41,12 +43,12 @@ def questions(chat, n, max_len=200):
     return out
 
 
-def answer(model, chat, messages, max_new):
-    """和chat.py的reply一样贪婪地往下写，但返回词元和“有没有自己停下”。"""
+def answer(model, chat, messages, max_new, temperature=0.0, top_k=None):
+    """和chat.py的reply一样往下写，但返回词元和“有没有自己停下”。"""
     ids = torch.tensor([chat.prompt(messages)])
     start = ids.shape[1]
     for _ in range(max_new):
-        ids = model.generate(ids, 1, temperature=0.0)
+        ids = model.generate(ids, 1, temperature=temperature, top_k=top_k)
         if ids[0, -1].item() in (IM_END, EOT):
             return ids[0, start:-1].tolist(), True
     return ids[0, start:].tolist(), False
@@ -63,19 +65,26 @@ def main():
     ap.add_argument("models", type=Path, nargs="+", help="导出的模型目录")
     ap.add_argument("--n", type=int, default=50, help="问几个问题")
     ap.add_argument("--max-new", type=int, default=300)
+    ap.add_argument("--temperature", type=float, default=0.0, help="0就是贪婪")
+    ap.add_argument("--top-k", type=int, default=None)
+    ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
     torch.set_grad_enabled(False)
     tok = Tokenizer.from_file(str(args.models[0] / "tokenizer.json"))
     chat = ChatTemplate(tok)
     qs = questions(chat, args.n)
-    print(f"验证集的前{len(qs)}个问题，贪婪解码，每个最多{args.max_new}个词元\n")
+    how = ("贪婪解码" if args.temperature == 0 else
+           f"温度{args.temperature:g}，top-k {args.top_k}")
+    print(f"验证集的前{len(qs)}个问题，{how}，每个最多{args.max_new}个词元\n")
     print("模型              平均长度   自己停下   重复")
     for path in args.models:
         model = load(path).eval()
+        torch.manual_seed(args.seed)
         lens, stops, reps = [], 0, []
         for messages in qs:
-            ids, stopped = answer(model, chat, messages, args.max_new)
+            ids, stopped = answer(model, chat, messages, args.max_new,
+                                  args.temperature, args.top_k)
             lens.append(len(ids))
             stops += stopped
             reps.append(repeated(ids))

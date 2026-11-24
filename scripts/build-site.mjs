@@ -87,6 +87,7 @@ const BOOKS = [
       'ch05_train_loop.md',
       'ch06_pretrain.md',
       'ch07_sft.md',
+      'ch08_dpo.md',
     ],
   },
   {
