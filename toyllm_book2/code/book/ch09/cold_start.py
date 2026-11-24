@@ -19,6 +19,7 @@
 """
 
 import argparse
+import json
 import random
 import time
 from contextlib import nullcontext
@@ -100,8 +101,18 @@ def main():
     scaler = torch.cuda.amp.GradScaler(enabled=fp16)
     tests = fixed_problems([1, 2, 3, 4, 5], args.eval_n)
 
+    run_dir = args.runs / args.name
+    run_dir.mkdir(parents=True, exist_ok=True)
+    log = (run_dir / "log.jsonl").open("w")
+
+    def record(rec):
+        log.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        log.flush()
+
     with amp:
-        show(accuracy(model, chat, tests), "第    0步")
+        acc = accuracy(model, chat, tests)
+    show(acc, "第    0步")
+    record({"step": 0, "acc": acc})
     t0 = time.perf_counter()
     for step in range(args.steps):
         lr = lr_at(step, args.lr, args.warmup, args.steps, args.lr / 10)
@@ -117,17 +128,22 @@ def main():
         scaler.step(opt)
         scaler.update()
         done = step + 1
+        rec = {"step": done, "loss": loss.item(), "lr": lr,
+               "time": time.perf_counter() - t0}
         if done % 50 == 0 or done == args.steps:
             print(f"第{done:>5}步  loss {loss.item():.4f}  "
                   f"{time.perf_counter() - t0:.0f}秒", flush=True)
         if done % args.eval_every == 0 or done == args.steps:
             with amp:
-                show(accuracy(model, chat, tests), f"第{done:>5}步")
+                rec["acc"] = accuracy(model, chat, tests)
+            show(rec["acc"], f"第{done:>5}步")
+        record(rec)
         if done % args.save_every == 0 and done < args.steps:
-            export_model(model, args.runs / args.name / f"step-{done}",
+            export_model(model, run_dir / f"step-{done}",
                          tok_path)
 
-    out = args.runs / args.name / "model"
+    log.close()
+    out = run_dir / "model"
     export_model(model, out, tok_path)
     print(f"模型目录存到 {out}")
 
