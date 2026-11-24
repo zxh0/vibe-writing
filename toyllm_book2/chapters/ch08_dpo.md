@@ -71,6 +71,8 @@ rejected:  is history presentation in the movie Bill & Ted's Excellent
 uv run python book/ch08/prepare_dpo.py
 ```
 
+它先处理训练集，再处理验证集，每一份打印三样东西：留下和扔掉的各有多少对，扔掉的按原因分开数；好回答和坏回答那一段的长度中位数；好回答更长的占多少：
+
 ```
 下载 train_prefs-00000-of-00001.parquet ...
 train：61,135对，用时328秒
@@ -105,6 +107,12 @@ val：2,000对，用时11秒
 ## RLHF
 
 在说DPO之前，先看看偏好对齐原本是怎么做的。ChatGPT之前的InstructGPT，出自《Training language models to follow instructions with human feedback》（arXiv:2203.02155），把后训练分成三步：先做SFT；再用人标的偏好数据训一个奖励模型；最后用强化学习，让模型去追奖励模型的高分。后两步合起来，就是**基于人类反馈的强化学习**（Reinforcement Learning from Human Feedback，简称RLHF）。
+
+把RLHF三步画成图是这样的，绿色的是要训的模型，灰色的是冻住不动的：
+
+<img src="../images/ch08/rlhf.png" alt="rlhf" width="1102" />
+
+第一步和第七章做的一样。第二步拿偏好数据训出一个打分的模型。第三步是一个循环：策略模型写回答，奖励模型打分，PPO根据分数更新策略模型，参考模型和价值模型在旁边帮忙。图里的每一个方框，下面几节都会讲到。
 
 
 
@@ -161,6 +169,12 @@ $$
 ## DPO
 
 **直接偏好优化**（Direct Preference Optimization，简称DPO）出自2023年的《Direct Preference Optimization: Your Language Model is Secretly a Reward Model》（arXiv:2305.18290）。论文的副标题就是它的核心想法：你的语言模型，其实就是一个奖励模型。
+
+先看DPO训练的一步画成图是什么样子，颜色和RLHF那张图一样：
+
+<img src="../images/ch08/dpo.png" alt="dpo" width="852" />
+
+和RLHF的第三步比，少了三样东西：没有奖励模型，没有价值模型，训练时也不用让模型写回答。一批偏好对同时送进两个模型，策略模型和参考模型各给好回答、坏回答算一个概率，再拿这四个数算出loss。两个模型都只做前向，只有策略模型要算梯度、要更新。图里的隐式奖励、差距是什么，下面几小节一样一样讲。
 
 
 
@@ -239,7 +253,7 @@ def dpo_loss(pc, pr, rc, rr, beta):
     return loss, chosen.detach(), rejected.detach()
 ```
 
-对数相除就是对数相减，所以 $\ln \frac{\pi_\theta}{\pi_{\mathrm{ref}}}$ 写出来就是`pc - rc`。`F.logsigmoid`一步算出 $\ln \sigma$ ，比先算sigmoid再取对数稳：差距是很大的负数时，sigmoid会小到下溢成0，再取对数就是负无穷。
+开头那张图里的`pc`、`pr`和`rc`、`rr`，就是这里的四个参数。对数相除就是对数相减，所以 $\ln \frac{\pi_\theta}{\pi_{\mathrm{ref}}}$ 写出来就是`pc - rc`。`F.logsigmoid`一步算出 $\ln \sigma$ ，比先算sigmoid再取对数稳：差距是很大的负数时，sigmoid会小到下溢成0，再取对数就是负无穷。
 
 训练开始时，策略模型就是参考模型，两个隐式奖励都是0，差距也是0，loss是 $-\ln \sigma(0) = -\ln \frac{1}{2} = \ln 2 \approx 0.693$ 。这是DPO的起点，每一次都一样，和数据无关。
 
@@ -295,16 +309,16 @@ $\beta$ 就是RLHF目标里KL约束的那个系数，在代码里叫`beta`。它
 
 超参数和SFT比，变化最大的是学习率：
 
-| 设置       | SFT                | DPO                  |
-| ---------- | ------------------ | -------------------- |
-| 起点       | 基座模型           | SFT模型              |
-| 最大学习率 | $3 \times 10^{-4}$ | $5 \times 10^{-6}$   |
-| 最小学习率 | $3 \times 10^{-5}$ | $5 \times 10^{-7}$   |
-| warmup     | 50步               | 100步                |
-| 权重衰减   | 0.1                | 0                    |
-| 每步       | 64行               | 32对，也就是64段     |
-| 步数       | 4,559              | 1,364                |
-| `beta`     | 无                 | 0.1                  |
+| 设置       | SFT                | DPO                |
+| ---------- | ------------------ | ------------------ |
+| 起点       | 基座模型           | SFT模型            |
+| 最大学习率 | $3 \times 10^{-4}$ | $5 \times 10^{-6}$ |
+| 最小学习率 | $3 \times 10^{-5}$ | $5 \times 10^{-7}$ |
+| warmup     | 50步               | 100步              |
+| 权重衰减   | 0.1                | 0                  |
+| 每步       | 64行               | 32对，也就是64段   |
+| 步数       | 4,559              | 1,364              |
+| `beta`     | 无                 | 0.1                |
 
 学习率小了60倍。DPO是在SFT模型上做很小的调整，它的loss只看差距，模型稍微一动，差距就能拉开，学习率大了，很快就会走出参考模型附近，把SFT学会的东西冲掉。DPO的学习率一般都比SFT小一两个数量级。权重衰减关掉了：它每一步都把参数往0拉，和“别离参考模型太远”是两回事。训练集43,626对，每步32对，过一遍是1,364步。
 
@@ -313,6 +327,8 @@ $\beta$ 就是RLHF目标里KL约束的那个系数，在代码里叫`beta`。它
 ```bash
 uv run python book/ch08/check_dpo.py
 ```
+
+三项各打印一段，每一段的末尾都是要对上的两个数：第一项是手算的loss和`dpo_loss`；第二项是四段回答逐个词元加起来的和`sequence_logps`，最后还有最大的相对误差；第三项是loss和 $\ln 2$ ：
 
 ```
 1. 手编的一对：好回答 -10（参考 -11），坏回答 -12（参考 -11），beta 0.1
@@ -351,7 +367,9 @@ python book/ch08/dpo.py --name dpo --init .../runs/sft/model \
 
 ### 训练曲线
 
-<img src="../images/ch08/dpo.png" alt="dpo" width="788" />
+训练的日志`log.jsonl`从Drive下载到`runs/dpo/`以后，用`uv run book/ch08/plot_log.py`画成下面三张小图。训练集上的数每一步记一次，一步只有32对，抖得厉害，图里画的是20步的滑动平均；验证集每100步算一次，用全部1,412对，画成带圆点的折线：
+
+<img src="../images/ch08/loss.png" alt="loss" width="788" />
 
 左边是loss，虚线是起点的 $\ln 2$ 。中间是准确率，虚线是瞎猜的50%。右边是验证集上好回答、坏回答的隐式奖励，以及两者的差距。
 
@@ -372,6 +390,8 @@ python book/ch08/dpo.py --name dpo --init .../runs/sft/model \
 ```bash
 uv run python book/ch08/length_bias.py
 ```
+
+它让参考模型和DPO之后的模型各给验证集算一遍对数概率，得到每一对的差距，再按好回答比坏回答长还是短，把1,412对分成两组，各算一个准确率；最后算长度差和差距的相关系数，以及平均到每个词元，对数概率变了多少：
 
 ```
 验证集1,412对，准确率66.3%
@@ -394,6 +414,8 @@ uv run python book/ch08/length_bias.py
 ```bash
 uv run python book/ch08/chat.py --model runs/dpo/model --max-new 80
 ```
+
+这里的`chat.py`和第七章的是同一个，只给了一个模型目录，所以每个问题下面只有`[dpo]`这一个回答：
 
 ```
 问：What is the capital of France?
@@ -461,6 +483,8 @@ uv run python book/ch08/answer_len.py runs/sft/model runs/dpo/model \
     --temperature 0.8 --top-k 50 --n 100
 ```
 
+输出的第一行是生成的设置，下面每个模型一行，三列就是上面说的平均长度、自己停下的比例和重复的比例：
+
 ```
 验证集的前100个问题，温度0.8，top-k 50，每个最多300个词元
 
@@ -485,6 +509,8 @@ dpo                    290        13%    17%
 uv run python book/ch08/compare_beta.py
 ```
 
+表里每个`beta`一行，都是第400步最后一次验证的结果。准确率和差距前面见过，后三列是新的，下面一列一列说：
+
 ```
 beta    准确率    差距   差距/beta   好回答变化   坏回答变化
 0.05     64.9%   0.211         4.2         -3.4         -7.6
@@ -503,6 +529,8 @@ uv run python book/ch08/answer_len.py runs/exp-beta0.05/model \
     runs/exp-beta0.1/model runs/exp-beta0.5/model \
     --temperature 0.8 --top-k 50 --n 100
 ```
+
+表的格式和前面SFT、DPO那一张一样，可以对照着看：
 
 ```
 验证集的前100个问题，温度0.8，top-k 50，每个最多300个词元

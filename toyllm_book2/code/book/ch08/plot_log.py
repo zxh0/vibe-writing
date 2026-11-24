@@ -5,7 +5,7 @@
 """第八章 · 画DPO的训练曲线
 
 读runs/dpo/log.jsonl（从Colab上下载下来），画三张小图，存到书的
-images/ch08/dpo.png：
+images/ch08/loss.png：
 
     左    训练loss和验证loss，横线是起点的log 2
     中    准确率：隐式奖励好回答高于坏回答的比例
@@ -88,8 +88,8 @@ def main():
         ax.legend(fontsize=8)
     IMAGES.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
-    fig.savefig(IMAGES / "dpo.png", dpi=150)
-    print(f"写出 {IMAGES / 'dpo.png'}")
+    fig.savefig(IMAGES / "loss.png", dpi=150)
+    print(f"写出 {IMAGES / 'loss.png'}")
 
 
 if __name__ == "__main__":

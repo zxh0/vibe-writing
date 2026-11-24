@@ -1,0 +1,131 @@
+<mxfile host="65bd71144e">
+    <diagram id="rlhf" name="rlhf">
+        <mxGraphModel dx="1111" dy="825" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="g1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;verticalAlign=bottom;spacingBottom=4;dashed=1;" value="Step 1: SFT" vertex="1">
+                    <mxGeometry height="280" width="240" x="20" y="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="demo" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=16;" value="Demonstrations" vertex="1">
+                    <mxGeometry height="60" width="130" x="75" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="base" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;" value="Base Model" vertex="1">
+                    <mxGeometry height="50" width="90" x="35" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="sft" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="SFT Model" vertex="1">
+                    <mxGeometry height="50" width="90" x="155" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" edge="1" parent="1" source="base" style="edgeStyle=none;html=1;" target="sft" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2" edge="1" parent="1" source="demo" style="edgeStyle=none;html=1;" target="sft" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="g2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;verticalAlign=bottom;spacingBottom=4;dashed=1;" value="Step 2: Reward Model" vertex="1">
+                    <mxGeometry height="280" width="240" x="300" y="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="pairs" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=16;" value="Preference Pairs&lt;br&gt;(x, y&lt;sub&gt;w&lt;/sub&gt;, y&lt;sub&gt;l&lt;/sub&gt;)" vertex="1">
+                    <mxGeometry height="60" width="130" x="355" y="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="rm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="Reward Model&lt;br&gt;r(x, y)" vertex="1">
+                    <mxGeometry height="50" width="120" x="360" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3" edge="1" parent="1" source="pairs" style="edgeStyle=none;html=1;" target="rm" value="Bradley-Terry">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="g3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;verticalAlign=bottom;spacingBottom=4;dashed=1;" value="Step 3: RL (PPO)" vertex="1">
+                    <mxGeometry height="280" width="520" x="580" y="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="pol" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="Policy" vertex="1">
+                    <mxGeometry height="50" width="110" x="605" y="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="resp" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=16;" value="Responses" vertex="1">
+                    <mxGeometry height="60" width="110" x="795" y="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="rm2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6E6E6;" value="Reward Model" vertex="1">
+                    <mxGeometry height="50" width="110" x="965" y="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="ref" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6E6E6;" value="Reference Model" vertex="1">
+                    <mxGeometry height="50" width="110" x="605" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="upd" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;" value="PPO Update" vertex="1">
+                    <mxGeometry height="50" width="110" x="795" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="val" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="Value Model" vertex="1">
+                    <mxGeometry height="50" width="110" x="965" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="e4" edge="1" parent="1" source="pol" style="edgeStyle=none;html=1;" target="resp" value="generate">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e5" edge="1" parent="1" source="resp" style="edgeStyle=none;html=1;" target="rm2" value="score">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" edge="1" parent="1" source="rm2" style="edgeStyle=none;html=1;" target="upd" value="reward">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e7" edge="1" parent="1" source="ref" style="edgeStyle=none;html=1;" target="upd" value="KL">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" edge="1" parent="1" source="val" style="edgeStyle=none;html=1;" target="upd" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e9" edge="1" parent="1" source="upd" style="edgeStyle=none;html=1;" target="pol" value="update">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e10" edge="1" parent="1" source="g1" style="edgeStyle=none;html=1;" target="g2" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e11" edge="1" parent="1" source="g2" style="edgeStyle=none;html=1;" target="g3" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="dpo-flow" name="dpo">
+        <mxGraphModel dx="555" dy="413" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="pairs" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=16;" value="Preference Pairs&lt;br&gt;(x, y&lt;sub&gt;w&lt;/sub&gt;, y&lt;sub&gt;l&lt;/sub&gt;)" vertex="1">
+                    <mxGeometry height="70" width="130" x="20" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="pol" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#CCFFCC;" value="Policy π&lt;sub&gt;θ&lt;/sub&gt;" vertex="1">
+                    <mxGeometry height="50" width="120" x="220" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ref" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E6E6E6;" value="Reference π&lt;sub&gt;ref&lt;/sub&gt;" vertex="1">
+                    <mxGeometry height="50" width="120" x="220" y="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="imp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;" value="Implicit Rewards&lt;br&gt;β(pc − rc), β(pr − rr)" vertex="1">
+                    <mxGeometry height="70" width="180" x="450" y="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="loss" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6CC;" value="DPO Loss&lt;br&gt;−ln σ(margin)" vertex="1">
+                    <mxGeometry height="50" width="140" x="710" y="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="d1" edge="1" parent="1" source="pairs" style="edgeStyle=none;html=1;" target="pol" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="d2" edge="1" parent="1" source="pairs" style="edgeStyle=none;html=1;" target="ref" value="">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="d3" edge="1" parent="1" source="pol" style="edgeStyle=none;html=1;" target="imp" value="pc, pr">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="d4" edge="1" parent="1" source="ref" style="edgeStyle=none;html=1;" target="imp" value="rc, rr">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="d5" edge="1" parent="1" source="imp" style="edgeStyle=none;html=1;" target="loss" value="margin">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="d6" edge="1" parent="1" source="loss" style="edgeStyle=orthogonalEdgeStyle;html=1;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="pol" value="update">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="780" y="20"/>
+                            <mxPoint x="280" y="20"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

@@ -19,6 +19,8 @@ uv run python book/ch07/chat.py "What is 12 plus 7?" \
     --model runs/pretrain/model --max-new 40
 ```
 
+输出先打出问题，方括号里是模型目录的名字，下面缩进的是它接着写出的40个词元：
+
 ```
 问：What is 12 plus 7?
 [pretrain]
@@ -68,6 +70,8 @@ uv run python book/ch07/chat.py "What is 12 plus 7?" \
 ```bash
 uv run python book/ch07/chat_template.py
 ```
+
+输出分两部分：上面是拼好的整段文字，特殊词元原样显示；下面逐个词元列出掩码、编号和词元本身，`Ġ`和`Ċ`分别代表空格和换行。留意掩码在哪里从0变成1，又在哪里变回0：
 
 ```
 <|im_start|>user
@@ -262,6 +266,8 @@ def pack(convs, row, seed):
 uv run python book/ch07/prepare_sft.py
 ```
 
+它先处理验证集，再处理训练集。训练集分成4个parquet文件，每读完一个，报一次累计的对话数。每一份的最后打印几行统计：完整放得下的、截短的、扔掉的对话各有多少，装成了多少行，以及行里的位置有多少是对话、多少算loss、多少是补齐：
+
 ```
 下载 test-00000-of-00001.parquet ...
 下载 train-00000-of-00004.parquet ...
@@ -385,6 +391,8 @@ python book/ch07/sft.py --name sft --init .../runs/pretrain/model \
 uv run python book/ch06/compare_bpb.py runs/pretrain/model runs/sft/model
 ```
 
+它把验证集的前100篇文档交给两个模型，各算一遍每词元的loss和每字节比特数，再列出两个模型的词表大小、参数量和切出的词元数：
+
 ```
 验证集前100篇文档，共199,605个字节
 
@@ -419,6 +427,8 @@ cd toyllm_book1/code
 uv run python book/ch13/chat.py "Hi! How are you today?" \
     --model toyllm2-sft --think --greedy
 ```
+
+输出的前几行是引擎打印的设置：哪个模型、哪种采样器、EOS是哪个编号，以及拼好的提示词有多少个词元；空一行之后是模型的回答，最后一行说写了多少个词元、为什么停下：
 
 ```
 模型     toyllm2-sft
@@ -477,6 +487,8 @@ def reply(model, chat, messages, max_new=200, temperature=0.0, top_k=None):
 uv run python book/ch07/chat.py --model runs/pretrain/model runs/sft/model \
     --max-new 80
 ```
+
+输出按问题分组，五个问题依次是首都、健康建议、写诗、算术和打招呼。每个问题下面，`[pretrain]`是基座模型的回答，`[sft]`是SFT之后的回答：
 
 ```
 问：What is the capital of France?
@@ -581,6 +593,8 @@ uv run python book/ch07/chat.py --model runs/pretrain/model runs/sft/model \
 ```bash
 uv run python book/ch07/probe_fact.py
 ```
+
+它做两件事。先让两个模型接着“The capital of France is”往下猜一个词元，看“ Paris”的概率有多大、在8192个词元里排第几；开头分两种，“直接续写”是把这句话原样交给模型，“对话里回答”是先按对话模板问完，再让助手这样开口。再去SFT的训练集里数一数，有多少个回答写着这句话：
 
 ```
 “The capital of France is”之后，下一个词元是“ Paris”的概率和排名
